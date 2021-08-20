@@ -32,14 +32,14 @@ public class Account {
     // oneToMany 단방향 관계에서 -> ManyToOne 양방향 관계
     // 멤버의 locationTag를 추가해주고 싶으면
     // new Location 생성해서, 여기에 Tag와 자기자신을 넣어 set해주고, add
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private Set<Location> locations = new HashSet<>();
 
 
     public void setAddress(Address address){
         this.address = address;
         LocationTag dong = address.getDong();
-        addLocation(dong);
+        this.addLocation(dong);
     }
 
     // 연관관계 메서드
@@ -55,4 +55,16 @@ public class Account {
         saleItems.add(item);
     }
 
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address=" + address +
+                ", saleItems=" + saleItems +
+                ", locations=" + locations +
+                '}';
+    }
 }

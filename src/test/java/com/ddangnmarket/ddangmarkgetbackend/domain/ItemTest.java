@@ -93,26 +93,24 @@ class ItemTest {
         buyer1.setName("buyer1");
         buyer1.setAddress(new Address(GUMI));
 
-        Location location = new Location();
-        location.setLocationTag(GUMI);
-        location.setAccount(buyer1);
+//        Location location = new Location();
+//        location.setLocationTag(GUMI);
+//        location.setAccount(buyer1);
 
         em.persist(seller);
         em.persist(buyer1);
-        em.persist(location);
 
         em.flush();
         em.clear();
 
-        assertThat(buyer1.getLocations().size()).isEqualTo(0);
-        System.out.println(buyer1.getLocations());
+        assertThat(buyer1.getLocations().size()).isEqualTo(1);
+        System.out.println("locations" + buyer1.getLocations());
 
         Account findBuyer = em.find(Account.class, buyer1.getId());
         assertThat(findBuyer.getLocations().size()).isEqualTo(1);
 
-        findBuyer.addLocation(GUMI);
+        System.out.println("buyer1 = " + buyer1);
 
-        assertThat(findBuyer.getLocations().size()).isEqualTo(2);
     }
 
 
@@ -128,6 +126,15 @@ class ItemTest {
         em.clear();
 
         Account findAcc = em.find(Account.class, account.getId());
+//        assertThat(findAcc.getLocations().size()).isEqualTo(1);
+
+
+        Set<Location> locations = findAcc.getLocations();
+        Location location = new Location();
+        location.setLocationTag(findAcc.getAddress().getDong());
+        location.setAccount(findAcc);
+        locations.add(location);
+
         assertThat(findAcc.getLocations().size()).isEqualTo(1);
 
     }

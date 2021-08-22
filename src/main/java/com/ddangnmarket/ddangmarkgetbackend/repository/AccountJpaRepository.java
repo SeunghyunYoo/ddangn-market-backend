@@ -34,20 +34,18 @@ public class AccountJpaRepository {
     }
 
     public Optional<Account> findByMail(String mail){
-        Optional<Account> accountOpt = Optional.ofNullable(em.createQuery("select a from Account a" +
-                " where a.mail = :mail", Account.class)
+        Optional<Account> accountOpt = em.createQuery("select a from Account a" +
+                " where (a.mail is NULL or a.mail = :mail)", Account.class)
                 .setParameter("mail", mail)
-                .getSingleResult());
+                .getResultList().stream().findAny();
 
         return accountOpt;
     }
 
     public boolean existsByMail(String mail){
-        Optional<Account> account = Optional.ofNullable(em.createQuery("select a from Account a" +
-                " where a.mail = :mail", Account.class)
-                .setParameter("mail", mail)
-                .getSingleResult());
-        return account.isPresent();
+        return !em.createQuery("select a from Account a" +
+                        " where a.mail = :mail", Account.class)
+                .setParameter("mail", mail).getResultList().isEmpty();
     }
 
 }

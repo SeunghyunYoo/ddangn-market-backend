@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
+//@Rollback(value = false)
 class PostRepositoryTest {
 
     @Autowired AccountRepository accountRepository;
@@ -28,7 +28,7 @@ class PostRepositoryTest {
     EntityManager em;
 
     @Test
-    void postTest(){
+    void 등록테스트(){
         Account seller = new Account("seller");
 
         Account saveAccount = accountRepository.save(seller);
@@ -50,7 +50,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    void findBySellerIdTest(){
+    void 판매자아이디로조회(){
 
         Account seller = new Account("seller");
 

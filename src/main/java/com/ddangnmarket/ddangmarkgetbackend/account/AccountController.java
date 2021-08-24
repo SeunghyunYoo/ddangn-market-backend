@@ -5,7 +5,6 @@ import com.ddangnmarket.ddangmarkgetbackend.account.dto.DeleteAccountResponseDto
 import com.ddangnmarket.ddangmarkgetbackend.account.dto.SignUpRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.account.dto.SignUpResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +35,7 @@ public class AccountController {
                 signUpRequestDto.getMail(),
                 signUpRequestDto.getPassword());
 
-        Account result = accountService.register(account);
+        Account result = accountService.signUp(account);
 
         SignUpResponseDto signUpResponseDto = new SignUpResponseDto(
                 result.getNickname(),

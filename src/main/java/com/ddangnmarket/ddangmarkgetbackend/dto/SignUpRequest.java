@@ -3,7 +3,7 @@ package com.ddangnmarket.ddangmarkgetbackend.dto;
 import lombok.Data;
 
 @Data
-public class SignUpDto {
+public class SignUpRequest {
     private String nickname;
 
     private String phone;

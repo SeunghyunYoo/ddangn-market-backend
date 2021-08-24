@@ -27,6 +27,7 @@ public class Account {
     public Account(String nickname){
         this.nickname = nickname;
     }
+
     public Account(String nickname, String phone, String mail){
         this.nickname = nickname;
         this.phone = phone;

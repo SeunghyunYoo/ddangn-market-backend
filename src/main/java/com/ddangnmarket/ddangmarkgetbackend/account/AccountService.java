@@ -2,6 +2,7 @@ package com.ddangnmarket.ddangmarkgetbackend.account;
 
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
+import com.ddangnmarket.ddangmarkgetbackend.dto.AccountUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,7 @@ public class AccountService {
     private final AccountJpaRepository accountJpaRepository;
     private final AccountRepository accountRepository;
 
-    public Account register(Account account){
+    public Account signUp(Account account){
         validateDuplicateEmailAccount(account);
         account.setCreatedAt(LocalDateTime.now());
 
@@ -39,4 +40,7 @@ public class AccountService {
         }
     }
 
+    public void updateInfo(Account account1, AccountUpdateDto accountUpdateDto) {
+
+    }
 }

@@ -1,6 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.repository;
 
 import com.ddangnmarket.ddangmarkgetbackend.account.AccountJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.account.AccountRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
+//@Rollback(value = false)
 class AccountRepositoryTest {
 
+
+    @Autowired AccountJpaRepository accountJpaRepository;
     @Autowired
-    AccountJpaRepository accountJpaRepository;
+    AccountRepository accountRepository;
     @Autowired
     EntityManager em;
 
@@ -57,5 +60,18 @@ class AccountRepositoryTest {
         assertThat(byMail.get().getNickname()).isEqualTo(account.getNickname());
         assertThat(byMail.get().getPhone()).isEqualTo(account.getPhone());
         assertThat(byMail.get().getMail()).isEqualTo(account.getMail());
+
+        assertThat(accountJpaRepository.existsByMail(byId.get().getMail())).isTrue();
+    }
+
+    @Test
+    void 가입하지않은회원체크(){
+        Optional<Account> byMail = accountJpaRepository.findByMail("acc@gmail.com");
+        assertThat(byMail).isEmpty();
+
+        boolean existsByMail = accountJpaRepository.existsByMail("acc@gmail.com");
+        assertThat(existsByMail).isFalse();
+
+//        Optional<Account> byMail = accountRepository.findByMail("acc@gmail.com");
     }
 }

@@ -32,9 +32,11 @@ public class Post {
     @JoinColumn(name = "account_id")
     private Account seller;
 
-    @OneToOne
+    @Enumerated(EnumType.STRING)
+    private CategoryTag categoryTag;
+    /*@OneToOne
     @JoinColumn(name = "category_id")
-    private Category category;
+    private Category category;*/
 
     public Post(String title, Account seller){
         this.title = title;
@@ -47,4 +49,12 @@ public class Post {
         this.seller = seller;
         seller.addPost(this);
     }
+
+    //== 바즈니스 로직 ==//
+    public static Post post(String title, Account seller, CategoryTag categoryTag){
+        Post post = new Post(title, seller);
+        post.setCategoryTag(categoryTag);
+        return post;
+    }
+
 }

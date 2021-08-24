@@ -42,11 +42,9 @@ public class AccountJpaRepository {
     }
 
     public boolean existsByMail(String mail){
-        Optional<Account> account = Optional.ofNullable(em.createQuery("select a from Account a" +
-                " where a.mail = :mail", Account.class)
-                .setParameter("mail", mail)
-                .getSingleResult());
-        return account.isPresent();
+        return !em.createQuery("select a from Account a" +
+                        " where a.mail = :mail", Account.class)
+                .setParameter("mail", mail).getResultList().isEmpty();
     }
 
 }

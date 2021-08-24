@@ -1,4 +1,4 @@
-package com.ddangnmarket.ddangmarkgetbackend.repository;
+package com.ddangnmarket.ddangmarkgetbackend.account;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +34,11 @@ public class AccountJpaRepository {
     }
 
     public Optional<Account> findByMail(String mail){
-        Optional<Account> accountOpt = Optional.ofNullable(em.createQuery("select a from Account a" +
+        return em.createQuery("select a from Account a" +
                 " where a.mail = :mail", Account.class)
                 .setParameter("mail", mail)
-                .getSingleResult());
-
-        return accountOpt;
+                .getResultStream()
+                .findAny();
     }
 
     public boolean existsByMail(String mail){

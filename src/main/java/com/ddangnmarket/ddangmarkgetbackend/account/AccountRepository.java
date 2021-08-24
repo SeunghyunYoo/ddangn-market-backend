@@ -1,4 +1,4 @@
-package com.ddangnmarket.ddangmarkgetbackend.repository;
+package com.ddangnmarket.ddangmarkgetbackend.account;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import org.springframework.data.jpa.repository.JpaRepository;

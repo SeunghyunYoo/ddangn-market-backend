@@ -33,6 +33,13 @@ public class Account {
         this.mail = mail;
     }
 
+    public Account(String nickname, String phone, String mail, String password){
+        this.nickname = nickname;
+        this.phone = phone;
+        this.mail = mail;
+        this.password = password;
+    }
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

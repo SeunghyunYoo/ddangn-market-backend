@@ -1,7 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.repository;
 
+import com.ddangnmarket.ddangmarkgetbackend.account.AccountJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Rollback(value = false)
 class AccountRepositoryTest {
 
-    @Autowired AccountJpaRepository accountJpaRepository;
+    @Autowired
+    AccountJpaRepository accountJpaRepository;
     @Autowired
     EntityManager em;
 

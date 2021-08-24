@@ -24,4 +24,4 @@ public class AppConfig {
         return objectMapper;
     }
 
-}q
+}

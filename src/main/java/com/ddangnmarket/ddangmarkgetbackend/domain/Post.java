@@ -44,6 +44,16 @@ public class Post {
         status = Status.NEW;
     }
 
+    public Post(String title, String desc, int price, CategoryTag categoryTag, Account seller){
+        this.title = title;
+        this.desc = desc;
+        this.price = price;
+        this.categoryTag = categoryTag;
+        this.seller = seller;
+        status = Status.NEW;
+        seller.addPost(this);
+    }
+
     //== 연관관계 메서드 ==/
     public void setSeller(Account seller) {
         this.seller = seller;

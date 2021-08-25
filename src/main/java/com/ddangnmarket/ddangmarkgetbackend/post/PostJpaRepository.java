@@ -1,4 +1,4 @@
-package com.ddangnmarket.ddangmarkgetbackend.repository;
+package com.ddangnmarket.ddangmarkgetbackend.post;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import lombok.RequiredArgsConstructor;

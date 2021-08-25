@@ -2,6 +2,8 @@ package com.ddangnmarket.ddangmarkgetbackend.repository;
 
 import com.ddangnmarket.ddangmarkgetbackend.account.AccountJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
+import com.ddangnmarket.ddangmarkgetbackend.post.PostJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.post.PostRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,10 +23,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 //@Rollback(value = false)
 class PostJpaRepositoryTest {
 
-    @Autowired PostJpaRepository postJpaRepository;
+    @Autowired
+    PostJpaRepository postJpaRepository;
     @Autowired
     AccountJpaRepository accountJpaRepository;
-    @Autowired PostRepository postRepository;
+    @Autowired
+    PostRepository postRepository;
     @Autowired CategoryJpaRepository categoryJpaRepository;
     @Autowired
     EntityManager em;

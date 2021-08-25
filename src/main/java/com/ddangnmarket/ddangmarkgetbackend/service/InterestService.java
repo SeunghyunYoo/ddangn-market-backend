@@ -5,12 +5,11 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Interest;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import com.ddangnmarket.ddangmarkgetbackend.repository.InterestJpaRepository;
-import com.ddangnmarket.ddangmarkgetbackend.repository.PostJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.post.PostJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

@@ -1,10 +1,9 @@
-package com.ddangnmarket.ddangmarkgetbackend.service;
+package com.ddangnmarket.ddangmarkgetbackend.post;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Status;
-import com.ddangnmarket.ddangmarkgetbackend.repository.PostJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +31,14 @@ public class PostService {
 
     public List<Post> findAllByCategoryTag(CategoryTag categoryTag){
         return postJpaRepository.findAllByCategoryTagAndStatus(categoryTag, Status.NEW);
+    }
+
+    public Post findById(Long postId){
+        return postJpaRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+    }
+
+    public void deleteById(Long postId){
+        Post post = findById(postId);
+        postJpaRepository.delete(post);
     }
 }

@@ -5,7 +5,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Reserve;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Status;
-import org.assertj.core.api.Assertions;
+import com.ddangnmarket.ddangmarkgetbackend.post.PostJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +28,8 @@ class ReserveJpaRepositoryTest {
     EntityManager em;
     @Autowired
     AccountJpaRepository accountJpaRepository;
-    @Autowired PostJpaRepository postJpaRepository;
+    @Autowired
+    PostJpaRepository postJpaRepository;
     @Autowired ReserveJpaRepository reserveJpaRepository;
 
     @Test

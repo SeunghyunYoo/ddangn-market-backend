@@ -2,7 +2,7 @@ package com.ddangnmarket.ddangmarkgetbackend.repository;
 
 import com.ddangnmarket.ddangmarkgetbackend.account.AccountJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
-import org.assertj.core.api.Assertions;
+import com.ddangnmarket.ddangmarkgetbackend.post.PostJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +25,8 @@ class InterestJpaRepositoryTest {
     @Autowired InterestJpaRepository interestJpaRepository;
     @Autowired
     AccountJpaRepository accountJpaRepository;
-    @Autowired PostJpaRepository postJpaRepository;
+    @Autowired
+    PostJpaRepository postJpaRepository;
     @Autowired
     EntityManager em;
 

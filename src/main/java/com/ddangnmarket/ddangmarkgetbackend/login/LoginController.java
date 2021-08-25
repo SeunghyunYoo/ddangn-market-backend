@@ -38,7 +38,7 @@ public class LoginController {
         HttpSession session = request.getSession(true);
         loginResponseDto.setJSESSIONID(session.getId());
 
-        session.setAttribute(LOGIN_ACCOUNT, loginResponseDto);
+        session.setAttribute(LOGIN_ACCOUNT, loginAccount.getId());
 
 //        LoginResponseDto loginInfo =  (LoginResponseDto) session.getAttribute(LOGIN_ACCOUNT);
 //        log.info(loginInfo.toString());

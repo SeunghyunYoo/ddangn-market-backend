@@ -1,8 +1,10 @@
 package com.ddangnmarket.ddangmarkgetbackend.config;
 
+import com.ddangnmarket.ddangmarkgetbackend.config.converter.StringToCategoryTagConverter;
 import com.ddangnmarket.ddangmarkgetbackend.interceptor.LogInterceptor;
 import com.ddangnmarket.ddangmarkgetbackend.interceptor.LoginCheckInterceptor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -29,4 +31,9 @@ public class WebConfig implements WebMvcConfigurer {
                         "/error");
     }
 
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new StringToCategoryTagConverter());
+    }
 }

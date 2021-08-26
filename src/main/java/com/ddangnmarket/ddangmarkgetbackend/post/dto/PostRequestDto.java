@@ -6,6 +6,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Status;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Locale;
 
 @Data
 public class PostRequestDto {
@@ -16,4 +17,5 @@ public class PostRequestDto {
     private int price;
 
     private CategoryTag categoryTag;
+
 }

@@ -1,9 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(exclude = {"title", "desc", "price", "categoryTag"}) // 같은 내용의 게시글 등록 허용
 public class Post {
 
     @Id @GeneratedValue
@@ -48,6 +46,7 @@ public class Post {
         this.title = title;
         this.desc = desc;
         this.price = price;
+//        @Converter
         this.categoryTag = categoryTag;
         this.seller = seller;
         status = Status.NEW;

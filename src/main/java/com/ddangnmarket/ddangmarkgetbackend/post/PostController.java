@@ -3,9 +3,12 @@ package com.ddangnmarket.ddangmarkgetbackend.post;
 import com.ddangnmarket.ddangmarkgetbackend.account.AccountJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
+import com.ddangnmarket.ddangmarkgetbackend.domain.Category;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
+import com.ddangnmarket.ddangmarkgetbackend.domain.PostCategory;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import com.ddangnmarket.ddangmarkgetbackend.post.dto.*;
+import com.ddangnmarket.ddangmarkgetbackend.repository.CategoryJpaRepository;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,7 @@ public class PostController {
 
     private final PostService postService;
     private final AccountJpaRepository accountJpaRepository;
+    private final CategoryJpaRepository categoryJpaRepository;
 
     @PostMapping("/new")
     public PostResponseDto post(@RequestBody PostRequestDto postRequestDto, @ApiIgnore HttpSession session){
@@ -30,6 +34,26 @@ public class PostController {
 
         Post post = new Post(postRequestDto.getTitle(), postRequestDto.getDesc(),
                 postRequestDto.getPrice(), postRequestDto.getCategoryTag(), account);
+
+        Long postId = postService.post(post);
+
+        return new PostResponseDto(postId);
+    }
+
+    @PostMapping("/new2")
+    public PostResponseDto postV2(@RequestBody PostRequestDto postRequestDto, @ApiIgnore HttpSession session){
+
+        Account account = getSessionCheckedAccount(session);
+
+        Post post = new Post(postRequestDto.getTitle(), postRequestDto.getDesc(),
+                postRequestDto.getPrice(), account);
+
+        Category category = categoryJpaRepository.findByCategoryTag(postRequestDto.getCategoryTag());
+
+        PostCategory postCategory = new PostCategory();
+        postCategory.setCategory(category);
+        post.setPostCategory(postCategory);
+
 
         Long postId = postService.post(post);
 

@@ -1,19 +1,16 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-//@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
 
     @Id @GeneratedValue

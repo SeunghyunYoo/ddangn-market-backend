@@ -3,12 +3,14 @@ package com.ddangnmarket.ddangmarkgetbackend.account;
 import com.ddangnmarket.ddangmarkgetbackend.account.dto.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -61,7 +63,7 @@ public class AccountController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<GetAccountInfoResponseDto> getAccountInfo(HttpSession session){
+    public ResponseEntity<GetAccountInfoResponseDto> getAccountInfo(@ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
         return new ResponseEntity<>(
                 new GetAccountInfoResponseDto(account.getMail(), account.getNickname(), account.getPhone()),
@@ -70,7 +72,8 @@ public class AccountController {
 
     @PutMapping("/info")
     public ResponseEntity<UpdateAccountInfoResponseDto> updateAccountInfo(
-            @Validated @RequestBody UpdateAccountInfoRequestDto updateAccountInfoRequestDto, HttpSession session){
+            @Validated @RequestBody UpdateAccountInfoRequestDto updateAccountInfoRequestDto,
+            @ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
         accountService.updateAccountInfo(account, updateAccountInfoRequestDto);
         return new ResponseEntity<>(new UpdateAccountInfoResponseDto("수정되었습니다."), HttpStatus.OK);
@@ -79,7 +82,7 @@ public class AccountController {
     @PutMapping("/password")
     public ResponseEntity<ChangeAccountPasswordResponseDto> changePassword(
             @Validated @RequestBody ChangeAccountPasswordRequestDto changeAccountPasswordRequestDto,
-                               HttpSession session){
+            @ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
         accountService.changePassword(account, changeAccountPasswordRequestDto);
         return new ResponseEntity<>(new ChangeAccountPasswordResponseDto("수정되었습니다."), HttpStatus.OK);

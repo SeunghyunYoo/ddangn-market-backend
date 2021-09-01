@@ -6,8 +6,10 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import com.ddangnmarket.ddangmarkgetbackend.post.dto.*;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,7 +24,7 @@ public class PostController {
     private final AccountJpaRepository accountJpaRepository;
 
     @PostMapping("/new")
-    public PostResponseDto post(@RequestBody PostRequestDto postRequestDto, HttpSession session){
+    public PostResponseDto post(@RequestBody PostRequestDto postRequestDto, @ApiIgnore HttpSession session){
 
         Account account = getSessionCheckedAccount(session);
 
@@ -35,7 +37,7 @@ public class PostController {
     }
 
     @GetMapping
-    public GetAllPostResponseDto getAllPost(HttpSession session){
+    public GetAllPostResponseDto getAllPost(@ApiIgnore HttpSession session){
         getSessionCheckedAccount(session);
 
         List<Post> posts = postService.findAll();
@@ -44,7 +46,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public GetPostResponseDto getPost(@PathVariable Long postId, HttpSession session){
+    public GetPostResponseDto getPost(@PathVariable Long postId, @ApiIgnore HttpSession session){
         getSessionCheckedAccount(session);
 
         Post post = postService.findById(postId);
@@ -53,7 +55,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public String deletePost(@PathVariable Long postId, HttpSession session){
+    public String deletePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
         getSessionCheckedAccount(session);
 
         postService.deleteById(postId);

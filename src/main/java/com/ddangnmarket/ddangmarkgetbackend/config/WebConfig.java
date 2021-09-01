@@ -23,7 +23,13 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LogInterceptor())
                 .order(1)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/css/**", "/*.ico");
+                .excludePathPatterns("/css/**", "/*.ico",
+                        "/swagger-ui/**",
+                        "/v3/api-docs",
+                        "/webjars/**",
+                        "/css/**", "/*.ico",
+                        "/swagger-resources/**"
+                );
 
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(2)
@@ -32,7 +38,13 @@ public class WebConfig implements WebMvcConfigurer {
                         API_VERSION + "/accounts/new",
                         API_VERSION + "/login",
                         API_VERSION + "/logout",
-                        "/error");
+                        "/error",
+                        "/swagger-ui/**",
+                        "/v3/api-docs",
+                        "/webjars/**",
+                        "/css/**", "/*.ico",
+                        "/swagger-resources/**"
+                );
     }
 
     @Override

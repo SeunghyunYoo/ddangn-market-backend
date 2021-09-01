@@ -12,7 +12,7 @@ public class ErrorResult {
     private String code;
     private int status;
     private String message;
-    private LocalDateTime timestamp;
+    private String timestamp;
 //    private String path;
 //    private String error;
 
@@ -20,6 +20,6 @@ public class ErrorResult {
         this.code = code;
         this.message = message;
         this.status = status;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now().toString();
     }
 }

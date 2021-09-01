@@ -6,6 +6,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.login.dto.LoginRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.login.dto.LoginResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.login.dto.LogoutResponseDto;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +53,7 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<LogoutResponseDto> logout(HttpServletRequest request){
+    public ResponseEntity<LogoutResponseDto> logout(@ApiIgnore HttpServletRequest request){
         HttpSession session = request.getSession(false);
         if (session != null){
             session.invalidate();
@@ -59,7 +61,7 @@ public class LoginController {
         return new ResponseEntity<>(new LogoutResponseDto("로그아웃 되었습니다."), HttpStatus.OK);
     }
 
-    @GetMapping("/sessionInfo")
+//    @GetMapping("/sessionInfo")
     public String sessionInfo(HttpServletRequest request){
         HttpSession session = request.getSession(false);
 

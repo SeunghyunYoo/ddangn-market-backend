@@ -17,8 +17,12 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession(false);
 
-        if(session == null || session.getAttribute(SessionConst.LOGIN_ACCOUNT) == null){
+       if(session == null || session.getAttribute(SessionConst.LOGIN_ACCOUNT) == null){
             log.info("미인증 사용자 요청");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("application/json");
+            response.getWriter().write("미인증된 사용자 요청입니다.");
             return false;
         }
         return true;

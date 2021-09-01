@@ -14,7 +14,7 @@ spring:
         format_sql: true
 #        default_batch_fetch_size: 100
   messages:
-    basename: errors, messages
+    basename: messages
 
 logging:
   level:
@@ -23,4 +23,9 @@ logging:
 
 server:
   port: 8080
+  error:
+    include-exception: true
+    include-message: always
+    include-stacktrace: on_param
+    include-binding-errors: on_param
 

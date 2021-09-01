@@ -1,0 +1,3 @@
+NotEmpty: "필수 입력값을 입력해주십시오."
+  signUpRequestDto:
+    nickname: "닉네임은 필수 입력값 입니다."

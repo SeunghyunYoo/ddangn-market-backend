@@ -12,14 +12,17 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignUpRequestDto {
-    @NotEmpty
+    @NotEmpty(message = "닉네임은 필수값입니다.")
     private String nickname;
-    @NotEmpty
+
+    @NotEmpty(message = "핸드폰 번호는 필수값입니다.")
     private String phone;
-    @NotEmpty
-    @Email
+
+    @NotEmpty(message = "메일은 필수 값 입니다.")
+    @Email(message = "이메일 형식이 아닙니다.")
     private String mail;
-    @NotEmpty
-    @Length(min=8, max=20)
+
+    @NotEmpty(message = "비밀번호는 필수 값입니다.")
+    @Length(min=8, max=20, message = "8자 이상 20자 이하의 문자열이여야 합니다.")
     private String password;
 }

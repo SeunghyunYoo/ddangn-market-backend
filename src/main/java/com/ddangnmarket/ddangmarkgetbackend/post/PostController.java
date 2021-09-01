@@ -24,10 +24,7 @@ public class PostController {
     @PostMapping("/new")
     public PostResponseDto post(@RequestBody PostRequestDto postRequestDto, HttpSession session){
 
-        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-
-        Account account = accountJpaRepository.findById(accountId).orElseThrow(() ->
-                new IllegalStateException("존재하지 않는 회원입니다."));
+        Account account = getSessionCheckedAccount(session);
 
         Post post = new Post(postRequestDto.getTitle(), postRequestDto.getDesc(),
                 postRequestDto.getPrice(), postRequestDto.getCategoryTag(), account);
@@ -39,10 +36,7 @@ public class PostController {
 
     @GetMapping
     public GetAllPostResponseDto getAllPost(HttpSession session){
-        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-
-        accountJpaRepository.findById(accountId).orElseThrow(() ->
-                new IllegalStateException("존재하지 않는 회원입니다."));
+        getSessionCheckedAccount(session);
 
         List<Post> posts = postService.findAll();
 
@@ -51,11 +45,7 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public GetPostResponseDto getPost(@PathVariable Long postId, HttpSession session){
-
-        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-
-        accountJpaRepository.findById(accountId).orElseThrow(() ->
-                new IllegalStateException("존재하지 않는 회원입니다."));
+        getSessionCheckedAccount(session);
 
         Post post = postService.findById(postId);
 
@@ -64,13 +54,18 @@ public class PostController {
 
     @DeleteMapping("/{postId}")
     public String deletePost(@PathVariable Long postId, HttpSession session){
-        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-
-        accountJpaRepository.findById(accountId).orElseThrow(() ->
-                new IllegalStateException("존재하지 않는 회원입니다."));
+        getSessionCheckedAccount(session);
 
         postService.deleteById(postId);
         return "게시글이 삭제되었습니다.";
+    }
+
+    private Account getSessionCheckedAccount(HttpSession session) {
+        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
+
+        Account account = accountJpaRepository.findById(accountId).orElseThrow(() ->
+                new IllegalStateException("존재하지 않는 회원입니다."));
+        return account;
     }
 
 }

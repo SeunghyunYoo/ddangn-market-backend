@@ -4,7 +4,6 @@ import com.ddangnmarket.ddangmarkgetbackend.account.AccountJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.account.AccountRepository;
 import com.ddangnmarket.ddangmarkgetbackend.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
-import com.ddangnmarket.ddangmarkgetbackend.dto.AccountUpdateDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,9 +61,9 @@ class AccountServiceTest {
         Account account1 = new Account("account1", "000-0000-0000", "acc1@gmail.com");
         accountService.signUp(account1);
 
-        AccountUpdateDto accountUpdateDto = new AccountUpdateDto();
-        accountUpdateDto.setMail("acc2@gmail.com");
-        accountService.updateInfo(account1, accountUpdateDto);
+//        AccountUpdateDto accountUpdateDto = new AccountUpdateDto();
+//        accountUpdateDto.setMail("acc2@gmail.com");
+//        accountService.updateInfo(account1, accountUpdateDto);
 
         em.flush();
         em.clear();

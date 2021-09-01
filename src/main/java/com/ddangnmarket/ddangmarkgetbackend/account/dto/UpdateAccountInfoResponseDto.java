@@ -1,13 +1,12 @@
-package com.ddangnmarket.ddangmarkgetbackend.login.dto;
+package com.ddangnmarket.ddangmarkgetbackend.account.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginResponseDto {
+public class UpdateAccountInfoResponseDto {
     private String message;
 }

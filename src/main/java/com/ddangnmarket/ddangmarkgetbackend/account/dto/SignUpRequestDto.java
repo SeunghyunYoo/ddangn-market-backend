@@ -1,5 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.account.dto;
 
+import com.ddangnmarket.ddangmarkgetbackend.account.validation.Phone;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,11 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 public class SignUpRequestDto {
     @NotEmpty(message = "닉네임은 필수값입니다.")
+    @Length(min=5, max=20, message = "5자 이상 20자 이하의 문자열이여야 합니다.")
     private String nickname;
 
     @NotEmpty(message = "핸드폰 번호는 필수값입니다.")
+    @Phone
     private String phone;
 
     @NotEmpty(message = "메일은 필수 값 입니다.")

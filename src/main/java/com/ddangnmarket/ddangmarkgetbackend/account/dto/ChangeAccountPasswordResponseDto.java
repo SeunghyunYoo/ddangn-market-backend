@@ -5,12 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class SignUpResponseDto {
-    private String nickname;
-
-    private String phone;
-
-    private String mail;
+@AllArgsConstructor
+public class ChangeAccountPasswordResponseDto {
+    private String message;
 }

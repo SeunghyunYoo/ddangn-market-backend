@@ -47,4 +47,12 @@ public class AccountJpaRepository {
                 .setParameter("mail", mail).getResultList().isEmpty();
     }
 
+    public Optional<Account> findByNickname(String nickname){
+        return em.createQuery("select a from Account a" +
+                " where a.nickname = :nickname", Account.class)
+                .setParameter("nickname", nickname)
+                .getResultStream()
+                .findAny();
+    }
+
 }

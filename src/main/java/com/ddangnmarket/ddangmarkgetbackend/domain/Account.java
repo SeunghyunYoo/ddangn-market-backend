@@ -52,4 +52,18 @@ public class Account {
     public void addPost(Post post){
         posts.add(post);
     }
+
+    //== 비즈니스 메서드 ==/
+    public void changePassword(String password){
+        this.password = password;
+    }
+
+    public void changePhone(String phone){
+        this.phone = phone;
+    }
+
+    public void changeNickname(String nickname){
+        this.nickname = nickname;
+    }
+
 }

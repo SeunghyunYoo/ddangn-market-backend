@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignUpResponseDto {
-    private String nickname;
-
-    private String phone;
-
+public class GetAccountInfoResponseDto {
     private String mail;
+    private String nickname;
+    private String phone;
 }

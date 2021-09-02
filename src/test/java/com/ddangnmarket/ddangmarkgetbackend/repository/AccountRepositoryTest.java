@@ -1,12 +1,11 @@
 package com.ddangnmarket.ddangmarkgetbackend.repository;
 
-import com.ddangnmarket.ddangmarkgetbackend.account.AccountJpaRepository;
-import com.ddangnmarket.ddangmarkgetbackend.account.AccountRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -31,7 +30,7 @@ class AccountRepositoryTest {
     @Test
     void saveTest(){
 
-        Account account = new Account("account1", "000-0000-0000", "acc1@gmail.com");
+        Account account = new Account("account01", "000-0000-0000", "acc1@gmail.com", "00000000");
 
         Account saveAccount = accountJpaRepository.save(account);
 
@@ -45,7 +44,7 @@ class AccountRepositoryTest {
 
     @Test
     void findByMailTest(){
-        Account account = new Account("account1", "000-0000-0000", "acc1@gmail.com");
+        Account account = new Account("account01", "000-0000-0000", "acc1@gmail.com", "0000000");
 
         Account saveAccount = accountJpaRepository.save(account);
 

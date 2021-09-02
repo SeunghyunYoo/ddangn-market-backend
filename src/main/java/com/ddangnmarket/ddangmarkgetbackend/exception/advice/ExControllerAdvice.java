@@ -1,8 +1,8 @@
 package com.ddangnmarket.ddangmarkgetbackend.exception.advice;
 
-import com.ddangnmarket.ddangmarkgetbackend.account.exception.DuplicateEmailException;
-import com.ddangnmarket.ddangmarkgetbackend.account.exception.DuplicateNicknameException;
-import com.ddangnmarket.ddangmarkgetbackend.account.exception.SignUpException;
+import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.DuplicateEmailException;
+import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.DuplicateNicknameException;
+import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.SignUpException;
 import com.ddangnmarket.ddangmarkgetbackend.exception.dto.ErrorResult;
 import com.ddangnmarket.ddangmarkgetbackend.exception.dto.ValidError;
 import com.ddangnmarket.ddangmarkgetbackend.exception.dto.ValidationErrorMessage;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
 
@@ -92,7 +93,7 @@ public class ExControllerAdvice {
     }
 
     //HttpRequestMethodNotSupportedException
-    @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
+    @ExceptionHandler({HttpRequestMethodNotSupportedException.class, MethodArgumentTypeMismatchException.class})
     public ResponseEntity<ErrorResult> httpMethodExHandler(Exception e){
         ErrorResult errorResult = new ErrorResult(HttpStatus.NOT_FOUND.name(),
                 HttpStatus.NOT_FOUND.value(), "존재하지 않는 경로입니다");

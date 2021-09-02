@@ -3,7 +3,6 @@ package com.ddangnmarket.ddangmarkgetbackend.domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter
@@ -24,49 +23,46 @@ public class Post {
     private int price;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private PostStatus postStatus;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account seller;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "post_category_id")
     private PostCategory postCategory;
 
-    @Enumerated(EnumType.STRING)
-    private CategoryTag categoryTag;
-    /*@OneToOne
-    @JoinColumn(name = "category_id")
-    private Category category;*/
+//    @Enumerated(EnumType.STRING)
+//    private CategoryTag categoryTag;
 
-    public Post(String title, Account seller){
-        this.title = title;
-        this.seller = seller;
-        status = Status.NEW;
-    }
+//    public Post(String title, String desc, int price, CategoryTag categoryTag, Account seller){
+//        this.title = title;
+//        this.desc = desc;
+//        this.price = price;
+//        this.categoryTag = categoryTag;
+//        this.seller = seller;
+//        status = Status.NEW;
+//        seller.addPost(this);
+//    }
 
-    public Post(String title, String desc, int price, CategoryTag categoryTag, Account seller){
-        this.title = title;
-        this.desc = desc;
-        this.price = price;
-//        @Converter
-        this.categoryTag = categoryTag;
-        this.seller = seller;
-        status = Status.NEW;
-        seller.addPost(this);
-    }
-
-    public Post(String title, String desc, int price, Account seller){
+    private Post(String title, String desc, int price, PostCategory postCategory, Account seller){
         this.title = title;
         this.desc = desc;
         this.price = price;
-//        @Converter
         this.postCategory = postCategory;
         this.seller = seller;
-        status = Status.NEW;
+        postStatus = PostStatus.NEW;
+        // 연관관계
         seller.addPost(this);
+        postCategory.setPost(this);
     }
+
+    // == 생성 메서드 == //
+    public static Post createPost(String title, String desc, int price, PostCategory postCategory, Account seller){
+        return new Post(title, desc, price, postCategory, seller);
+    }
+
 
     //== 연관관계 메서드 ==/
     public void setSeller(Account seller) {
@@ -75,12 +71,6 @@ public class Post {
     }
 
     //== 바즈니스 로직 ==//
-    public static Post post(String title, Account seller, CategoryTag categoryTag){
-        Post post = new Post(title, seller);
-        post.setCategoryTag(categoryTag);
-        return post;
-    }
-
     public void setPostCategory(PostCategory postCategory){
         this.postCategory = postCategory;
         postCategory.setPost(this);

@@ -1,16 +1,13 @@
 package com.ddangnmarket.ddangmarkgetbackend.login;
 
-import com.ddangnmarket.ddangmarkgetbackend.account.AccountService;
-import com.ddangnmarket.ddangmarkgetbackend.account.dto.SignUpRequestDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.login.dto.LoginRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.login.dto.LoginResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.login.dto.LogoutResponseDto;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;

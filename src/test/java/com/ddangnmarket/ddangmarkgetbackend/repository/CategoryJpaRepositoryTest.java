@@ -1,12 +1,10 @@
 package com.ddangnmarket.ddangmarkgetbackend.repository;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Category;
-import com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag;
-import org.assertj.core.api.Assertions;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Repository;
 import org.springframework.test.annotation.Rollback;
 
 import javax.persistence.EntityManager;
@@ -22,7 +20,8 @@ class CategoryJpaRepositoryTest {
 
     @Autowired
     EntityManager em;
-    @Autowired CategoryJpaRepository categoryJpaRepository;
+    @Autowired
+    CategoryJpaRepository categoryJpaRepository;
 
     @Test
     void 카테고리태그로조회(){

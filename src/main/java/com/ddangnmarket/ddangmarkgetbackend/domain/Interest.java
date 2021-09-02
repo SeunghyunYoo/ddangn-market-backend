@@ -16,11 +16,11 @@ public class Interest {
     @Column(name = "interest_post_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
@@ -29,8 +29,7 @@ public class Interest {
         this.account = account;
     }
 
-    public static Interest enrollInterest(Post post, Account account){
-//        post.setStatus(Status.BOOKED);
+    public static Interest addInterest(Post post, Account account){
         return new Interest(post, account);
     }
 

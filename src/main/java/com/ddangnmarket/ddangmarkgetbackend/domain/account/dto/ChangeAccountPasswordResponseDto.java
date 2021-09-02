@@ -1,0 +1,12 @@
+package com.ddangnmarket.ddangmarkgetbackend.domain.account.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChangeAccountPasswordResponseDto {
+    private String message;
+}

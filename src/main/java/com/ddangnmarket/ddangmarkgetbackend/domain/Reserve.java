@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
 
@@ -17,11 +16,11 @@ public class Reserve {
     @Column(name = "reserve_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
@@ -31,12 +30,12 @@ public class Reserve {
     }
 
     public static Reserve reserve(Post post, Account account){
-        post.setStatus(Status.RESERVE);
+        post.setPostStatus(PostStatus.RESERVE);
         return new Reserve(post, account);
     }
 
     public void cancel(){
         this.account = null;
-        this.post.setStatus(Status.NEW);
+        this.post.setPostStatus(PostStatus.NEW);
     }
 }

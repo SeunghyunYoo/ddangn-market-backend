@@ -24,16 +24,6 @@ public class Account {
 
     private String password;
 
-    public Account(String nickname){
-        this.nickname = nickname;
-    }
-
-    public Account(String nickname, String phone, String mail){
-        this.nickname = nickname;
-        this.phone = phone;
-        this.mail = mail;
-    }
-
     public Account(String nickname, String phone, String mail, String password){
         this.nickname = nickname;
         this.phone = phone;

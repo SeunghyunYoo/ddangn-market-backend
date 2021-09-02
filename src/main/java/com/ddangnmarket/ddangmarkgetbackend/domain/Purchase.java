@@ -1,27 +1,27 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Purchase {
 
     @Id @GeneratedValue
     @Column(name = "purchase_id")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
@@ -31,7 +31,7 @@ public class Purchase {
     }
 
     public static Purchase purchase(Post post, Account account){
-        post.setStatus(Status.COMPLETE);
+        post.setPostStatus(PostStatus.COMPLETE);
         return new Purchase(post, account);
     }
 }

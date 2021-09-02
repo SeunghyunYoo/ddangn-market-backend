@@ -1,6 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.login;
 
-import com.ddangnmarket.ddangmarkgetbackend.account.AccountJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

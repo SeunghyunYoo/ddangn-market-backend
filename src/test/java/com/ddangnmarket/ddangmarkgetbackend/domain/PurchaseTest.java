@@ -8,8 +8,6 @@ import org.springframework.test.annotation.Rollback;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @Transactional
 @Rollback(value = false)
@@ -68,7 +66,7 @@ class PurchaseTest {
     }
 
     private Purchase purchase(Account buyer, Post findPost) {
-        findPost.setStatus(Status.NEW);
+        findPost.setPostStatus(PostStatus.NEW);
         Purchase purchase = new Purchase();
         purchase.setPost(findPost);
         purchase.setAccount(buyer);

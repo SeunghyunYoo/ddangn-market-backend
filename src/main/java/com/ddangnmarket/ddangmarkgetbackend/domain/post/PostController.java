@@ -179,7 +179,7 @@ public class PostController {
     @GetMapping("/category")
     public ResponseEntity<ResponseOKDto<GetAllPostResponseDto>> getAllPostByCategory(
             @RequestParam(name = "category") String categoryTag,
-            @RequestParam(name = "status", required = false) @Nullable String status,
+            @RequestParam(name = "status", required = false) @Nullable List<String> status,
             @ApiIgnore HttpSession session){
         getSessionCheckedAccount(session);
 
@@ -189,10 +189,13 @@ public class PostController {
             List<Post> posts = postService.findPostAllByCategory(CategoryTag.valueOf(categoryTag.toUpperCase()));
             return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
         }
-        getPostAllParamValidation(status);
-        List<Post> posts = postService.findAllByCategoryAndStatus(
+        getPostAllParamListValidation(status);
+
+        List<PostStatus> postStatuses = convertStringToPostStatus(status);
+
+        List<Post> posts = postService.findAllByCategoryAndStatuses(
                 CategoryTag.valueOf(categoryTag.toUpperCase()),
-                PostStatus.valueOf(status.toUpperCase()));
+                postStatuses);
 
         return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
     }

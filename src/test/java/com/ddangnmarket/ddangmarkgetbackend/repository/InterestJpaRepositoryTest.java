@@ -2,8 +2,10 @@ package com.ddangnmarket.ddangmarkgetbackend.repository;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.InterestJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostJpaRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,10 +32,48 @@ class InterestJpaRepositoryTest {
     @Autowired
     PostJpaRepository postJpaRepository;
     @Autowired
+    CategoryJpaRepository categoryJpaRepository;
+    @Autowired
     EntityManager em;
+
+    private final String TEST_PHONE = "000-0000-0000";
+    private final String TEST_EMAIL = "@gmail.com";
+    private final String TEST_PASSWORD = "00000000";
 
     @Test
     void 관심상품등록및삭제(){
+        Account account01 = new Account("test01", TEST_PHONE, "test01" + TEST_EMAIL, TEST_PASSWORD);
+        em.persist(account01);
+        Account account02 = new Account("test02", TEST_PHONE, "test02" + TEST_EMAIL, TEST_PASSWORD);
+        em.persist(account02);
+
+        Category digital = categoryJpaRepository.findByCategoryTag(DIGITAL);
+
+
+        Post post1 = Post.createPost("title01", "desc01", 10000, digital, account01);
+        em.persist(post1);
+        Post post2 = Post.createPost("title02", "desc01", 10000, digital, account01);
+        em.persist(post2);
+        Post post3 = Post.createPost("title03", "desc01", 10000, digital, account01);
+        em.persist(post3);
+        Post post4 = Post.createPost("title04", "desc01", 10000, digital, account01);
+        em.persist(post4);
+
+        Interest interest1 = Interest.addInterest(post1, account02);
+        Interest interest2 = Interest.addInterest(post2, account02);
+        Interest interest3 = Interest.addInterest(post3, account02);
+        Interest interest4 = Interest.addInterest(post4, account02);
+
+        interestJpaRepository.save(interest1);
+        interestJpaRepository.save(interest2);
+        interestJpaRepository.save(interest3);
+
+        em.flush();
+        em.clear();
+
+        List<Interest> allByAccount = interestJpaRepository.findAllByAccount(account02);
+
+        Assertions.assertThat(allByAccount.size()).isEqualTo(4);
 
 
     }

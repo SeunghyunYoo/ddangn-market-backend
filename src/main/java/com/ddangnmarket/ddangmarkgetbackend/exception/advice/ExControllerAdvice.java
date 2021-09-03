@@ -17,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -100,7 +101,7 @@ public class ExControllerAdvice {
         return new ResponseEntity<>(errorResult, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class})
+    @ExceptionHandler({HttpMessageNotReadableException.class, MissingServletRequestParameterException.class})
     public ResponseEntity<ErrorResult> httpMessageExHandler(Exception e){
         ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(),
                 HttpStatus.BAD_REQUEST.value(), "잘못된 입력 값 입니다.");

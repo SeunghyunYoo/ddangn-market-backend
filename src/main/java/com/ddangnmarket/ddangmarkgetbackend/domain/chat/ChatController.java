@@ -4,6 +4,7 @@ import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Chat;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.CreateChatRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.CreateChatResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.GetAllChatResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
@@ -25,7 +26,8 @@ public class ChatController {
     private final AccountService accountService;
 
     @GetMapping
-    public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChatByPost(@RequestParam Long postId, @ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChatByPost(
+            @RequestParam Long postId, @ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
 
         List<Chat> chats = chatService.findAllByPost(account, postId);
@@ -34,10 +36,11 @@ public class ChatController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseOKDto<CreateChatResponseDto>> createChat(@RequestParam Long postId, @ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseOKDto<CreateChatResponseDto>> createChat(
+            @RequestBody CreateChatRequestDto createChatRequestDto, @ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
 
-        Long chatId = chatService.createChat(account, postId);
+        Long chatId = chatService.createChat(account, createChatRequestDto.getPostId());
 
         return new ResponseEntity<>(new ResponseOKDto<>(new CreateChatResponseDto(chatId)), HttpStatus.OK);
     }

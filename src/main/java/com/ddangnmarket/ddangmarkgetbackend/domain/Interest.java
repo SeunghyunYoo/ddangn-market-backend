@@ -16,7 +16,7 @@ public class Interest extends BaseEntity{
     @Column(name = "interest_post_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
 
@@ -24,13 +24,11 @@ public class Interest extends BaseEntity{
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public Interest(Post post, Account account){
-        this.post = post;
-        this.account = account;
-    }
-
     public static Interest addInterest(Post post, Account account){
-        return new Interest(post, account);
+        Interest interest = new Interest();
+        interest.post = post;
+        interest.account = account;
+        return interest;
     }
 
     public void removeInterest(){

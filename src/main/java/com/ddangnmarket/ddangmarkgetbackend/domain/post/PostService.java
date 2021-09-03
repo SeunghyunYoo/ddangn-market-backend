@@ -63,6 +63,10 @@ public class PostService {
         return postJpaRepository.findAllByCategoryAndStatus(categoryTag, postStatus);
     }
 
+    public List<Post> findAllByCategoryAndStatuses(CategoryTag categoryTag, List<PostStatus> postStatuses) {
+        return postJpaRepository.findAllByCategoryAndStatuses(categoryTag, postStatuses);
+    }
+
     public void deleteById(Long postId){
         Post post = findById(postId);
         postJpaRepository.delete(post);
@@ -100,4 +104,5 @@ public class PostService {
         return postJpaRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
+
 }

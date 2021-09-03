@@ -29,7 +29,9 @@ public class PostJpaRepository {
 
     public Optional<Post> findByIdWithSeller(Long id){
         return em.createQuery("select p from Post p" +
-                " join fetch p.seller s", Post.class)
+                " join fetch p.seller s" +
+                " where p.id = :id", Post.class)
+                .setParameter("id", id)
                 .getResultStream()
                 .findAny();
     }
@@ -54,8 +56,8 @@ public class PostJpaRepository {
         return em.createQuery("select p from Post p" +
                         " join fetch p.seller s" +
                         " join fetch p.category c" +
-                        " where p.postStatus in (:statuses)", Post.class)
-                .setParameter("statuses", postStatuses)
+                        " where p.postStatus in (:postStatuses)", Post.class)
+                .setParameter("postStatuses", postStatuses)
                 .getResultList();
     }
 
@@ -86,6 +88,16 @@ public class PostJpaRepository {
                 .getResultList();
     }
 
+    public List<Post> findAllBySellerAndStatuses(Account seller, List<PostStatus> postStatuses) {
+        return em.createQuery("select p from Post p" +
+                " join fetch p.category c" +
+                " where p.seller =: seller" +
+                " and p.postStatus in (:postStatuses)", Post.class)
+                .setParameter("seller", seller)
+                .setParameter("postStatuses", postStatuses)
+                .getResultList();
+    }
+
     public List<Post> findAllByCategoryAndStatus(CategoryTag categoryTag, PostStatus postStatus){
 
         return em.createQuery("select p from Post p" +
@@ -96,13 +108,13 @@ public class PostJpaRepository {
                 .getResultList();
     }
 
-    public List<Post> findAllBySellerAndStatuses(Account seller, List<PostStatus> postStatuses) {
+    public List<Post> findAllByCategoryAndStatuses(CategoryTag categoryTag, List<PostStatus> postStatuses) {
         return em.createQuery("select p from Post p" +
-                " join fetch p.category c" +
-                " where p.seller =: seller" +
-                " and p.postStatus in (:statuses)", Post.class)
-                .setParameter("seller", seller)
-                .setParameter("statuses", postStatuses)
+                " join fetch p.seller s" +
+                " where p.category.categoryTag = :categoryTag" +
+                " and p.postStatus in (:postStatuses)", Post.class)
+                .setParameter("categoryTag", categoryTag)
+                .setParameter("postStatuses", postStatuses)
                 .getResultList();
     }
 }

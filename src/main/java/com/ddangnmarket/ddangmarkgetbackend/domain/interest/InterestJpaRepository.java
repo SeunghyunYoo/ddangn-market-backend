@@ -24,13 +24,13 @@ public class InterestJpaRepository {
         em.remove(interest);
     };
 
-    public List<Interest> findAll(){
-        return em.createQuery("select i from Interest i", Interest.class).getResultList();
-    }
-
     public List<Interest> findAllByAccount(Account account){
         return em.createQuery("select i from Interest i" +
-                " where i.account = :account", Interest.class)
+                " join fetch i.post p" +
+                " join fetch p.seller s" +
+                " join fetch p.category c" +
+                " join fetch i.account a" +
+                " where a = :account", Interest.class)
                 .setParameter("account", account)
                 .getResultList();
     }

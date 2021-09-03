@@ -31,7 +31,4 @@ public class Interest extends BaseEntity{
         return interest;
     }
 
-    public void removeInterest(){
-        this.account = null;
-    }
 }

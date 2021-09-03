@@ -34,4 +34,11 @@ public class InterestService {
         return interestJpaRepository.findAllByAccount(account);
     }
 
+    public void deleteInterest(Account account, Long interestId){
+
+        Interest interest = interestJpaRepository.findByIdAndAccount(interestId, account)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id이거나 해당 사용자의 interest가 아닙니다"));
+
+        interestJpaRepository.delete(interest);
+    }
 }

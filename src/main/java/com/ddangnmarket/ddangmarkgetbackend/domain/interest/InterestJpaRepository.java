@@ -24,6 +24,16 @@ public class InterestJpaRepository {
         em.remove(interest);
     };
 
+    public Optional<Interest> findByIdAndAccount(Long id, Account account){
+        return em.createQuery("select i from Interest i" +
+                " where i.id = :id" +
+                " and i.account = :account", Interest.class)
+                .setParameter("id", id)
+                .setParameter("account", account)
+                .getResultStream()
+                .findAny();
+    }
+
     public List<Interest> findAllByAccount(Account account){
         return em.createQuery("select i from Interest i" +
                 " join fetch i.post p" +

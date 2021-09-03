@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Purchase {
+public class Purchase extends BaseEntity{
 
     @Id @GeneratedValue
     @Column(name = "purchase_id")
@@ -25,13 +25,18 @@ public class Purchase {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    public Purchase (Post post, Account account){
-        this.post = post;
-        this.account = account;
-    }
+    @Enumerated(EnumType.STRING)
+    private PurchaseStatus purchaseStatus;
 
     public static Purchase purchase(Post post, Account account){
+        if (post.getPostStatus().equals(PostStatus.COMPLETE)){
+            throw new IllegalStateException("구매 완료된 상품은 주문할 수 없습니다.");
+        }
+        Purchase purchase = new Purchase();
+        purchase.post = post;
+        purchase.account = account;
+        purchase.purchaseStatus = PurchaseStatus.COMPLETE;
         post.setPostStatus(PostStatus.COMPLETE);
-        return new Purchase(post, account);
+        return purchase;
     }
 }

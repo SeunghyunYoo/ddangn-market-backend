@@ -27,19 +27,24 @@ public class PostJpaRepository {
         return Optional.ofNullable(em.find(Post.class, id));
     }
 
+    public Optional<Post> findByIdWithSeller(Long id){
+        return em.createQuery("select p from Post p" +
+                " join fetch p.seller s", Post.class)
+                .getResultStream()
+                .findAny();
+    }
+
     public List<Post> findAll(){
         return em.createQuery("select p from Post p" +
                         " join fetch p.seller s" +
-                        " join fetch p.postCategory pc" +
-                        " join fetch pc.category c", Post.class)
+                        " join fetch p.category c", Post.class)
                 .getResultList();
     }
 
     public List<Post> findAllByStatus(PostStatus postStatus){
         return em.createQuery("select p from Post p" +
                         " join fetch p.seller s" +
-                        " join fetch p.postCategory pc" +
-                        " join fetch pc.category c" +
+                        " join fetch p.category c" +
                         " where p.postStatus = :status", Post.class)
                 .setParameter("status", postStatus)
                 .getResultList();
@@ -48,8 +53,7 @@ public class PostJpaRepository {
     public List<Post> findAllByStatuses(List<PostStatus> postStatuses){
         return em.createQuery("select p from Post p" +
                         " join fetch p.seller s" +
-                        " join fetch p.postCategory pc" +
-                        " join fetch pc.category c" +
+                        " join fetch p.category c" +
                         " where p.postStatus in (:statuses)", Post.class)
                 .setParameter("statuses", postStatuses)
                 .getResultList();
@@ -57,8 +61,7 @@ public class PostJpaRepository {
 
     public List<Post> findAllBySeller(Account seller){
         return em.createQuery("select p from Post p" +
-                        " join fetch p.postCategory pc" +
-                        " join fetch pc.category c" +
+                        " join fetch p.category c" +
                         " where p.seller = :seller", Post.class)
                 .setParameter("seller", seller)
                 .getResultList();
@@ -66,8 +69,7 @@ public class PostJpaRepository {
 
     public List<Post> findAllBySellerAndStatus(Account seller, PostStatus postStatus){
         return em.createQuery("select p from Post p" +
-                        " join fetch p.postCategory pc" +
-                        " join fetch pc.category c" +
+                        " join fetch p.category c" +
                         " where p.seller = :seller" +
                         " and p.postStatus = :status", Post.class)
                 .setParameter("seller", seller)
@@ -75,21 +77,21 @@ public class PostJpaRepository {
                 .getResultList();
     }
 
-    public List<Post> findAllByCategory(Category category){
+    public List<Post> findAllByCategory(CategoryTag categoryTag){
 
         return em.createQuery("select p from Post p" +
                         " join fetch p.seller s" +
-                " where p.postCategory.category = :category", Post.class)
-                .setParameter("category", category)
+                " where p.category.categoryTag = :categoryTag", Post.class)
+                .setParameter("categoryTag", categoryTag)
                 .getResultList();
     }
 
-    public List<Post> findAllByCategoryAndStatus(Category category, PostStatus postStatus){
+    public List<Post> findAllByCategoryAndStatus(CategoryTag categoryTag, PostStatus postStatus){
 
         return em.createQuery("select p from Post p" +
-                " where p.postCategory.category = :category" +
+                " where p.category.categoryTag = :categoryTag" +
                 " and p.postStatus = :status", Post.class)
-                .setParameter("category", category)
+                .setParameter("categoryTag", categoryTag)
                 .setParameter("status", postStatus)
                 .getResultList();
     }

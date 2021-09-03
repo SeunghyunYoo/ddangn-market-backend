@@ -2,6 +2,8 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.post;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chat.ChatJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.UpdatePostRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ public class PostService {
 
     private final PostJpaRepository postJpaRepository;
     private final CategoryJpaRepository categoryJpaRepository;
+    private final ChatJpaRepository chatJpaRepository;
 
     public Long post(Post post){
         return postJpaRepository.save(post).getId();
@@ -23,7 +26,8 @@ public class PostService {
     public Long post(String title, String desc, int price, CategoryTag categoryTag, Account account) {
         Category category = categoryJpaRepository.findByCategoryTag(categoryTag);
 
-        Post post = Post.createPost(title, desc, price, new PostCategory(category), account);
+//        Post post = Post.createPost(title, desc, price, new PostCategory(category), account);
+        Post post = Post.createPost(title, desc, price, category, account);
         return postJpaRepository.save(post).getId();
     }
 
@@ -41,25 +45,23 @@ public class PostService {
 
     public List<Post> findPostAllBySeller(Account account){
         return postJpaRepository.findAllBySeller(account);
-    };
+    }
 
     public List<Post> findPostAllBySellerAndStatus(Account account, PostStatus postStatus){
         return postJpaRepository.findAllBySellerAndStatus(account, postStatus);
     }
 
     public List<Post> findPostAllByCategory(CategoryTag categoryTag){
-        Category category = categoryJpaRepository.findByCategoryTag(categoryTag);
-        return postJpaRepository.findAllByCategory(category);
+        return postJpaRepository.findAllByCategory(categoryTag);
     }
 
     public List<Post> findAllByCategoryAndStatus(CategoryTag categoryTag, PostStatus postStatus){
-        Category category = categoryJpaRepository.findByCategoryTag(categoryTag);
-        return postJpaRepository.findAllByCategoryAndStatus(category, postStatus);
+        return postJpaRepository.findAllByCategoryAndStatus(categoryTag, postStatus);
     }
 
     public Post findById(Long postId){
-        return postJpaRepository.findById(postId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 상품입니다."));
+        return postJpaRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
 
     public void deleteById(Long postId){
@@ -67,4 +69,34 @@ public class PostService {
         postJpaRepository.delete(post);
     }
 
+    public Long updatePost(Long postId, UpdatePostRequestDto updatePostRequestDto){
+        Post post = findById(postId);
+        Category category = categoryJpaRepository.findByCategoryTag(
+                updatePostRequestDto.getCategoryTag());
+
+//        post.updatePost(
+//                updatePostRequestDto.getTitle(),
+//                updatePostRequestDto.getDesc(),
+//                updatePostRequestDto.getPrice(),
+//
+//        );
+        return 0L;
+    }
+
+    public void changeReserve(Long postId, Long chatId) {
+        Post post = postJpaRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+
+        Chat chat = chatJpaRepository.findById(chatId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅입니다."));
+
+        post.changeReserve(chat);
+    }
+
+    public void cancelReserve(Long postId){
+        Post post = postJpaRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+
+        post.cancelReserve();
+    }
 }

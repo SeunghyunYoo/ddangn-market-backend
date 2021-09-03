@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ValidationException;
 import java.util.List;
 
 @Slf4j
@@ -47,7 +48,7 @@ public class ExControllerAdvice {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<ErrorResult> validationExHandler(MethodArgumentNotValidException e) throws JsonProcessingException {
+    public ResponseEntity<ErrorResult> methodArgumentNotExHandler(MethodArgumentNotValidException e) throws JsonProcessingException {
         BindingResult bindingResult = e.getBindingResult();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
 
@@ -66,6 +67,20 @@ public class ExControllerAdvice {
                 HttpStatus.BAD_REQUEST.value(), errorMessage);
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({ValidationException.class})
+    public ResponseEntity<ErrorResult> validationExHandler(ValidationException e){
+        if(e.getCause() instanceof NullPointerException){
+            ErrorResult errorResult = new ErrorResult(
+                    HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value()
+                    , "모든 요청 필드값을 넣어주세요");
+            return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
+        }
+        String message = e.getMessage();
+        ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value(), message);
+        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler

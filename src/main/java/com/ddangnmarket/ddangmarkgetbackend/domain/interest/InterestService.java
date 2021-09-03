@@ -23,8 +23,8 @@ public class InterestService {
         Account account = accountJpaRepository.findById(accountId).orElseThrow(() ->
                 new IllegalStateException("존재하지 않는 회원입니다."));
 
-        Post post = postJpaRepository.findById(postId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 상품입니다."));
+        Post post = postJpaRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 
         Interest interest = new Interest(post, account);
         interestJpaRepository.save(interest);

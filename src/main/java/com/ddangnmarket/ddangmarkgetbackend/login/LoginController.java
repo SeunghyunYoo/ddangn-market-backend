@@ -1,5 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.login;
 
+import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.login.dto.LoginRequestDto;
@@ -29,7 +30,7 @@ public class LoginController {
     private final LoginService loginService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(
+    public ResponseEntity<ResponseOKDto<String>> login(
             @RequestBody LoginRequestDto loginRequestDto, BindingResult bindingResult,
             HttpServletRequest request, HttpServletResponse response){
 
@@ -46,16 +47,16 @@ public class LoginController {
         );
         log.info(session.getId());
 
-        return new ResponseEntity<>(new LoginResponseDto("로그인되었습니다."), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>("로그인되었습니다."), HttpStatus.OK);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<LogoutResponseDto> logout(@ApiIgnore HttpServletRequest request){
+    public ResponseEntity<ResponseOKDto<String>> logout(@ApiIgnore HttpServletRequest request){
         HttpSession session = request.getSession(false);
         if (session != null){
             session.invalidate();
         }
-        return new ResponseEntity<>(new LogoutResponseDto("로그아웃 되었습니다."), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>("로그아웃 되었습니다."), HttpStatus.OK);
     }
 
 //    @GetMapping("/sessionInfo")

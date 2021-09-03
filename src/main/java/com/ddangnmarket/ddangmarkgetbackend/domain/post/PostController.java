@@ -1,11 +1,9 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.post;
 
+import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetAllPostResponseDto;
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetPostResponseDto;
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.PostRequestDto;
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.PostResponseDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.*;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -47,24 +45,52 @@ public class PostController {
 //        return new PostResponseDto(postId);
 
 //    }
-    @PostMapping("/new")
-    public ResponseEntity<PostResponseDto> post(@RequestBody PostRequestDto postRequestDto, @ApiIgnore HttpSession session){
+    @PostMapping
+    public ResponseEntity<ResponseOKDto<PostResponseDto>> post(@RequestBody PostRequestDto postRequestDto, @ApiIgnore HttpSession session){
 
         Account account = getSessionCheckedAccount(session);
 
         Long postId = postService.post(postRequestDto.getTitle(), postRequestDto.getDesc(),
                 postRequestDto.getPrice(), postRequestDto.getCategoryTag(), account);
 
-        return new ResponseEntity<>(new PostResponseDto(postId), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(new PostResponseDto(postId)), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<GetPostResponseDto> getPost(@PathVariable Long postId, @ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseOKDto<GetPostResponseDto>> getPost(@PathVariable Long postId, @ApiIgnore HttpSession session){
         getSessionCheckedAccount(session);
 
         Post post = postService.findById(postId);
 
-        return new ResponseEntity<>(new GetPostResponseDto(post), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(new GetPostResponseDto(post)), HttpStatus.OK);
+    }
+
+    @PutMapping("/{postId}/reserve/{chatId}")
+    public ResponseEntity<ResponseOKDto<String>> reservePost(@PathVariable Long postId, @PathVariable Long chatId,
+                            @ApiIgnore HttpSession session){
+        Account seller = getSessionCheckedAccount(session);
+
+        validateIsSellerPost(postId, seller);
+
+        postService.changeReserve(postId, chatId);
+        return new ResponseEntity<>(new ResponseOKDto<>(""), HttpStatus.OK);
+    }
+
+    @PutMapping("/{postId}/reserve/cancel")
+    public ResponseEntity<ResponseOKDto<String>> cancelReservePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
+        Account seller = getSessionCheckedAccount(session);
+
+        validateIsSellerPost(postId, seller);
+
+        postService.cancelReserve(postId);
+        return new ResponseEntity<>(new ResponseOKDto<>(""), HttpStatus.OK);
+    }
+
+    private void validateIsSellerPost(Long postId, Account seller) {
+        seller.getPosts().stream()
+                .filter(post-> post.getId().equals(postId))
+                .findAny().orElseThrow(()->
+                        new IllegalArgumentException("해당 사용자의 게시글이 아닙니다."));
     }
 
 //    @GetMapping
@@ -83,7 +109,7 @@ public class PostController {
             @ApiImplicitParam(name = "status", value = "complete", required = false ,dataTypeClass = String.class, paramType = "query")
     })
     @GetMapping
-    public ResponseEntity<GetAllPostResponseDto> getAllPost(
+    public ResponseEntity<ResponseOKDto<GetAllPostResponseDto>> getAllPost(
             @ApiIgnore @RequestParam(required = false) @Nullable MultiValueMap<String, String> statuses,
             @ApiIgnore HttpSession session){
 
@@ -91,7 +117,7 @@ public class PostController {
 
         if (statuses.size() == 0){
             List<Post> posts = postService.findAll();
-            return new ResponseEntity<>(new GetAllPostResponseDto(posts), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
         }
 
         statusRequestParamKeyAndValueValidation(statuses);
@@ -102,12 +128,12 @@ public class PostController {
                 .collect(toList());
 
         List<Post> posts = postService.findAllByStatuses(postStatuses);
-        return new ResponseEntity<>(new GetAllPostResponseDto(posts), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
 
     }
 
     @GetMapping("/seller")
-    public ResponseEntity<GetAllPostResponseDto> getAllPostBySeller(
+    public ResponseEntity<ResponseOKDto<GetAllPostResponseDto>> getAllPostBySeller(
             @RequestParam(required = false) @Nullable String status,
             @ApiIgnore HttpSession session) {
 
@@ -115,18 +141,18 @@ public class PostController {
 
         if (status == null){
             List<Post> posts = postService.findPostAllBySeller(account);
-            return new ResponseEntity<>(new GetAllPostResponseDto(posts), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
         }
 
         statusRequestParamValueValidation(status);
 
         List<Post> posts = postService.findPostAllBySellerAndStatus(account,
                 PostStatus.valueOf(status.toUpperCase()));
-        return new ResponseEntity<>(new GetAllPostResponseDto(posts), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
     }
 
     @GetMapping("/category")
-    public ResponseEntity<GetAllPostResponseDto> getAllPostByCategory(
+    public ResponseEntity<ResponseOKDto<GetAllPostResponseDto>> getAllPostByCategory(
             @RequestParam(name = "category") String categoryTag,
             @RequestParam(name = "status", required = false) @Nullable String status,
             @ApiIgnore HttpSession session){
@@ -136,22 +162,22 @@ public class PostController {
             // 예외 메세지 처리 필요
             // IllegalArgumentException
             List<Post> posts = postService.findPostAllByCategory(CategoryTag.valueOf(categoryTag.toUpperCase()));
-            return new ResponseEntity<>(new GetAllPostResponseDto(posts), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
         }
         statusRequestParamValueValidation(status);
         List<Post> posts = postService.findAllByCategoryAndStatus(
                 CategoryTag.valueOf(categoryTag.toUpperCase()),
                 PostStatus.valueOf(status.toUpperCase()));
 
-        return new ResponseEntity<>(new GetAllPostResponseDto(posts), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<String> deletePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseOKDto<String>> deletePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
         getSessionCheckedAccount(session);
 
         postService.deleteById(postId);
-        return new ResponseEntity<>("게시글이 삭제되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>("게시글이 삭제되었습니다."), HttpStatus.OK);
     }
 
     private Account getSessionCheckedAccount(HttpSession session) {

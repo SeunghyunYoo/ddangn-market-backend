@@ -1,5 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.account;
 
+import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseDto;
+import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.*;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
@@ -24,8 +26,8 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @PostMapping("/new")
-    public ResponseEntity<SignUpResponseDto> signUp(
+    @PostMapping
+    public ResponseEntity<ResponseOKDto<SignUpResponseDto>> signUp(
             @Validated @RequestBody SignUpRequestDto signUpRequestDto,
             HttpServletRequest request, HttpServletResponse response){
 
@@ -42,11 +44,11 @@ public class AccountController {
                 result.getPhone(),
                 result.getMail());
 
-        return new ResponseEntity<>(signUpResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(signUpResponseDto), HttpStatus.OK);
     }
 
     @DeleteMapping
-    public ResponseEntity<DeleteAccountResponseDto> deleteAccount(
+    public ResponseEntity<ResponseOKDto<DeleteAccountResponseDto>> deleteAccount(
             @RequestBody DeleteAccountRequestDto deleteAccountRequestDto,
             HttpServletRequest request, HttpServletResponse response){
 
@@ -57,33 +59,33 @@ public class AccountController {
             session.invalidate();
         }
 
-        return new ResponseEntity<>(new DeleteAccountResponseDto("삭제 되었습니다."), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(new DeleteAccountResponseDto("삭제 되었습니다.")), HttpStatus.OK);
     }
 
     @GetMapping("/info")
-    public ResponseEntity<GetAccountInfoResponseDto> getAccountInfo(@ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseOKDto<GetAccountInfoResponseDto>> getAccountInfo(@ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
-        return new ResponseEntity<>(
-                new GetAccountInfoResponseDto(account.getMail(), account.getNickname(), account.getPhone()),
+        return new ResponseEntity<>(new ResponseOKDto<>(
+                new GetAccountInfoResponseDto(account.getMail(), account.getNickname(), account.getPhone())),
                 HttpStatus.OK);
     }
 
     @PutMapping("/info")
-    public ResponseEntity<UpdateAccountInfoResponseDto> updateAccountInfo(
+    public ResponseEntity<ResponseOKDto<UpdateAccountInfoResponseDto>> updateAccountInfo(
             @Validated @RequestBody UpdateAccountInfoRequestDto updateAccountInfoRequestDto,
             @ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
         accountService.updateAccountInfo(account, updateAccountInfoRequestDto);
-        return new ResponseEntity<>(new UpdateAccountInfoResponseDto("수정되었습니다."), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(new UpdateAccountInfoResponseDto("수정되었습니다.")), HttpStatus.OK);
     }
 
     @PutMapping("/password")
-    public ResponseEntity<ChangeAccountPasswordResponseDto> changePassword(
+    public ResponseEntity<ResponseOKDto<ChangeAccountPasswordResponseDto>> changePassword(
             @Validated @RequestBody ChangeAccountPasswordRequestDto changeAccountPasswordRequestDto,
             @ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
         accountService.changePassword(account, changeAccountPasswordRequestDto);
-        return new ResponseEntity<>(new ChangeAccountPasswordResponseDto("수정되었습니다."), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(new ChangeAccountPasswordResponseDto("수정되었습니다.")), HttpStatus.OK);
     }
 
     private Account getSessionCheckedAccount(HttpSession session) {

@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Account {
+public class Account extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "account_id")
     private Long id;
@@ -30,10 +30,6 @@ public class Account {
         this.mail = mail;
         this.password = password;
     }
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "seller")
     private List<Post> posts = new ArrayList<>();

@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Interest {
+public class Interest extends BaseEntity{
 
     @Id @GeneratedValue
     @Column(name = "interest_post_id")

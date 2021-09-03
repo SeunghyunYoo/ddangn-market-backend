@@ -5,6 +5,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,24 +46,23 @@ class PostJpaRepositoryTest {
         Category digital = categoryJpaRepository.findByCategoryTag(DIGITAL);
         Category book = categoryJpaRepository.findByCategoryTag(BOOK);
 
-        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, new PostCategory(digital), account1);
+        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, digital, account1);
         postJpaRepository.save(post1);
-        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, new PostCategory(book), account1);
+        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, book, account1);
         postJpaRepository.save(post2);
 
         em.flush();
         em.clear();
 
         // 1. 등록
-        Optional<Post> byId = postJpaRepository.findById(post1.getId());
-        assertThat(byId.isPresent()).isTrue();
-        assertThat(byId.get().getTitle()).isEqualTo(post1.getTitle());
-        assertThat(byId.get().getSeller().getNickname()).isEqualTo(account1.getNickname());
-        assertThat(byId.get().getPostCategory().getCategory().getCategoryTag()).isEqualTo(DIGITAL);
+        Post byId = postJpaRepository.findById(post1.getId()).orElseThrow();
+        assertThat(byId.getTitle()).isEqualTo(post1.getTitle());
+        assertThat(byId.getSeller().getNickname()).isEqualTo(account1.getNickname());
+        assertThat(byId.getCategory().getCategoryTag()).isEqualTo(DIGITAL);
 
         // 2. 삭제
-        postJpaRepository.delete(byId.get());
-        assertThat(postJpaRepository.findById(post1.getId()).isEmpty()).isTrue();
+        postJpaRepository.delete(byId);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> postJpaRepository.findById(post1.getId()));
     }
 
     @Test
@@ -73,9 +73,9 @@ class PostJpaRepositoryTest {
         Category digital = categoryJpaRepository.findByCategoryTag(DIGITAL);
         Category book = categoryJpaRepository.findByCategoryTag(BOOK);
 
-        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, new PostCategory(digital), account1);
+        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, digital, account1);
         postJpaRepository.save(post1);
-        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, new PostCategory(book), account1);
+        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, book, account1);
         postJpaRepository.save(post2);
 
         em.flush();
@@ -93,9 +93,9 @@ class PostJpaRepositoryTest {
 //        Category digital = categoryJpaRepository.findByCategoryTag(DIGITAL);
 //        Category book = categoryJpaRepository.findByCategoryTag(BOOK);
 //
-//        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, new PostCategory(digital), account1);
+//        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, digital, account1);
 //        postJpaRepository.save(post1);
-//        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, new PostCategory(book), account1);
+//        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, book, account1);
 //        postJpaRepository.save(post2);
 //
 //        em.flush();
@@ -115,9 +115,9 @@ class PostJpaRepositoryTest {
         Category digital = categoryJpaRepository.findByCategoryTag(DIGITAL);
         Category book = categoryJpaRepository.findByCategoryTag(BOOK);
 
-        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, new PostCategory(digital), account1);
+        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, digital, account1);
         postJpaRepository.save(post1);
-        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, new PostCategory(book), account1);
+        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, book, account1);
         postJpaRepository.save(post2);
 
         em.flush();
@@ -136,11 +136,11 @@ class PostJpaRepositoryTest {
         Category digital = categoryJpaRepository.findByCategoryTag(DIGITAL);
         Category book = categoryJpaRepository.findByCategoryTag(BOOK);
 
-        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, new PostCategory(digital), account1);
+        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, digital, account1);
         postJpaRepository.save(post1);
-        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, new PostCategory(book), account1);
+        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, book, account1);
         postJpaRepository.save(post2);
-        Post post3 = Post.createPost("JPA 책 판매", "스프링 책 팔아요", 10000, new PostCategory(book), account1);
+        Post post3 = Post.createPost("JPA 책 판매", "스프링 책 팔아요", 10000, book, account1);
         postJpaRepository.save(post3);
 
         post1.setPostStatus(RESERVE);
@@ -162,11 +162,11 @@ class PostJpaRepositoryTest {
         Category digital = categoryJpaRepository.findByCategoryTag(DIGITAL);
         Category book = categoryJpaRepository.findByCategoryTag(BOOK);
 
-        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, new PostCategory(digital), account1);
+        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, digital, account1);
         postJpaRepository.save(post1);
-        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, new PostCategory(book), account1);
+        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, book, account1);
         postJpaRepository.save(post2);
-        Post post3 = Post.createPost("JPA 책 판매", "스프링 책 팔아요", 10000, new PostCategory(book), account1);
+        Post post3 = Post.createPost("JPA 책 판매", "스프링 책 팔아요", 10000, book, account1);
         postJpaRepository.save(post3);
 
         post1.setPostStatus(RESERVE);
@@ -190,11 +190,11 @@ class PostJpaRepositoryTest {
         Category digital = categoryJpaRepository.findByCategoryTag(DIGITAL);
         Category book = categoryJpaRepository.findByCategoryTag(BOOK);
 
-        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, new PostCategory(digital), account1);
+        Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, digital, account1);
         postJpaRepository.save(post1);
-        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, new PostCategory(book), account1);
+        Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, book, account1);
         postJpaRepository.save(post2);
-        Post post3 = Post.createPost("JPA 책 판매", "스프링 책 팔아요", 10000, new PostCategory(book), account1);
+        Post post3 = Post.createPost("JPA 책 판매", "스프링 책 팔아요", 10000, book, account1);
         postJpaRepository.save(post3);
 
         post1.setPostStatus(RESERVE);
@@ -208,18 +208,4 @@ class PostJpaRepositoryTest {
         assertThat(postJpaRepository.findAllBySellerAndStatus(account1, COMPLETE).size()).isEqualTo(1);
     }
 
-    @Test
-    void test(){
-
-        List<PostStatus> aNew = List.of(NEW, RESERVE);
-        List<Post> statuses = em.createQuery("select p from Post p" +
-                        " join fetch p.seller s" +
-                        " join fetch p.postCategory pc" +
-                        " join fetch pc.category c" +
-                        " where p.postStatus in (:statuses)", Post.class)
-                .setParameter("statuses", aNew)
-                .getResultList();
-
-        System.out.println("statuses = " + statuses.size());
-    }
 }

@@ -24,7 +24,7 @@ public class AccountService {
         validateDuplicateEmailAccount(account);
         validateDuplicateNicknameAccount(account.getNickname());
 
-        account.setCreatedAt(LocalDateTime.now());
+//        account.setCreatedAt(LocalDateTime.now());
 
         return accountJpaRepository.save(account);
     }
@@ -49,7 +49,9 @@ public class AccountService {
             account.changePhone(updateAccountInfoRequestDto.getPhone());
         }
         if(updateAccountInfoRequestDto.getNickname() != null){
-            validateDuplicateNicknameAccount(updateAccountInfoRequestDto.getNickname());
+            if (!account.getNickname().equals(updateAccountInfoRequestDto.getNickname())) {
+                validateDuplicateNicknameAccount(updateAccountInfoRequestDto.getNickname());
+            }
             account.changeNickname(updateAccountInfoRequestDto.getNickname());
         }
     }

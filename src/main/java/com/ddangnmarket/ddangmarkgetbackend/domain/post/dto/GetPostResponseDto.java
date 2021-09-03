@@ -29,6 +29,6 @@ public class GetPostResponseDto {
         this.price = post.getPrice();
         this.status = post.getPostStatus();
         this.sellerNickname = post.getSeller().getNickname();
-        this.categoryTag = post.getPostCategory().getCategory().getCategoryTag();
+        this.categoryTag = post.getCategory().getCategoryTag();
     }
 }

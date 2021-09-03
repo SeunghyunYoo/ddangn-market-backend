@@ -51,6 +51,10 @@ public class PostService {
         return postJpaRepository.findAllBySellerAndStatus(account, postStatus);
     }
 
+    public List<Post> findPostAllBySellerAndStatuses(Account account, List<PostStatus> postStatuses){
+        return postJpaRepository.findAllBySellerAndStatuses(account, postStatuses);
+    }
+
     public List<Post> findPostAllByCategory(CategoryTag categoryTag){
         return postJpaRepository.findAllByCategory(categoryTag);
     }
@@ -59,33 +63,26 @@ public class PostService {
         return postJpaRepository.findAllByCategoryAndStatus(categoryTag, postStatus);
     }
 
-    public Post findById(Long postId){
-        return postJpaRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
-    }
-
     public void deleteById(Long postId){
         Post post = findById(postId);
         postJpaRepository.delete(post);
     }
 
-    public Long updatePost(Long postId, UpdatePostRequestDto updatePostRequestDto){
+    public void updatePost(Long postId, UpdatePostRequestDto updatePostRequestDto){
         Post post = findById(postId);
         Category category = categoryJpaRepository.findByCategoryTag(
                 updatePostRequestDto.getCategoryTag());
 
-//        post.updatePost(
-//                updatePostRequestDto.getTitle(),
-//                updatePostRequestDto.getDesc(),
-//                updatePostRequestDto.getPrice(),
-//
-//        );
-        return 0L;
+        post.updatePost(
+                updatePostRequestDto.getTitle(),
+                updatePostRequestDto.getDesc(),
+                updatePostRequestDto.getPrice(),
+                category
+        );
     }
 
     public void changeReserve(Long postId, Long chatId) {
-        Post post = postJpaRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+        Post post = findById(postId);
 
         Chat chat = chatJpaRepository.findById(chatId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅입니다."));
@@ -94,9 +91,13 @@ public class PostService {
     }
 
     public void cancelReserve(Long postId){
-        Post post = postJpaRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+        Post post = findById(postId);
 
         post.cancelReserve();
+    }
+
+    public Post findById(Long postId){
+        return postJpaRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
 }

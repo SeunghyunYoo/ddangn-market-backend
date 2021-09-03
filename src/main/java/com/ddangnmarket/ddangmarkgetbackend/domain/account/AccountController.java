@@ -26,7 +26,7 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @PostMapping
+    @PostMapping("/new")
     public ResponseEntity<ResponseOKDto<SignUpResponseDto>> signUp(
             @Validated @RequestBody SignUpRequestDto signUpRequestDto,
             HttpServletRequest request, HttpServletResponse response){

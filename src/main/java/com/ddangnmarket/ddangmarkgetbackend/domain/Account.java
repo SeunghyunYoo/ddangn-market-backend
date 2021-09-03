@@ -52,4 +52,9 @@ public class Account extends BaseEntity{
         this.nickname = nickname;
     }
 
+    public void changeAccountInfo(String nickname, String phone){
+        this.nickname = nickname;
+        this.phone = phone;
+    }
+
 }

@@ -95,4 +95,14 @@ public class PostJpaRepository {
                 .setParameter("status", postStatus)
                 .getResultList();
     }
+
+    public List<Post> findAllBySellerAndStatuses(Account seller, List<PostStatus> postStatuses) {
+        return em.createQuery("select p from Post p" +
+                " join fetch p.category c" +
+                " where p.seller =: seller" +
+                " and p.postStatus in (:statuses)", Post.class)
+                .setParameter("seller", seller)
+                .setParameter("statuses", postStatuses)
+                .getResultList();
+    }
 }

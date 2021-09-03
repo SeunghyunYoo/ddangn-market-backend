@@ -45,15 +45,15 @@ public class AccountService {
     }
 
     public void updateAccountInfo(Account account, UpdateAccountInfoRequestDto updateAccountInfoRequestDto) {
-        if(updateAccountInfoRequestDto.getPhone() != null){
-            account.changePhone(updateAccountInfoRequestDto.getPhone());
+
+        if (!account.getNickname().equals(updateAccountInfoRequestDto.getNickname())) {
+            validateDuplicateNicknameAccount(updateAccountInfoRequestDto.getNickname());
         }
-        if(updateAccountInfoRequestDto.getNickname() != null){
-            if (!account.getNickname().equals(updateAccountInfoRequestDto.getNickname())) {
-                validateDuplicateNicknameAccount(updateAccountInfoRequestDto.getNickname());
-            }
-            account.changeNickname(updateAccountInfoRequestDto.getNickname());
-        }
+
+        account.changeAccountInfo(
+                updateAccountInfoRequestDto.getNickname(),
+                updateAccountInfoRequestDto.getPhone()
+        );
     }
 
     public void changePassword(Account account, ChangeAccountPasswordRequestDto changeAccountPasswordRequestDto){

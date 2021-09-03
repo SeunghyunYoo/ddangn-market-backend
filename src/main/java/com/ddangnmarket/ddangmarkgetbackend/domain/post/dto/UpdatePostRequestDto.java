@@ -15,10 +15,13 @@ import javax.validation.constraints.NotEmpty;
 public class UpdatePostRequestDto {
     @NotEmpty
     private String title;
+
     @NotEmpty
     private String desc;
+
     @Min(value = 100)
     private int price;
 
+    @NotEmpty
     private CategoryTag categoryTag;
 }

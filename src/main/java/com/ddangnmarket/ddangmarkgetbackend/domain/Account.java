@@ -5,7 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -24,6 +26,9 @@ public class Account extends BaseEntity{
 
     private String password;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ActivityArea> activityAreas = new HashSet<>();
+
     public Account(String nickname, String phone, String mail, String password){
         this.nickname = nickname;
         this.phone = phone;
@@ -31,7 +36,7 @@ public class Account extends BaseEntity{
         this.password = password;
     }
 
-    @OneToMany(mappedBy = "seller")
+    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
 
     //== 연관관계 메서드 ==/
@@ -44,17 +49,23 @@ public class Account extends BaseEntity{
         this.password = password;
     }
 
-    public void changePhone(String phone){
-        this.phone = phone;
-    }
-
-    public void changeNickname(String nickname){
-        this.nickname = nickname;
-    }
-
     public void changeAccountInfo(String nickname, String phone){
         this.nickname = nickname;
         this.phone = phone;
+    }
+
+    public void addActivityArea(ActivityArea activityArea){
+        activityAreas.add(activityArea);
+        activityArea.updateAccount(this);
+    }
+
+    public void removeActivityArea(ActivityArea activityArea){
+        activityAreas.stream()
+                .filter(activityArea::equals)
+                .findFirst()
+                .ifPresent((area) -> {
+                    activityAreas.remove(area);
+                });
     }
 
 }

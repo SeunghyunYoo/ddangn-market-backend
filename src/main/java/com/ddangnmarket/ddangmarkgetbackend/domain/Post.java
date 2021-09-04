@@ -40,6 +40,7 @@ public class Post extends BaseEntity{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
     private List<Chat> chats = new ArrayList<>();
 
+
     // == 생성 메서드 == //
     public static Post createPost(String title, String desc, int price, Category category, Account seller){
         Post post = new Post();

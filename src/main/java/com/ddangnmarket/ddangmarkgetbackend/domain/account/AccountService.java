@@ -1,11 +1,15 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.account;
 
 
+import com.ddangnmarket.ddangmarkgetbackend.domain.ActivityArea;
+import com.ddangnmarket.ddangmarkgetbackend.domain.District;
+import com.ddangnmarket.ddangmarkgetbackend.domain.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.UpdateAccountInfoRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.ChangeAccountPasswordRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.DuplicateEmailException;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.DuplicateNicknameException;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +23,7 @@ public class AccountService {
 
     private final AccountJpaRepository accountJpaRepository;
     private final AccountRepository accountRepository;
+    private final DistrictJpaRepository districtJpaRepository;
 
     public Account signUp(Account account){
         validateDuplicateEmailAccount(account);
@@ -32,6 +37,11 @@ public class AccountService {
     public Account findAccount(Long accountId){
         return accountJpaRepository.findById(accountId).orElseThrow(() ->
                 new IllegalStateException("존재하지 않는 회원입니다."));
+    }
+
+    public Account findAccountWithActivityArea(Long accountId){
+        return accountJpaRepository.findByIdWithActivityArea(accountId)
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 회원입니다."));
     }
 
     public void delete(String mail, String password) {
@@ -61,6 +71,19 @@ public class AccountService {
             throw new IllegalArgumentException("같은 비밀번호로 변경 불가능합니다");
         }
         account.changePassword(changeAccountPasswordRequestDto.getPassword());
+    }
+
+    public void addActivityArea(Account account, Dong dong){
+        District district = districtJpaRepository.findByDong(dong);
+        ActivityArea activeArea = ActivityArea.createActiveArea(district);
+
+        account.addActivityArea(activeArea);
+    }
+
+    public void removeActivityArea(Account account, Dong dong){
+        District district = districtJpaRepository.findByDong(dong);
+        ActivityArea activeArea = ActivityArea.createActiveArea(district);
+        account.removeActivityArea(activeArea);
     }
 
     private void validateDuplicateEmailAccount(Account account) {

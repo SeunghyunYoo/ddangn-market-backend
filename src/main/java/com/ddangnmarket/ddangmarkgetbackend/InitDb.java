@@ -19,6 +19,7 @@ public class InitDb {
     @PostConstruct
     public void init(){
         initService.initCategory();
+        initService.initDistrict();
         initService.initAccountPost();
         initService.initAccount();
     }
@@ -33,6 +34,12 @@ public class InitDb {
         public void initCategory(){
             for(CategoryTag categoryTag : CategoryTag.values()){
                  em.persist(new Category(categoryTag));
+            }
+        }
+
+        public void initDistrict(){
+            for (Dong dong : Dong.values()){
+                em.persist(new District(dong));
             }
         }
 

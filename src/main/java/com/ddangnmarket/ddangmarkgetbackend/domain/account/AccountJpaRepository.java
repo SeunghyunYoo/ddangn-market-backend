@@ -33,6 +33,14 @@ public class AccountJpaRepository {
         return Optional.ofNullable(account);
     }
 
+    public Optional<Account> findByIdWithActivityArea(Long id){
+        return em.createQuery("select a from Account a" +
+                " join fetch a.activityAreas ar" +
+                " join fetch ar.district", Account.class)
+                .getResultStream()
+                .findAny();
+    }
+
     public Optional<Account> findByMail(String mail){
         return em.createQuery("select a from Account a" +
                 " where a.mail = :mail", Account.class)

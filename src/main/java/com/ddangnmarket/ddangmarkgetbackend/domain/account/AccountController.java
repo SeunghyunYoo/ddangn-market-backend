@@ -1,10 +1,13 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.account;
 
-import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
+import com.ddangnmarket.ddangmarkgetbackend.domain.ActivityArea;
+import com.ddangnmarket.ddangmarkgetbackend.domain.District;
+import com.ddangnmarket.ddangmarkgetbackend.domain.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.*;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -64,10 +68,11 @@ public class AccountController {
 
     @GetMapping("/info")
     public ResponseEntity<ResponseOKDto<GetAccountInfoResponseDto>> getAccountInfo(@ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = getSessionCheckedAccountWithArea(session);
+        // TODO Account2Area fetch join 고민 필요
+
         return new ResponseEntity<>(new ResponseOKDto<>(
-                new GetAccountInfoResponseDto(account.getMail(), account.getNickname(), account.getPhone())),
-                HttpStatus.OK);
+                new GetAccountInfoResponseDto(account)),HttpStatus.OK);
     }
 
     @PutMapping("/info")
@@ -88,11 +93,34 @@ public class AccountController {
         return new ResponseEntity<>(new ResponseOKDto<>(new ChangeAccountPasswordResponseDto("수정되었습니다.")), HttpStatus.OK);
     }
 
+    @PostMapping("/activity-area")
+    public ResponseEntity<ResponseOKDto<String>> addActivityArea(
+            @RequestBody ActivityAreaRequestDto activityAreaRequestDto,
+            @ApiIgnore HttpSession session){
+        Account account = getSessionCheckedAccount(session);
+        accountService.addActivityArea(account, Dong.fromString(activityAreaRequestDto.getDong()));
+
+        return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/activity-area")
+    public ResponseEntity<ResponseOKDto<String>> removeActivityArea(
+            @RequestBody ActivityAreaRequestDto activityAreaRequestDto,
+            @ApiIgnore HttpSession session){
+        Account account = getSessionCheckedAccount(session);
+        accountService.removeActivityArea(account, Dong.fromString(activityAreaRequestDto.getDong()));
+
+        return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
+    }
+
     private Account getSessionCheckedAccount(HttpSession session) {
         Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-
         return accountService.findAccount(accountId);
     }
 
+    private Account getSessionCheckedAccountWithArea(HttpSession session) {
+        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
+        return accountService.findAccountWithActivityArea(accountId);
+    }
 
 }

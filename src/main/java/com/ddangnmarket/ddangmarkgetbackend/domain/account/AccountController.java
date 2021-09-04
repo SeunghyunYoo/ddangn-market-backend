@@ -6,6 +6,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.ActivityArea;
 import com.ddangnmarket.ddangmarkgetbackend.domain.District;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.*;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictService;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 public class AccountController {
 
     private final AccountService accountService;
+    private final DistrictService districtService;
 
     @PostMapping("/new")
     public ResponseEntity<ResponseOKDto<SignUpResponseDto>> signUp(
@@ -41,7 +44,7 @@ public class AccountController {
                 signUpRequestDto.getMail(),
                 signUpRequestDto.getPassword());
 
-        Account result = accountService.signUp(account);
+        Account result = accountService.signUp(account, signUpRequestDto.getDong());
 
         SignUpResponseDto signUpResponseDto = new SignUpResponseDto(
                 result.getNickname(),
@@ -70,9 +73,10 @@ public class AccountController {
     public ResponseEntity<ResponseOKDto<GetAccountInfoResponseDto>> getAccountInfo(@ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccountWithArea(session);
         // TODO Account2Area fetch join 고민 필요
+        List<Dong> activityAreas = districtService.getActivityAreas(account);
 
         return new ResponseEntity<>(new ResponseOKDto<>(
-                new GetAccountInfoResponseDto(account)),HttpStatus.OK);
+                new GetAccountInfoResponseDto(account, activityAreas)),HttpStatus.OK);
     }
 
     @PutMapping("/info")
@@ -95,20 +99,13 @@ public class AccountController {
 
     @PostMapping("/activity-area")
     public ResponseEntity<ResponseOKDto<String>> addActivityArea(
-            @RequestBody ActivityAreaRequestDto activityAreaRequestDto,
+            @Validated @RequestBody ActivityAreaRequestDto activityAreaRequestDto,
             @ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
-        accountService.addActivityArea(account, Dong.fromString(activityAreaRequestDto.getDong()));
+        Account account = getSessionCheckedAccountWithArea(session);
 
-        return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/activity-area")
-    public ResponseEntity<ResponseOKDto<String>> removeActivityArea(
-            @RequestBody ActivityAreaRequestDto activityAreaRequestDto,
-            @ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
-        accountService.removeActivityArea(account, Dong.fromString(activityAreaRequestDto.getDong()));
+        accountService.changeActivityArea(account,
+                Dong.fromString(activityAreaRequestDto.getDong()),
+                activityAreaRequestDto.getRange());
 
         return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
     }

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -15,6 +16,11 @@ public class DistrictJpaRepository {
     public District save(District district){
         em.persist(district);
         return district;
+    }
+
+    public List<District> findAll(){
+        return em.createQuery("select d from District d", District.class)
+                .getResultList();
     }
 
     public District findByDong(Dong dong){

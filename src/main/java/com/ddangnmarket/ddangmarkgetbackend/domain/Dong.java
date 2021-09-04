@@ -3,8 +3,10 @@ package com.ddangnmarket.ddangmarkgetbackend.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum Dong {
-    BUNDANG, SUNAE, JEONGJA, SEOHYEON, IMAE,
-    YATAP, GEUMGOK, GUMI, PANGYO, SAMPYEONG, UNJUNG;
+    BUNDANG, SUNAE1, SUNAE2, SUNAE3, JEONGJA1, JEONGJA2, JEONGJA3,
+    SEOHYEON1, SEOHYEON2, IMAE1, IMAE2,
+    YATAP1, YATAP2, YATAP3, GEUMGOK, GUMI, GUMI1,
+    PANGYO, SAMPYEONG, UNJUNG, BACKHYUN;
 
     @JsonCreator
     public static Dong fromString(String key){

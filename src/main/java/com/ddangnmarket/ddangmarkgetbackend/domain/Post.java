@@ -40,6 +40,9 @@ public class Post extends BaseEntity{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
     private List<Chat> chats = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "district_id")
+    private District district;
 
     // == 생성 메서드 == //
     public static Post createPost(String title, String desc, int price, Category category, Account seller){
@@ -50,6 +53,7 @@ public class Post extends BaseEntity{
         post.category = category;
         post.seller = seller;
         post.postStatus = PostStatus.NEW;
+        post.district = seller.getActivityArea().getDistrict();
         seller.addPost(post);
         return post;
     }
@@ -86,6 +90,10 @@ public class Post extends BaseEntity{
     public void cancelReserve(){
         chats.forEach(Chat::cancelReserve);
         postStatus = PostStatus.NEW;
+    }
+
+    public void changeDistrict(District district){
+        this.district = district;
     }
 
 }

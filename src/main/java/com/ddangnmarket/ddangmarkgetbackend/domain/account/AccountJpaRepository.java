@@ -35,8 +35,10 @@ public class AccountJpaRepository {
 
     public Optional<Account> findByIdWithActivityArea(Long id){
         return em.createQuery("select a from Account a" +
-                " join fetch a.activityAreas ar" +
-                " join fetch ar.district", Account.class)
+                " join fetch a.activityArea ar" +
+                " join fetch ar.district" +
+                " where a.id = :id", Account.class)
+                .setParameter("id", id)
                 .getResultStream()
                 .findAny();
     }

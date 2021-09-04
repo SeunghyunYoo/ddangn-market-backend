@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -25,10 +23,11 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final DistrictJpaRepository districtJpaRepository;
 
-    public Account signUp(Account account){
+    public Account signUp(Account account, Dong dong){
         validateDuplicateEmailAccount(account);
         validateDuplicateNicknameAccount(account.getNickname());
-
+        District district = districtJpaRepository.findByDong(dong);
+        account.changeActivityArea(ActivityArea.createActiveArea(district, 0));
 //        account.setCreatedAt(LocalDateTime.now());
 
         return accountJpaRepository.save(account);
@@ -73,17 +72,9 @@ public class AccountService {
         account.changePassword(changeAccountPasswordRequestDto.getPassword());
     }
 
-    public void addActivityArea(Account account, Dong dong){
+    public void changeActivityArea(Account account, Dong dong, Integer range){
         District district = districtJpaRepository.findByDong(dong);
-        ActivityArea activeArea = ActivityArea.createActiveArea(district);
-
-        account.addActivityArea(activeArea);
-    }
-
-    public void removeActivityArea(Account account, Dong dong){
-        District district = districtJpaRepository.findByDong(dong);
-        ActivityArea activeArea = ActivityArea.createActiveArea(district);
-        account.removeActivityArea(activeArea);
+        account.getActivityArea().changeActiveArea(district, range);
     }
 
     private void validateDuplicateEmailAccount(Account account) {

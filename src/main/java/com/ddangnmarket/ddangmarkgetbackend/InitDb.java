@@ -2,12 +2,15 @@ package com.ddangnmarket.ddangmarkgetbackend;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+
+import static com.ddangnmarket.ddangmarkgetbackend.domain.Dong.*;
 
 @Component
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class InitDb {
     static class InitService{
         private final EntityManager em;
         private final CategoryJpaRepository categoryJpaRepository;
+        private final DistrictJpaRepository districtJpaRepository;
 
         public void initCategory(){
             for(CategoryTag categoryTag : CategoryTag.values()){
@@ -38,19 +42,44 @@ public class InitDb {
         }
 
         public void initDistrict(){
-            for (Dong dong : Dong.values()){
-                em.persist(new District(dong));
-            }
+            em.persist(new District(SAMPYEONG, new Position(-1, 3)));
+            em.persist(new District(PANGYO, new Position(0, 2)));
+            em.persist(new District(BACKHYUN, new Position(-1, 0)));
+            em.persist(new District(UNJUNG, new Position(-3, 1)));
+            em.persist(new District(GUMI1, new Position(-1, -1)));
+            em.persist(new District(GEUMGOK, new Position(-1, 0)));
+            em.persist(new District(JEONGJA1, new Position(0, 0)));
+            em.persist(new District(JEONGJA2, new Position(0, 1)));
+            em.persist(new District(JEONGJA3, new Position(-1, 1)));
+            em.persist(new District(GUMI, new Position(0, -2)));
+            em.persist(new District(SUNAE1, new Position(0, 1)));
+            em.persist(new District(SUNAE2, new Position(1, 0)));
+            em.persist(new District(SUNAE3, new Position(2, 0)));
+            em.persist(new District(SEOHYEON1, new Position(3, 1)));
+            em.persist(new District(SEOHYEON2, new Position(2, 0)));
+            em.persist(new District(BUNDANG, new Position(3, 0)));
+            em.persist(new District(IMAE1, new Position(0, 2)));
+            em.persist(new District(IMAE2, new Position(1, 2)));
+            em.persist(new District(YATAP1, new Position(0, 3)));
+            em.persist(new District(YATAP2, new Position(0, 4)));
+            em.persist(new District(YATAP3, new Position(2, 3)));
         }
 
         public void initAccountPost(){
             Account account1 = new Account("account1", "000-0000-0000", "account1@gmail.com", "00000000");
-            em.persist(account1);
-
             Account account2= new Account("account2", "000-0000-0000", "account2@gmail.com", "00000000");
-            em.persist(account2);
-
             Account account3 = new Account("account3", "000-0000-0000", "account3@gmail.com", "00000000");
+
+            ActivityArea activeArea1 = ActivityArea.createActiveArea(districtJpaRepository.findByDong(Dong.GUMI), 0);
+            ActivityArea activeArea2 = ActivityArea.createActiveArea(districtJpaRepository.findByDong(JEONGJA1), 0);
+            ActivityArea activeArea3 = ActivityArea.createActiveArea(districtJpaRepository.findByDong(Dong.UNJUNG), 0);
+
+            account1.setActivityArea(activeArea1);
+            account2.setActivityArea(activeArea2);
+            account3.setActivityArea(activeArea3);
+
+            em.persist(account1);
+            em.persist(account2);
             em.persist(account3);
 
             Category digital = categoryJpaRepository.findByCategoryTag(CategoryTag.DIGITAL);

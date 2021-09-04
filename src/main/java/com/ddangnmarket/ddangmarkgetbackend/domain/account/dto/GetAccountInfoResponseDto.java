@@ -19,14 +19,11 @@ public class GetAccountInfoResponseDto {
     private String phone;
     private List<Dong> activeAreas;
 
-    public GetAccountInfoResponseDto(Account account){
+    public GetAccountInfoResponseDto(Account account, List<Dong> activeAreas){
         this.mail = account.getMail();
         this.nickname = account.getNickname();
         this.phone = account.getPhone();
-        this.activeAreas = account.getActivityAreas().stream()
-                .map(ActivityArea::getDistrict)
-                .map(District::getDong)
-                .collect(Collectors.toList());
+        this.activeAreas = activeAreas;
     }
 
 }

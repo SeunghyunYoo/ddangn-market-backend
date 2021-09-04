@@ -17,7 +17,14 @@ public class District extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private Dong dong;
 
-    public District(Dong dong){
+    private Position position;
+
+    public District(Dong dong, Position position){
+        this.dong = dong;
+        this.position = position;
+    }
+
+    public void changeDong(Dong dong){
         this.dong = dong;
     }
 }

@@ -3,6 +3,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,14 +12,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 //@EqualsAndHashCode(exclude = {"id", "account"}, callSuper = false)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class ActivityArea extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "activity_area_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "activityArea")
     private Account account;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,10 +26,29 @@ public class ActivityArea extends BaseEntity{
     @EqualsAndHashCode.Include
     private District district;
 
-    public static ActivityArea createActiveArea(District district){
+    @EqualsAndHashCode.Include
+    private Integer range;
+
+    public static ActivityArea createActiveArea(District district, Integer range){
         ActivityArea activityArea = new ActivityArea();
         activityArea.district = district;
+        activityArea.range = range;
+
         return activityArea;
+    }
+
+    public void changeActiveArea(District district, Integer range){
+        this.district = district;
+        this.range = range;
+        account.changeActivityArea(this);
+    }
+
+    public void changeRange(Integer range){
+        if(range < 4){
+            this.range = range;
+        } else{
+            this.range = 3;
+        }
     }
 
     public void updateAccount(Account account){

@@ -26,8 +26,11 @@ public class Account extends BaseEntity{
 
     private String password;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ActivityArea> activityAreas = new HashSet<>();
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "activity_area_id")
+    private ActivityArea activityArea;
+    // TODO 1. Controller test
+    // TODO 2. post에도 저장
 
     public Account(String nickname, String phone, String mail, String password){
         this.nickname = nickname;
@@ -54,18 +57,10 @@ public class Account extends BaseEntity{
         this.phone = phone;
     }
 
-    public void addActivityArea(ActivityArea activityArea){
-        activityAreas.add(activityArea);
+    public void changeActivityArea(ActivityArea activityArea){
+        this.activityArea = activityArea;
         activityArea.updateAccount(this);
+        posts.forEach(post ->
+                post.changeDistrict(activityArea.getDistrict()));
     }
-
-    public void removeActivityArea(ActivityArea activityArea){
-        activityAreas.stream()
-                .filter(activityArea::equals)
-                .findFirst()
-                .ifPresent((area) -> {
-                    activityAreas.remove(area);
-                });
-    }
-
 }

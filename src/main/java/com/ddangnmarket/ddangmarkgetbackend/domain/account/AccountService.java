@@ -14,13 +14,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AccountService {
 
     private final AccountJpaRepository accountJpaRepository;
-    private final AccountRepository accountRepository;
     private final DistrictJpaRepository districtJpaRepository;
 
     public Account signUp(Account account, Dong dong){

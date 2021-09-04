@@ -127,10 +127,10 @@ public class PostController {
             @RequestParam(required = false) @Nullable List<String> status,
             @ApiIgnore HttpSession session){
 
-        getSessionCheckedAccount(session);
+        Account account = getSessionCheckedAccount(session);
 
         if (status == null || status.size() == 0){
-            List<Post> posts = postService.findAll();
+            List<Post> posts = postService.findAll(account);
             return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
         }
 
@@ -138,7 +138,7 @@ public class PostController {
 
         List<PostStatus> postStatuses = convertStringToPostStatus(status);
 
-        List<Post> posts = postService.findAllByStatuses(postStatuses);
+        List<Post> posts = postService.findAllByStatuses(account, postStatuses);
         return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
 
     }
@@ -181,19 +181,19 @@ public class PostController {
             @RequestParam(name = "category") String categoryTag,
             @RequestParam(name = "status", required = false) @Nullable List<String> status,
             @ApiIgnore HttpSession session){
-        getSessionCheckedAccount(session);
+        Account account = getSessionCheckedAccount(session);
 
         if(status == null){
             // 예외 메세지 처리 필요
             // IllegalArgumentException
-            List<Post> posts = postService.findPostAllByCategory(CategoryTag.valueOf(categoryTag.toUpperCase()));
+            List<Post> posts = postService.findPostAllByCategory(account, CategoryTag.valueOf(categoryTag.toUpperCase()));
             return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
         }
         getPostAllParamListValidation(status);
 
         List<PostStatus> postStatuses = convertStringToPostStatus(status);
 
-        List<Post> posts = postService.findAllByCategoryAndStatuses(
+        List<Post> posts = postService.findAllByCategoryAndStatuses(account,
                 CategoryTag.valueOf(categoryTag.toUpperCase()),
                 postStatuses);
 

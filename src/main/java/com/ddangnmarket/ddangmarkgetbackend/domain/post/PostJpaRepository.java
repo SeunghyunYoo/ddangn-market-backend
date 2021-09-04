@@ -37,30 +37,33 @@ public class PostJpaRepository {
                 .findAny();
     }
 
-    public List<Post> findAll(){
+    public List<Post> findAll(List<District> districts){
         return em.createQuery("select p from Post p" +
                         " join fetch p.seller s" +
                         " join fetch p.category c" +
-                        " join fetch p.district d", Post.class)
+                        " where p.district in (:districts)", Post.class)
+                .setParameter("districts", districts)
                 .getResultList();
     }
 
-    public List<Post> findAllByStatus(PostStatus postStatus){
+    public List<Post> findAllByStatus(List<District> districts, PostStatus postStatus){
         return em.createQuery("select p from Post p" +
                         " join fetch p.seller s" +
                         " join fetch p.category c" +
-                        " join fetch p.district d" +
-                        " where p.postStatus = :status", Post.class)
+                        " where p.district in (:districts)" +
+                        " and p.postStatus = :status", Post.class)
+                .setParameter("districts", districts)
                 .setParameter("status", postStatus)
                 .getResultList();
     }
 
-    public List<Post> findAllByStatuses(List<PostStatus> postStatuses){
+    public List<Post> findAllByStatuses(List<District> districts, List<PostStatus> postStatuses){
         return em.createQuery("select p from Post p" +
                         " join fetch p.seller s" +
                         " join fetch p.category c" +
-                        " join fetch p.district d" +
-                        " where p.postStatus in (:postStatuses)", Post.class)
+                        " where p.district in (:districts)" +
+                        " and p.postStatus in (:postStatuses)", Post.class)
+                .setParameter("districts", districts)
                 .setParameter("postStatuses", postStatuses)
                 .getResultList();
     }
@@ -85,16 +88,6 @@ public class PostJpaRepository {
                 .getResultList();
     }
 
-    public List<Post> findAllByCategory(CategoryTag categoryTag){
-
-        return em.createQuery("select p from Post p" +
-                        " join fetch p.seller s" +
-                        " join fetch p.district d" +
-                " where p.category.categoryTag = :categoryTag", Post.class)
-                .setParameter("categoryTag", categoryTag)
-                .getResultList();
-    }
-
     public List<Post> findAllBySellerAndStatuses(Account seller, List<PostStatus> postStatuses) {
         return em.createQuery("select p from Post p" +
                 " join fetch p.category c" +
@@ -106,23 +99,36 @@ public class PostJpaRepository {
                 .getResultList();
     }
 
-    public List<Post> findAllByCategoryAndStatus(CategoryTag categoryTag, PostStatus postStatus){
+    public List<Post> findAllByCategory(List<District> districts, CategoryTag categoryTag){
 
         return em.createQuery("select p from Post p" +
-                " join fetch p. district d" +
-                " where p.category.categoryTag = :categoryTag" +
+                        " join fetch p.seller s" +
+                        " where p.district in(:districts)" +
+                        " and p.category.categoryTag = :categoryTag", Post.class)
+                .setParameter("districts", districts)
+                .setParameter("categoryTag", categoryTag)
+                .getResultList();
+    }
+
+    public List<Post> findAllByCategoryAndStatus(List<District> districts, CategoryTag categoryTag, PostStatus postStatus){
+
+        return em.createQuery("select p from Post p" +
+                " where p.district in (:districts)" +
+                " and p.category.categoryTag = :categoryTag" +
                 " and p.postStatus = :status", Post.class)
+                .setParameter("districts", districts)
                 .setParameter("categoryTag", categoryTag)
                 .setParameter("status", postStatus)
                 .getResultList();
     }
 
-    public List<Post> findAllByCategoryAndStatuses(CategoryTag categoryTag, List<PostStatus> postStatuses) {
+    public List<Post> findAllByCategoryAndStatuses(List<District> districts, CategoryTag categoryTag, List<PostStatus> postStatuses) {
         return em.createQuery("select p from Post p" +
                 " join fetch p.seller s" +
-                " join fetch p.district d" +
-                " where p.category.categoryTag = :categoryTag" +
+                " where p.district in (:districts)" +
+                " and p.category.categoryTag = :categoryTag" +
                 " and p.postStatus in (:postStatuses)", Post.class)
+                .setParameter("districts", districts)
                 .setParameter("categoryTag", categoryTag)
                 .setParameter("postStatuses", postStatuses)
                 .getResultList();

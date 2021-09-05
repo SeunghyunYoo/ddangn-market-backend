@@ -1,7 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.district;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.District;
-import com.ddangnmarket.ddangmarkgetbackend.domain.Dong;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

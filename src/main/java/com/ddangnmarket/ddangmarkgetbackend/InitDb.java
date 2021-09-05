@@ -3,6 +3,8 @@ package com.ddangnmarket.ddangmarkgetbackend;
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.Position;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-import static com.ddangnmarket.ddangmarkgetbackend.domain.Dong.*;
+import static com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong.*;
 
 @Component
 @RequiredArgsConstructor
@@ -57,7 +59,7 @@ public class InitDb {
             em.persist(new District(SUNAE3, new Position(2, 0)));
             em.persist(new District(SEOHYEON1, new Position(3, 1)));
             em.persist(new District(SEOHYEON2, new Position(2, 0)));
-            em.persist(new District(BUNDANG, new Position(3, 0)));
+            em.persist(new District(BUNDANG, new Position(2, 0)));
             em.persist(new District(IMAE1, new Position(0, 2)));
             em.persist(new District(IMAE2, new Position(1, 2)));
             em.persist(new District(YATAP1, new Position(0, 3)));

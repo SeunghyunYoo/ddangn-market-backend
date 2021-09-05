@@ -1,11 +1,11 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.SaleStatus;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Getter
@@ -27,7 +27,7 @@ public class Post extends BaseEntity{
     private int price;
 
     @Enumerated(EnumType.STRING)
-    private PostStatus postStatus;
+    private SaleStatus saleStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
@@ -37,12 +37,18 @@ public class Post extends BaseEntity{
     @JoinColumn(name ="category_id")
     private Category category;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Chat> chats = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "district_id")
     private District district;
+
+    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
+    private Sale sale;
+
+    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
+    private Purchase purchase;
 
     // == 생성 메서드 == //
     public static Post createPost(String title, String desc, int price, Category category, Account seller){
@@ -52,7 +58,7 @@ public class Post extends BaseEntity{
         post.price = price;
         post.category = category;
         post.seller = seller;
-        post.postStatus = PostStatus.NEW;
+        post.saleStatus = SaleStatus.NEW;
         post.district = seller.getActivityArea().getDistrict();
         seller.addPost(post);
         return post;
@@ -77,19 +83,52 @@ public class Post extends BaseEntity{
         this.category = category;
     }
 
-    public void changeReserve(Chat chat){
-        Optional<Chat> optChat = chats.stream()
-                .filter(c -> c.getChatStatus() == ChatStatus.RESERVED)
-                .findAny();
+    public void changeComplete(){
+        saleStatus = SaleStatus.COMPLETE;
+    }
 
-        optChat.ifPresent(Chat::cancelReserve);
+    public void cancelSale(){
+        sale.cancelSale();
+        purchase.cancelPurchase();
+        sale = null;
+        purchase = null;
+        saleStatus = SaleStatus.NEW;
+        // mappedBy라 여기서 변경 못함 Chat에서
+        chats.forEach(Chat::changeNone);
+    }
+
+    public void changeReserve(Chat chat){
+        // 다른 chat으로 예약 변경 -> 기존의 reserved 였던 것들 취소
+        // -> target chat 예약으로 지정
+//        chats.stream()
+//               .filter(c -> c.getChatStatus() == ChatStatus.RESERVED)
+//               .findAny()
+//               .ifPresent(Chat::changeNone);
+        chats.forEach(Chat::changeNone);
+
         chat.changeReserve();
-        postStatus = PostStatus.RESERVE;
+        if (sale != null){
+            sale.cancelSale();
+            sale = null;
+        }
+        if (purchase != null){
+            purchase.cancelPurchase();
+            purchase = null;
+        }
+        saleStatus = SaleStatus.RESERVE;
     }
 
     public void cancelReserve(){
-        chats.forEach(Chat::cancelReserve);
-        postStatus = PostStatus.NEW;
+        chats.forEach(Chat::changeNone);
+        if (sale != null){
+            sale.cancelSale();
+            sale = null;
+        }
+        if (purchase != null){
+            purchase.cancelPurchase();
+            purchase = null;
+        }
+        saleStatus = SaleStatus.NEW;
     }
 
     public void changeDistrict(District district){

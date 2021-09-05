@@ -3,7 +3,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.account;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.ActivityArea;
 import com.ddangnmarket.ddangmarkgetbackend.domain.District;
-import com.ddangnmarket.ddangmarkgetbackend.domain.Dong;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.UpdateAccountInfoRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.ChangeAccountPasswordRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.DuplicateEmailException;
@@ -13,9 +13,6 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictJpaRepositor
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional

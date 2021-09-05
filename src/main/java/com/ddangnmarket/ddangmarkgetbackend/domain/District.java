@@ -1,5 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.Position;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

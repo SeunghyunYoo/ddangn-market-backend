@@ -1,6 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.account.dto;
 
-import com.ddangnmarket.ddangmarkgetbackend.domain.Dong;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.validation.Phone;
 import lombok.AllArgsConstructor;
 import lombok.Data;

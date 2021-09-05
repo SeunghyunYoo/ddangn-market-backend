@@ -25,18 +25,20 @@ public class Purchase extends BaseEntity{
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @Enumerated(EnumType.STRING)
-    private PurchaseStatus purchaseStatus;
 
-    public static Purchase purchase(Post post, Account account){
-        if (post.getPostStatus().equals(PostStatus.COMPLETE)){
-            throw new IllegalStateException("구매 완료된 상품은 주문할 수 없습니다.");
-        }
+    public static Purchase createPurchase(Account buyer, Post post){
+//        if (post.getsaleStatus().equals(saleStatus.COMPLETE)){
+//            throw new IllegalStateException("구매 완료된 상품은 주문할 수 없습니다.");
+//        }
         Purchase purchase = new Purchase();
         purchase.post = post;
-        purchase.account = account;
-        purchase.purchaseStatus = PurchaseStatus.COMPLETE;
-        post.setPostStatus(PostStatus.COMPLETE);
+        purchase.account = buyer;
         return purchase;
+    }
+
+    // cancelSale에서 호출
+    public void cancelPurchase(){
+        post = null;
+        account = null;
     }
 }

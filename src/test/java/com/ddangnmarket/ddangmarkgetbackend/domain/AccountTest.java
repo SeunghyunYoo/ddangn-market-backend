@@ -2,6 +2,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

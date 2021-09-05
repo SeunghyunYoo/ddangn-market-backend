@@ -1,10 +1,9 @@
-package com.ddangnmarket.ddangmarkgetbackend.domain;
+package com.ddangnmarket.ddangmarkgetbackend.domain.district;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
-import javax.persistence.ManyToOne;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

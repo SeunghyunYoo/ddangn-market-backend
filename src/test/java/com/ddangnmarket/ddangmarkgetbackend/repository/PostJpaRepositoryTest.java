@@ -14,10 +14,9 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag.*;
-import static com.ddangnmarket.ddangmarkgetbackend.domain.PostStatus.*;
+import static com.ddangnmarket.ddangmarkgetbackend.domain.post.SaleStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -143,8 +142,8 @@ class PostJpaRepositoryTest {
         Post post3 = Post.createPost("JPA 책 판매", "스프링 책 팔아요", 10000, book, account1);
         postJpaRepository.save(post3);
 
-        post1.setPostStatus(RESERVE);
-        post2.setPostStatus(COMPLETE);
+        post1.setSaleStatus(RESERVE);
+        post2.setSaleStatus(COMPLETE);
 
         em.flush();
         em.clear();
@@ -169,8 +168,8 @@ class PostJpaRepositoryTest {
         Post post3 = Post.createPost("JPA 책 판매", "스프링 책 팔아요", 10000, book, account1);
         postJpaRepository.save(post3);
 
-        post1.setPostStatus(RESERVE);
-        post2.setPostStatus(COMPLETE);
+        post1.setSaleStatus(RESERVE);
+        post2.setSaleStatus(COMPLETE);
 
         em.flush();
         em.clear();
@@ -197,8 +196,8 @@ class PostJpaRepositoryTest {
         Post post3 = Post.createPost("JPA 책 판매", "스프링 책 팔아요", 10000, book, account1);
         postJpaRepository.save(post3);
 
-        post1.setPostStatus(RESERVE);
-        post2.setPostStatus(COMPLETE);
+        post1.setSaleStatus(RESERVE);
+        post2.setSaleStatus(COMPLETE);
 
         em.flush();
         em.clear();

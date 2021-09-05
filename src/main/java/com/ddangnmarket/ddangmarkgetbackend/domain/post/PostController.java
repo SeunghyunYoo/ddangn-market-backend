@@ -75,6 +75,24 @@ public class PostController {
         return new ResponseEntity<>(new ResponseOKDto<>("SUCCEEDED"), HttpStatus.OK);
     }
 
+    @PostMapping("/{postId}/sale/{chatId}")
+    public void salePost(@PathVariable Long postId, @PathVariable Long chatId, @ApiIgnore HttpSession session){
+        Account seller = getSessionCheckedAccount(session);
+
+        validateIsSellerPost(postId, seller);
+
+        postService.sale(seller, postId, chatId);
+    }
+
+    @PostMapping("/{postId}/cancel")
+    public void cancelSalePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
+        Account seller = getSessionCheckedAccount(session);
+
+        validateIsSellerPost(postId, seller);
+        // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
+        postService.cancelSale(postId);
+    }
+
     /**
      * 판매자가 해당 게시글 예약 지정
      * @param postId
@@ -82,7 +100,7 @@ public class PostController {
      * @param session
      * @return
      */
-    @PutMapping("/{postId}/reserve/{chatId}")
+    @PostMapping("/{postId}/reserve/{chatId}")
     public ResponseEntity<ResponseOKDto<String>> reservePost(@PathVariable Long postId, @PathVariable Long chatId,
                             @ApiIgnore HttpSession session){
         Account seller = getSessionCheckedAccount(session);
@@ -99,7 +117,7 @@ public class PostController {
      * @param session
      * @return
      */
-    @PutMapping("/{postId}/reserve/cancel")
+    @PostMapping("/{postId}/reserve/cancel")
     public ResponseEntity<ResponseOKDto<String>> cancelReservePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
         Account seller = getSessionCheckedAccount(session);
 
@@ -136,9 +154,9 @@ public class PostController {
 
         getPostAllParamListValidation(status);
 
-        List<PostStatus> postStatuses = convertStringToPostStatus(status);
+        List<SaleStatus> saleStatuses = convertStringToSaleStatus(status);
 
-        List<Post> posts = postService.findAllByStatuses(account, postStatuses);
+        List<Post> posts = postService.findAllByStatuses(account, saleStatuses);
         return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
 
     }
@@ -163,9 +181,9 @@ public class PostController {
 
         getPostAllParamListValidation(status);
 
-        List<PostStatus> postStatuses = convertStringToPostStatus(status);
+        List<SaleStatus> saleStatuses = convertStringToSaleStatus(status);
 
-        List<Post> posts = postService.findPostAllBySellerAndStatuses(account, postStatuses);
+        List<Post> posts = postService.findPostAllBySellerAndStatuses(account, saleStatuses);
         return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
     }
 
@@ -191,21 +209,15 @@ public class PostController {
         }
         getPostAllParamListValidation(status);
 
-        List<PostStatus> postStatuses = convertStringToPostStatus(status);
+        List<SaleStatus> saleStatuses = convertStringToSaleStatus(status);
 
         List<Post> posts = postService.findAllByCategoryAndStatuses(account,
                 CategoryTag.valueOf(categoryTag.toUpperCase()),
-                postStatuses);
+                saleStatuses);
 
         return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
     }
 
-
-//    @GetMapping("/address")
-
-    public void getAllPostByAddress(){
-        // TODO
-    }
 //    @GetMapping("/interest")
 
     public void getAllPostByInterest(){
@@ -225,7 +237,7 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<ResponseOKDto<String>> deletePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
         getSessionCheckedAccount(session);
-
+        // TODO 거래 완료된 게시글은 삭제 못하도록 변경
         postService.deleteById(postId);
         return new ResponseEntity<>(new ResponseOKDto<>("게시글이 삭제되었습니다."), HttpStatus.OK);
     }
@@ -249,12 +261,12 @@ public class PostController {
         }
     }
 
-    private List<PostStatus> convertStringToPostStatus(List<String> status) {
-        List<PostStatus> postStatuses = status
+    private List<SaleStatus> convertStringToSaleStatus(List<String> status) {
+        List<SaleStatus> saleStatuses = status
                 .stream().map(String::toUpperCase)
-                .map(PostStatus::valueOf)
+                .map(SaleStatus::valueOf)
                 .collect(toList());
-        return postStatuses;
+        return saleStatuses;
     }
 
 }

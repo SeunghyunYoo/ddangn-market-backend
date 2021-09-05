@@ -1,15 +1,11 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.account.dto;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
-import com.ddangnmarket.ddangmarkgetbackend.domain.ActivityArea;
-import com.ddangnmarket.ddangmarkgetbackend.domain.District;
-import com.ddangnmarket.ddangmarkgetbackend.domain.Dong;
-import lombok.AllArgsConstructor;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor

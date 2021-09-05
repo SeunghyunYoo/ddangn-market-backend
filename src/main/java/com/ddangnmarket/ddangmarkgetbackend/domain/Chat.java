@@ -1,5 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.SaleStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,7 @@ public class Chat extends BaseEntity{
     private ChatStatus chatStatus;
 
     public static Chat createChat(Post post, Account account){
-        if (post.getPostStatus() == PostStatus.COMPLETE){
+        if (post.getSaleStatus() == SaleStatus.COMPLETE){
             throw new IllegalArgumentException("이미 판매완료된 상품은 구매할 수 없습니다.");
         }
         validateHasAlreadyChat(post, account);
@@ -53,7 +54,12 @@ public class Chat extends BaseEntity{
         chatStatus = ChatStatus.RESERVED;
     }
 
-    public void cancelReserve(){
+    public void changeNone(){
         chatStatus = ChatStatus.NONE;
     }
+
+    public void changeComplete(){
+        chatStatus = ChatStatus.COMPLETE;
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.ddangnmarket.ddangmarkgetbackend.domain;
+package com.ddangnmarket.ddangmarkgetbackend.domain.district;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

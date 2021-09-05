@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PreUpdate;
 import java.util.List;
 
 @Repository
@@ -17,6 +18,10 @@ public class PurchaseJpaRepository {
     public Purchase save(Purchase purchase){
         em.persist(purchase);
         return purchase;
+    }
+
+    public void delete(Purchase purchase){
+        em.remove(purchase);
     }
 
     public List<Purchase> findAll(){

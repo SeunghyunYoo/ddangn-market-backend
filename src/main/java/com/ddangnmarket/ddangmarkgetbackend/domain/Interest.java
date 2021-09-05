@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Interest extends BaseEntity{
 
     @Id @GeneratedValue
-    @Column(name = "interest_post_id")
+    @Column(name = "interest_id")
     private Long id;
 
     @ManyToOne

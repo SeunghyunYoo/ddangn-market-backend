@@ -72,25 +72,27 @@ public class PostController {
         getSessionCheckedAccount(session);
 
         postService.updatePost(postId, updatePostRequestDto);
-        return new ResponseEntity<>(new ResponseOKDto<>("SUCCEEDED"), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
     }
 
-    @PostMapping("/{postId}/sale/{chatId}")
-    public void salePost(@PathVariable Long postId, @PathVariable Long chatId, @ApiIgnore HttpSession session){
+    @PostMapping("/{postId}/sales/{chatId}")
+    public ResponseEntity<ResponseOKDto<String>> salePost(@PathVariable Long postId, @PathVariable Long chatId, @ApiIgnore HttpSession session){
         Account seller = getSessionCheckedAccount(session);
 
         validateIsSellerPost(postId, seller);
 
         postService.sale(seller, postId, chatId);
+        return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
     }
 
-    @PostMapping("/{postId}/cancel")
-    public void cancelSalePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
+    @PostMapping("/{postId}/sales/cancel")
+    public ResponseEntity<ResponseOKDto<String>> cancelSalePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
         Account seller = getSessionCheckedAccount(session);
 
         validateIsSellerPost(postId, seller);
         // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
         postService.cancelSale(postId);
+        return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
     }
 
     /**
@@ -104,7 +106,9 @@ public class PostController {
     public ResponseEntity<ResponseOKDto<String>> reservePost(@PathVariable Long postId, @PathVariable Long chatId,
                             @ApiIgnore HttpSession session){
         Account seller = getSessionCheckedAccount(session);
-
+        
+        // TODO 여기서 1대다 (seller -> posts) 쿼리 너무 많이 날라감
+        // sale purchase 테이블을 조회하는데, orphan removal 영향인지 check 필요
         validateIsSellerPost(postId, seller);
 
         postService.changeReserve(postId, chatId);
@@ -124,7 +128,7 @@ public class PostController {
         validateIsSellerPost(postId, seller);
 
         postService.cancelReserve(postId);
-        return new ResponseEntity<>(new ResponseOKDto<>(""), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
     }
 
     private void validateIsSellerPost(Long postId, Account seller) {
@@ -167,7 +171,7 @@ public class PostController {
      * @param session
      * @return
      */
-    @GetMapping("/seller")
+    @GetMapping("/sales")
     public ResponseEntity<ResponseOKDto<GetAllPostResponseDto>> getAllPostBySeller(
             @RequestParam(required = false) @Nullable List<String> status,
             @ApiIgnore HttpSession session) {
@@ -218,16 +222,21 @@ public class PostController {
         return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
     }
 
-//    @GetMapping("/interest")
+//    @GetMapping("/purchase")
+//    public ResponseEntity<ResponseOKDto<GetAllPostResponseDto>> getAllPurchase(
+//            @ApiIgnore HttpSession session){
+//        Account account = getSessionCheckedAccount(session);
+//
+//        List<Post> posts = postService.findAllPurchase(account);
+//
+//        return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
+//    }
 
+//    @GetMapping("/interest")
     public void getAllPostByInterest(){
         //TODO
     }
-//    @GetMapping("")
 
-    public void getAllPostByPurchase(){
-        //TODO
-    }
     /**
      * 게시글 삭제
      * @param postId

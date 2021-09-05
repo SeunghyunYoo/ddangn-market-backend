@@ -1,5 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.purchase;
 
+import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Purchase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class PurchaseService {
 
     private final PurchaseJpaRepository purchaseJpaRepository;
 
-    public List<Purchase> findAllPurchase(){
-        return purchaseJpaRepository.findAll();
+    public List<Purchase> findAllPurchase(Account account){
+        return purchaseJpaRepository.findAllByAccount(account);
     }
 }

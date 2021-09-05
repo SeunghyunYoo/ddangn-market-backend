@@ -17,7 +17,7 @@ public class Purchase extends BaseEntity{
     @Column(name = "purchase_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "post_id")
     private Post post;
 
@@ -36,7 +36,6 @@ public class Purchase extends BaseEntity{
         return purchase;
     }
 
-    // cancelSale에서 호출
     public void cancelPurchase(){
         post = null;
         account = null;

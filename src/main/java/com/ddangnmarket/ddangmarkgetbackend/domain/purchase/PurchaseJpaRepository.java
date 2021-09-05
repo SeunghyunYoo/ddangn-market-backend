@@ -30,8 +30,12 @@ public class PurchaseJpaRepository {
     }
 
     public List<Purchase> findAllByAccount(Account account){
-        return em.createQuery("select p from Purchase p" +
-                " where p.account = : account", Purchase.class)
+        return em.createQuery("select pc from Purchase pc" +
+                " join fetch pc.post p" +
+                " join fetch p.category c" +
+                " join fetch p.district d" +
+                " join fetch p.seller s" +
+                " where pc.account = : account", Purchase.class)
                 .setParameter("account", account)
                 .getResultList();
     }

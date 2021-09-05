@@ -25,6 +25,10 @@ public class GetPostResponseDto {
 
     private Dong dong;
 
+    private String createdAt;
+
+    private String updatedAt;
+
     public GetPostResponseDto(Post post){
         this.postId = post.getId();
         this.title = post.getTitle();
@@ -34,5 +38,7 @@ public class GetPostResponseDto {
         this.sellerNickname = post.getSeller().getNickname();
         this.categoryTag = post.getCategory().getCategoryTag();
         this.dong = post.getDistrict().getDong();
+        this.createdAt = post.getCreatedAt().toString();
+        this.updatedAt = post.getUpdatedAt().toString();
     }
 }

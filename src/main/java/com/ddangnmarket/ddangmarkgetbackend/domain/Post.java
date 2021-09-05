@@ -44,10 +44,10 @@ public class Post extends BaseEntity{
     @JoinColumn(name = "district_id")
     private District district;
 
-    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
     private Sale sale;
 
-    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
     private Purchase purchase;
 
     // == 생성 메서드 == //
@@ -87,9 +87,11 @@ public class Post extends BaseEntity{
         saleStatus = SaleStatus.COMPLETE;
     }
 
+    /**
+     * orphanRemoval 적용 -> null로 연관관계 끊으면 자동 삭제
+     * repository delete operation 필요 x
+     */
     public void cancelSale(){
-        sale.cancelSale();
-        purchase.cancelPurchase();
         sale = null;
         purchase = null;
         saleStatus = SaleStatus.NEW;
@@ -97,6 +99,10 @@ public class Post extends BaseEntity{
         chats.forEach(Chat::changeNone);
     }
 
+    /**
+     * 다른 chat의 구매 희망자로 reserve 변경
+     * @param chat
+     */
     public void changeReserve(Chat chat){
         // 다른 chat으로 예약 변경 -> 기존의 reserved 였던 것들 취소
         // -> target chat 예약으로 지정
@@ -105,29 +111,18 @@ public class Post extends BaseEntity{
 //               .findAny()
 //               .ifPresent(Chat::changeNone);
         chats.forEach(Chat::changeNone);
-
         chat.changeReserve();
-        if (sale != null){
-            sale.cancelSale();
+
+        if (saleStatus == SaleStatus.COMPLETE) {
             sale = null;
-        }
-        if (purchase != null){
-            purchase.cancelPurchase();
             purchase = null;
         }
+
         saleStatus = SaleStatus.RESERVE;
     }
 
     public void cancelReserve(){
         chats.forEach(Chat::changeNone);
-        if (sale != null){
-            sale.cancelSale();
-            sale = null;
-        }
-        if (purchase != null){
-            purchase.cancelPurchase();
-            purchase = null;
-        }
         saleStatus = SaleStatus.NEW;
     }
 

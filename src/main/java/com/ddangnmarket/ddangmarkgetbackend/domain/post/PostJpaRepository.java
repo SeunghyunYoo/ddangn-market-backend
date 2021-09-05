@@ -143,4 +143,15 @@ public class PostJpaRepository {
                 .setParameter("saleStatuses", saleStatuses)
                 .getResultList();
     }
+
+    public List<Post> findAllPurchase(Account buyer){
+        return em.createQuery("select p from Post p" +
+                " join fetch p.district d" +
+                " join fetch p.category c" +
+                " join fetch p.seller s" +
+                " join fetch p.purchase pc" +
+                " where pc.account = :buyer", Post.class)
+                .setParameter("buyer", buyer)
+                .getResultList();
+    }
 }

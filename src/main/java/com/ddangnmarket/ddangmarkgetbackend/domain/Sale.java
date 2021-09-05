@@ -13,10 +13,10 @@ public class Sale extends BaseEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
+    @JoinColumn(name = "account_id")
     private Account account;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "post_id")
     private Post post;
 
@@ -45,7 +45,6 @@ public class Sale extends BaseEntity {
      * chat -> reserved로 변경
      */
     public void cancelSale(){
-        post.getPurchase().cancelPurchase();
         post = null;
         account = null;
     }

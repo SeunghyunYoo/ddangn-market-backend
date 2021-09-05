@@ -86,7 +86,16 @@ public class PostService {
         return postJpaRepository.findAllByCategoryAndStatuses(districts, categoryTag, saleStatuses);
     }
 
+    public List<Post> findAllPurchase(Account account){
+        return postJpaRepository.findAllPurchase(account);
+    }
+
+    /**
+     * 사용자가 삭제 요청시 -> 구매완료된 상품일 경우 hide로 변경
+     * @param postId
+     */
     public void deleteById(Long postId){
+        // TODO 삭제 요청시 -> hide로 변경
         Post post = findById(postId);
         postJpaRepository.delete(post);
     }
@@ -108,7 +117,7 @@ public class PostService {
         Post post = findById(postId);
 
         if(post.getSaleStatus().equals(SaleStatus.COMPLETE)){
-            cancelSaleAndDeleteSaleAndPost(post);
+            post.cancelSale();
         }
         if(post.getSaleStatus().equals(SaleStatus.RESERVE)){
             post.cancelReserve();
@@ -130,44 +139,35 @@ public class PostService {
     public void cancelSale(Long postId){
         // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
         Post post = findById(postId);
-        cancelSaleAndDeleteSaleAndPost(post);
-    }
-
-    private void cancelSaleAndDeleteSaleAndPost(Post post) {
-        // TODO orphanRemoval로 변경
         if(post.getSaleStatus().equals(SaleStatus.COMPLETE)) {
-            Sale sale = post.getSale();
-            Purchase purchase = post.getPurchase();
-
             post.cancelSale();
-            saleJpaRepository.delete(sale);
-            purchaseJpaRepository.delete(purchase);
         }
     }
 
     public void changeReserve(Long postId, Long chatId) {
         Post post = findById(postId);
         // TODO 판매 완료된 건 예약 상태로 바꾸게 허용할지 말지
-//        validateSaleComplete(post);
+        //  validateSaleComplete(post);
         if(post.getSaleStatus() == SaleStatus.COMPLETE){
-            cancelSaleAndDeleteSaleAndPost(post);
+            post.cancelSale();
         }
 
+        // 이런 validation이 필요한가?
         Chat chat = chatJpaRepository.findById(chatId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅입니다."));
 
         post.changeReserve(chat);
     }
 
+    public void cancelReserve(Long postId){
+        Post post = findById(postId);
+        post.cancelReserve();
+    }
+
     private void validateSaleComplete(Post post) {
         if (post.getSaleStatus().equals(SaleStatus.COMPLETE)){
             throw new IllegalStateException("이미 판매 완료된 상품입니다.");
         }
-    }
-
-    public void cancelReserve(Long postId){
-        Post post = findById(postId);
-        post.cancelReserve();
     }
 
     public Post findById(Long postId){
@@ -180,7 +180,7 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
 
-    public List<District> getDistrict(Account account){
+    private List<District> getDistrict(Account account){
         List<District> districts = districtJpaRepository.findAll();
 
         District accountDistrict = account.getActivityArea().getDistrict();

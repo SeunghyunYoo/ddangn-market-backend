@@ -1,6 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.post;
 
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
+import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseSimpleOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.*;
@@ -69,32 +70,34 @@ public class PostController {
      * @return
      */
     @PutMapping("/{postId}")
-    public ResponseEntity<ResponseOKDto<String>> updatePost(@PathVariable Long postId,
-                @RequestBody UpdatePostRequestDto updatePostRequestDto, @ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseSimpleOKDto> updatePost(
+            @PathVariable Long postId,
+            @RequestBody UpdatePostRequestDto updatePostRequestDto, @ApiIgnore HttpSession session){
         getSessionCheckedAccount(session);
 
         postService.updatePost(postId, updatePostRequestDto);
-        return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
     @PostMapping("/{postId}/sales/{chatId}")
-    public ResponseEntity<ResponseOKDto<String>> salePost(@PathVariable Long postId, @PathVariable Long chatId, @ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseSimpleOKDto> salePost(
+            @PathVariable Long postId, @PathVariable Long chatId, @ApiIgnore HttpSession session){
         Account seller = getSessionCheckedAccount(session);
 
         validateIsSellerPost(postId, seller);
 
         postService.sale(seller, postId, chatId);
-        return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
     @PostMapping("/{postId}/sales/cancel")
-    public ResponseEntity<ResponseOKDto<String>> cancelSalePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseSimpleOKDto> cancelSalePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
         Account seller = getSessionCheckedAccount(session);
 
         validateIsSellerPost(postId, seller);
         // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
         postService.cancelSale(postId);
-        return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
     /**
@@ -105,7 +108,7 @@ public class PostController {
      * @return
      */
     @PostMapping("/{postId}/reserve/{chatId}")
-    public ResponseEntity<ResponseOKDto<String>> reservePost(@PathVariable Long postId, @PathVariable Long chatId,
+    public ResponseEntity<ResponseSimpleOKDto> reservePost(@PathVariable Long postId, @PathVariable Long chatId,
                             @ApiIgnore HttpSession session){
         Account seller = getSessionCheckedAccount(session);
         
@@ -114,7 +117,7 @@ public class PostController {
         validateIsSellerPost(postId, seller);
 
         postService.changeReserve(postId, chatId);
-        return new ResponseEntity<>(new ResponseOKDto<>(""), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
     /**
@@ -124,13 +127,13 @@ public class PostController {
      * @return
      */
     @PostMapping("/{postId}/reserve/cancel")
-    public ResponseEntity<ResponseOKDto<String>> cancelReservePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseSimpleOKDto> cancelReservePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
         Account seller = getSessionCheckedAccount(session);
 
         validateIsSellerPost(postId, seller);
 
         postService.cancelReserve(postId);
-        return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
     private void validateIsSellerPost(Long postId, Account seller) {
@@ -234,11 +237,6 @@ public class PostController {
 //        return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
 //    }
 
-//    @GetMapping("/interest")
-    public void getAllPostByInterest(){
-        //TODO
-    }
-
     /**
      * 게시글 삭제
      * @param postId
@@ -246,11 +244,11 @@ public class PostController {
      * @return
      */
     @DeleteMapping("/{postId}")
-    public ResponseEntity<ResponseOKDto<String>> deletePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseSimpleOKDto> deletePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
         getSessionCheckedAccount(session);
         // TODO 거래 완료된 게시글은 삭제 못하도록 변경
         postService.deleteById(postId);
-        return new ResponseEntity<>(new ResponseOKDto<>("게시글이 삭제되었습니다."), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
     private Account getSessionCheckedAccount(HttpSession session) {

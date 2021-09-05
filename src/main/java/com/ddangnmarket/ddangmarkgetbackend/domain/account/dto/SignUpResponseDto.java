@@ -13,4 +13,5 @@ public class SignUpResponseDto {
     private String phone;
 
     private String mail;
+
 }

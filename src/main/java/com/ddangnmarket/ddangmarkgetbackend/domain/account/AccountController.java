@@ -1,6 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.account;
 
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
+import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseSimpleOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.*;
@@ -30,9 +31,8 @@ public class AccountController {
     private final DistrictService districtService;
 
     @PostMapping("/new")
-    public ResponseEntity<ResponseOKDto<SignUpResponseDto>> signUp(
-            @Validated @RequestBody SignUpRequestDto signUpRequestDto,
-            HttpServletRequest request, HttpServletResponse response){
+    public ResponseEntity<ResponseSimpleOKDto> signUp(
+            @Validated @RequestBody SignUpRequestDto signUpRequestDto){
 
         Account account = new Account(
                 signUpRequestDto.getNickname(),
@@ -47,13 +47,13 @@ public class AccountController {
                 result.getPhone(),
                 result.getMail());
 
-        return new ResponseEntity<>(new ResponseOKDto<>(signUpResponseDto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
     @DeleteMapping
-    public ResponseEntity<ResponseOKDto<DeleteAccountResponseDto>> deleteAccount(
+    public ResponseEntity<ResponseSimpleOKDto> deleteAccount(
             @RequestBody DeleteAccountRequestDto deleteAccountRequestDto,
-            HttpServletRequest request, HttpServletResponse response){
+            HttpServletRequest request){
 
         accountService.delete(deleteAccountRequestDto.getMail(), deleteAccountRequestDto.getPassword());
 
@@ -62,7 +62,7 @@ public class AccountController {
             session.invalidate();
         }
 
-        return new ResponseEntity<>(new ResponseOKDto<>(new DeleteAccountResponseDto("삭제 되었습니다.")), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
     @GetMapping("/info")
@@ -76,25 +76,25 @@ public class AccountController {
     }
 
     @PutMapping("/info")
-    public ResponseEntity<ResponseOKDto<UpdateAccountInfoResponseDto>> updateAccountInfo(
+    public ResponseEntity<ResponseSimpleOKDto> updateAccountInfo(
             @Validated @RequestBody UpdateAccountInfoRequestDto updateAccountInfoRequestDto,
             @ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
         accountService.updateAccountInfo(account, updateAccountInfoRequestDto);
-        return new ResponseEntity<>(new ResponseOKDto<>(new UpdateAccountInfoResponseDto("수정되었습니다.")), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
     @PutMapping("/password")
-    public ResponseEntity<ResponseOKDto<ChangeAccountPasswordResponseDto>> changePassword(
+    public ResponseEntity<ResponseSimpleOKDto> changePassword(
             @Validated @RequestBody ChangeAccountPasswordRequestDto changeAccountPasswordRequestDto,
             @ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
         accountService.changePassword(account, changeAccountPasswordRequestDto);
-        return new ResponseEntity<>(new ResponseOKDto<>(new ChangeAccountPasswordResponseDto("수정되었습니다.")), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
     @PostMapping("/activity-area")
-    public ResponseEntity<ResponseOKDto<String>> addActivityArea(
+    public ResponseEntity<ResponseOKDto<ActivityAreaResponseDto>> addActivityArea(
             @Validated @RequestBody ActivityAreaRequestDto activityAreaRequestDto,
             @ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccountWithArea(session);
@@ -103,7 +103,10 @@ public class AccountController {
                 Dong.fromString(activityAreaRequestDto.getDong()),
                 activityAreaRequestDto.getRange());
 
-        return new ResponseEntity<>(new ResponseOKDto<>("SUCCESS"), HttpStatus.OK);
+        List<Dong> activityAreas = districtService.getActivityAreas(account);
+
+        return new ResponseEntity<>(new ResponseOKDto<>(
+                new ActivityAreaResponseDto(activityAreas)), HttpStatus.OK);
     }
 
     private Account getSessionCheckedAccount(HttpSession session) {

@@ -1,6 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.interest;
 
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
+import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseSimpleOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Interest;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
@@ -33,7 +34,8 @@ public class InterestController {
 
         Long interestId = interestService.addInterest(account, addInterestRequestDto.getPostId());
 
-        return new ResponseEntity<>(new ResponseOKDto<>(new AddInterestResponseDto(interestId)), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(
+                new AddInterestResponseDto(interestId)), HttpStatus.OK);
     }
 
     @GetMapping
@@ -42,16 +44,17 @@ public class InterestController {
 
         List<Interest> interests = interestService.findAllInterests(account);
 
-        return new ResponseEntity<>(new ResponseOKDto<>(new GetAllInterestDto(interests)), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(
+                new GetAllInterestDto(interests)), HttpStatus.OK);
     }
 
     @DeleteMapping("/{interestId}")
-    public ResponseEntity<ResponseOKDto<DeleteInterestDto>> deleteInterest(@PathVariable Long interestId, @ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseSimpleOKDto> deleteInterest(@PathVariable Long interestId, @ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
 
         interestService.deleteInterest(account, interestId);
 
-        return new ResponseEntity<>(new ResponseOKDto<>(new DeleteInterestDto(interestId)), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
 

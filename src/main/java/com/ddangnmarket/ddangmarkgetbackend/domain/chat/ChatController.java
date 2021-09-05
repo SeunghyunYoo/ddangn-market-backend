@@ -32,7 +32,8 @@ public class ChatController {
 
         List<Chat> chats = chatService.findAllByPost(account, postId);
 
-        return new ResponseEntity<>(new ResponseOKDto<>(new GetAllChatResponseDto(chats)), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(
+                new GetAllChatResponseDto(chats)), HttpStatus.OK);
     }
 
     @PostMapping
@@ -42,7 +43,8 @@ public class ChatController {
 
         Long chatId = chatService.createChat(account, createChatRequestDto.getPostId());
 
-        return new ResponseEntity<>(new ResponseOKDto<>(new CreateChatResponseDto(chatId)), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(
+                new CreateChatResponseDto(chatId)), HttpStatus.OK);
     }
 
     private Account getSessionCheckedAccount(HttpSession session) {

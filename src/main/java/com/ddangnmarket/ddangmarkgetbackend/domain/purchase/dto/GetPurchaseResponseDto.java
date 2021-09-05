@@ -13,15 +13,17 @@ public class GetPurchaseResponseDto {
 
     private Long purchaseId;
     private PostDto post;
-    private String nickname;
-    private String purchaseAt;
+    private String buyerNickname;
+    private String createdAt;
+    private String updatedAt;
 
     public GetPurchaseResponseDto(Purchase purchase){
 
         this.purchaseId = purchase.getId();
         this.post = new PostDto(purchase.getPost());
-        this.nickname = purchase.getAccount().getNickname();
-        this.purchaseAt = purchase.getCreatedAt().toString();
+        this.buyerNickname = purchase.getAccount().getNickname();
+        this.createdAt = purchase.getCreatedAt().toString();
+        this.updatedAt = purchase.getUpdatedAt().toString();
 
     }
 

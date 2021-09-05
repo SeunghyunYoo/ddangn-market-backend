@@ -41,7 +41,8 @@ public class PostController {
         Long postId = postService.post(postRequestDto.getTitle(), postRequestDto.getDesc(),
                 postRequestDto.getPrice(), postRequestDto.getCategoryTag(), account);
 
-        return new ResponseEntity<>(new ResponseOKDto<>(new PostResponseDto(postId)), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(
+                new PostResponseDto(postId)), HttpStatus.OK);
     }
 
     /**
@@ -56,7 +57,8 @@ public class PostController {
 
         Post post = postService.findById(postId);
 
-        return new ResponseEntity<>(new ResponseOKDto<>(new GetPostResponseDto(post)), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(
+                new GetPostResponseDto(post)), HttpStatus.OK);
     }
 
     /**

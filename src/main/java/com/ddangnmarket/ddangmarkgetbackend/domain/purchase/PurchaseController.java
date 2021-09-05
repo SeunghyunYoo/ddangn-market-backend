@@ -32,7 +32,8 @@ public class PurchaseController {
 
         List<Purchase> purchases = purchaseService.findAllPurchase(account);
 
-        return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPurchaseResponseDto(purchases)), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(
+                new GetAllPurchaseResponseDto(purchases)), HttpStatus.OK);
     }
 
     private Account getSessionCheckedAccount(HttpSession session) {

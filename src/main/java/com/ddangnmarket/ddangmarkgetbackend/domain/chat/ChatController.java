@@ -26,7 +26,7 @@ public class ChatController {
     private final AccountService accountService;
 
     @GetMapping
-    public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChatByPost(@ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChat(@ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
 
         List<Chat> chats = chatService.findAllChat(account);

@@ -152,7 +152,7 @@ class PostControllerTest {
 
         // 채팅 수 확인
         ResponseOKDto<GetAllChatResponseDto> allChats
-                = MockGetChats(session, "/api/v1/chats?postId=" + postId2.toString());
+                = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2.toString());
         assertThat(allChats.getData().getChats().size()).isEqualTo(3);
         Long chatId1 = allChats.getData().getChats().get(0).getChatId();
         Long chatId2 = allChats.getData().getChats().get(1).getChatId();
@@ -166,7 +166,7 @@ class PostControllerTest {
                 MockGetPosts(session, "/api/v1/posts/sales?status=reserve");
 
         assertThat(allReserved1.getData().getPosts().get(0).getStatus()).isEqualTo(RESERVE);
-        GetChatResponseDto reservedChat1 = MockGetChats(session, "/api/v1/chats?postId=" + postId2)
+        GetChatResponseDto reservedChat1 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
                 .getData().getChats().get(0);
         assertThat(reservedChat1.getChatStatus()).isEqualTo(ChatStatus.RESERVED);
 
@@ -176,16 +176,17 @@ class PostControllerTest {
                 MockGetPosts(session, "/api/v1/posts/sales?status=reserve");
 
         assertThat(allReserved2.getData().getPosts().get(0).getStatus()).isEqualTo(RESERVE);
-        reservedChat1 = MockGetChats(session, "/api/v1/chats?postId=" + postId2)
+        reservedChat1 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
                 .getData().getChats().get(0);
         assertThat(reservedChat1.getChatStatus()).isEqualTo(ChatStatus.NONE);
-        GetChatResponseDto reservedChat2 = MockGetChats(session, "/api/v1/chats?postId=" + postId2)
+        GetChatResponseDto reservedChat2 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
                 .getData().getChats().get(1);
         assertThat(reservedChat2.getChatStatus()).isEqualTo(ChatStatus.RESERVED);
 
         // 판매 예약 취소 /api/v1/posts/{postId}/sales/cancel
+
         MockPost(session, "/api/v1/posts/" + postId2 +"/reserve/cancel");
-        reservedChat2 = MockGetChats(session, "/api/v1/chats?postId=" + postId2)
+        reservedChat2 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
                 .getData().getChats().get(1);
         assertThat(reservedChat2.getChatStatus()).isEqualTo(ChatStatus.NONE);
         // 다시 예약
@@ -292,23 +293,23 @@ class PostControllerTest {
         return objectMapper.readValue(responseStr, new TypeReference<>() {});
     }
 
-    @Test
-    void deleteAccount() {
-    }
-
-    @Test
-    void getAccountInfo() {
-    }
-
-    @Test
-    void updateAccountInfo() {
-    }
-
-    @Test
-    void changePassword() {
-    }
-
-    @Test
-    void addActivityArea() {
-    }
+//    @Test
+//    void deleteAccount() {
+//    }
+//
+//    @Test
+//    void getAccountInfo() {
+//    }
+//
+//    @Test
+//    void updateAccountInfo() {
+//    }
+//
+//    @Test
+//    void changePassword() {
+//    }
+//
+//    @Test
+//    void addActivityArea() {
+//    }
 }

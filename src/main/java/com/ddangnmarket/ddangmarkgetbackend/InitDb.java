@@ -27,8 +27,8 @@ public class InitDb {
     public void init(){
         initService.initCategory();
         initService.initDistrict();
-//        initService.initAccountPost();
-        initService.initAccountPostV2();
+        initService.initAccountPost();
+//        initService.initAccountPostV2();
     }
 
     @Component

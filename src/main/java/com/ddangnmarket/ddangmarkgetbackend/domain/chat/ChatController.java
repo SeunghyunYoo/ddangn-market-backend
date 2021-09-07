@@ -26,11 +26,21 @@ public class ChatController {
     private final AccountService accountService;
 
     @GetMapping
+    public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChatByPost(@ApiIgnore HttpSession session){
+        Account account = getSessionCheckedAccount(session);
+
+        List<Chat> chats = chatService.findAllChat(account);
+
+        return new ResponseEntity<>(new ResponseOKDto<>(
+                new GetAllChatResponseDto(chats)), HttpStatus.OK);
+    }
+
+    @GetMapping("/sales")
     public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChatByPost(
             @RequestParam Long postId, @ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccount(session);
 
-        List<Chat> chats = chatService.findAllByPost(account, postId);
+        List<Chat> chats = chatService.findAllChatByPost(account, postId);
 
         return new ResponseEntity<>(new ResponseOKDto<>(
                 new GetAllChatResponseDto(chats)), HttpStatus.OK);

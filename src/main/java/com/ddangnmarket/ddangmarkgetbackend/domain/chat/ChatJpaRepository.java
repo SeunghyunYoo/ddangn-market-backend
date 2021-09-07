@@ -1,10 +1,12 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.chat;
 
+import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Chat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +35,24 @@ public class ChatJpaRepository {
                         " join fetch c.post p" +
                         " where p.id =: postId", Chat.class)
                 .setParameter("postId", postId)
+                .getResultList();
+    }
+
+    public List<Chat> findAllByPostIds(Collection<Long> postIds){
+        return em.createQuery("select c from Chat c" +
+                " join fetch c.account a" +
+                " join fetch c.post p" +
+                " where p.id in :postIds ", Chat.class)
+                .setParameter("postIds", postIds)
+                .getResultList();
+    }
+
+    public List<Chat> findAllByAccount(Account account){
+        return em.createQuery("select c from Chat c" +
+                        " join fetch c.post p" +
+                        " where c.account = :account" +
+                        " and p.seller <> :account", Chat.class)
+                .setParameter("account", account)
                 .getResultList();
     }
 

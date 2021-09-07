@@ -5,8 +5,10 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.SaleStatus;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class GetPostResponseDto {
 
     private Long postId;

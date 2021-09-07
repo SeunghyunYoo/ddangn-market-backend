@@ -9,8 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -26,7 +29,7 @@ public class ChatService {
      * @param postId
      * @return
      */
-    public List<Chat> findAllByPost(Account seller, Long postId){
+    public List<Chat> findAllChatByPost(Account seller, Long postId){
 
         Post post = getPost(postId);
 
@@ -34,6 +37,19 @@ public class ChatService {
             throw new IllegalArgumentException("해당 판매자의 게시글이 아닙니다.");
         }
         return chatJpaRepository.findAllByPost(postId);
+    }
+
+    public List<Chat> findAllChat(Account account){
+        List<Long> postIds = postJpaRepository.findAllBySeller(account)
+                .stream().map(Post::getId).collect(Collectors.toList());
+
+        List<Chat> allBySeller = chatJpaRepository.findAllByPostIds(postIds);
+
+        List<Chat> allByAccount = chatJpaRepository.findAllByAccount(account);
+
+        return Stream.concat(allByAccount.stream(), allBySeller.stream())
+                .sorted(Comparator.comparing(Chat::getUpdatedAt).reversed())
+                .collect(Collectors.toList());
     }
 
     public Long createChat(Account buyer, Long postId){

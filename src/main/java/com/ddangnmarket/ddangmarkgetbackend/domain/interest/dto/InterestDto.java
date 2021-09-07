@@ -4,6 +4,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Interest;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -25,7 +26,7 @@ public class InterestDto {
 
     @Data
     @NoArgsConstructor
-    static class PostDto{
+    public static class PostDto{
         private Long id;
         private String title;
         private int price;
@@ -33,6 +34,7 @@ public class InterestDto {
         private String createdAt;
         private String updatedAt;
         private SellerDto seller;
+        private Dong dong;
 
         PostDto(Post post){
             this.id = post.getId();
@@ -40,6 +42,7 @@ public class InterestDto {
             this.price = post.getPrice();
             this.category = post.getCategory().getCategoryTag();
             this.seller = new SellerDto(post.getSeller());
+            this.dong = post.getDistrict().getDong();
             this.createdAt = post.getCreatedAt().toString();
             this.updatedAt = post.getUpdatedAt().toString();
         }
@@ -47,7 +50,7 @@ public class InterestDto {
 
     @Data
     @NoArgsConstructor
-    static class SellerDto{
+    public static class SellerDto{
         private String nickname;
         private String phone;
 

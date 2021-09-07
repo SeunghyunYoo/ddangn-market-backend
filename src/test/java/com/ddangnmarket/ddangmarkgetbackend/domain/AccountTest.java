@@ -29,7 +29,7 @@ class AccountTest {
     void activityTest(){
 
         District gumi = districtJpaRepository.findByDong(Dong.GUMI);
-        District jeongja = districtJpaRepository.findByDong(Dong.JEONGJA);
+        District jeongja = districtJpaRepository.findByDong(Dong.JEONGJA1);
 
         Account account = new Account("test01", "000-0000-0000", "test01@gmail.com", "00000000");
         em.persist(account);

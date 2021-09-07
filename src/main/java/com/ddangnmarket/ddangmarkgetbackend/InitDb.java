@@ -103,7 +103,7 @@ public class InitDb {
             Chat chat2 = Chat.createChat(post1, account3);
             em.persist(chat2);
 
-            Chat chat3 = Chat.createChat(post2, account1);
+            Chat chat3 = Chat.createChat(post2, account2);
             em.persist(chat3);
         }
 

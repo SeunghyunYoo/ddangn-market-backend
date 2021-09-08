@@ -13,13 +13,12 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.AddInterestRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.GetAllInterestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostService;
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.SaleStatus;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetAllPostResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.PostRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.login.dto.LoginRequestDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
 @Transactional
+@Slf4j
 class PostControllerTest {
 
     @Autowired
@@ -59,7 +59,7 @@ class PostControllerTest {
     @Autowired
     AccountService accountService;
     @Autowired
-    AccountJpaRepository accountJpaRepository;
+    AccountRepository accountRepository;
 
 //    protected MockHttpSession session;
 
@@ -93,21 +93,29 @@ class PostControllerTest {
         MockPost(session, "/api/v1/posts", postRequestDto);
 
         // 전체 게시글 조회
+        System.out.println("=============");
+        System.out.println("전체 게시글 조회");
         ResponseOKDto<GetAllPostResponseDto> allPostResult = MockGetPosts(session, "/api/v1/posts");
         assertThat(allPostResult.getData().getPosts().size()).isEqualTo(4+1);
         Long postId1 = allPostResult.getData().getPosts().get(0).getPostId();
         Long postId2 = allPostResult.getData().getPosts().get(2).getPostId();
 
         // 판매자가 올린 게시글 조회
+        System.out.println("=============");
+        System.out.println("판매자가 올린 게시글 조회");
         ResponseOKDto<GetAllPostResponseDto> allPostBySellerResult = MockGetPosts(session, "/api/v1/posts/sales");
         assertThat(allPostBySellerResult.getData().getPosts().size()).isEqualTo(1);
 
         // 카테고리별 조회 결과
+        System.out.println("=============");
+        System.out.println("카테고리별 게시글 조회");
         ResponseOKDto<GetAllPostResponseDto> allPostByCategory =
                 MockGetPosts(session, "/api/v1/posts/category?category=others");
         assertThat(allPostByCategory.getData().getPosts().size()).isEqualTo(1);
 
         // 활동 지역 변경
+        System.out.println("=============");
+        System.out.println("활동 지역 변경");
         ActivityAreaRequestDto activityAreaRequestDto =
                 new ActivityAreaRequestDto(Dong.YATAP3.name(), 0);
         MockPost(session, "/api/v1/accounts/activity-area", activityAreaRequestDto);
@@ -118,10 +126,14 @@ class PostControllerTest {
         //== 관심상품 ==//
 
         // 관심상품 등록
+        System.out.println("=============");
+        System.out.println("관심 게시글 등록");
         AddInterestRequestDto addInterestRequestDto = new AddInterestRequestDto(postId1);
         MockPost(session, "/api/v1/interests/new", addInterestRequestDto);
 
         // 관심상품 조회
+        System.out.println("=============");
+        System.out.println("전체 관심 게시글 조회");
         ResponseOKDto<GetAllInterestDto> allInterests =
                 MockGetInterests(session, "/api/v1/interests");
         Long interestId = allInterests.getData().getInterests().get(0).getId();
@@ -221,7 +233,7 @@ class PostControllerTest {
                 .getResponse();
 
         MockHttpSession session = new MockHttpSession();
-        Account account = accountJpaRepository.findByMail(mail).orElseThrow();
+        Account account = accountRepository.findByMail(mail).orElseThrow();
         session.setAttribute(LOGIN_ACCOUNT, account.getId());
         return session;
     }

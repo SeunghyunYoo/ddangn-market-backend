@@ -29,7 +29,7 @@ public class ChatJpaRepository {
         return Optional.ofNullable(em.find(Chat.class, id));
     }
 
-    public List<Chat> findAllByPost(Long postId){
+    public List<Chat> findAllByPostId(Long postId){
         return em.createQuery("select c from Chat c" +
                         " join fetch c.account a" +
                         " join fetch c.post p" +
@@ -79,6 +79,6 @@ public class ChatJpaRepository {
 
 
     public List<Chat> findAll() {
-        return em.createQuery("select r from Chat r", Chat.class).getResultList();
+        return em.createQuery("select c from Chat c", Chat.class).getResultList();
     }
 }

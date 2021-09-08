@@ -2,7 +2,7 @@ package com.ddangnmarket.ddangmarkgetbackend;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
-import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Position;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ import static com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong.*;
 public class InitDb {
 
     private final InitService initService;
-    private final CategoryJpaRepository categoryJpaRepository;
 
     @PostConstruct
     public void init(){
@@ -37,7 +36,7 @@ public class InitDb {
     static class InitService{
         private final EntityManager em;
         private final CategoryJpaRepository categoryJpaRepository;
-        private final DistrictJpaRepository districtJpaRepository;
+        private final DistrictRepository districtRepository;
 
         public void initCategory(){
             for(CategoryTag categoryTag : CategoryTag.values()){
@@ -74,9 +73,9 @@ public class InitDb {
             Account account2= new Account("account2", "000-0000-0000", "account2@gmail.com", "00000000");
             Account account3 = new Account("account3", "000-0000-0000", "account3@gmail.com", "00000000");
 
-            ActivityArea activeArea1 = ActivityArea.createActiveArea(districtJpaRepository.findByDong(Dong.GUMI), 0);
-            ActivityArea activeArea2 = ActivityArea.createActiveArea(districtJpaRepository.findByDong(JEONGJA1), 0);
-            ActivityArea activeArea3 = ActivityArea.createActiveArea(districtJpaRepository.findByDong(Dong.UNJUNG), 0);
+            ActivityArea activeArea1 = ActivityArea.createActiveArea(districtRepository.findByDong(Dong.GUMI), 0);
+            ActivityArea activeArea2 = ActivityArea.createActiveArea(districtRepository.findByDong(JEONGJA1), 0);
+            ActivityArea activeArea3 = ActivityArea.createActiveArea(districtRepository.findByDong(Dong.UNJUNG), 0);
 
             account1.setActivityArea(activeArea1);
             account2.setActivityArea(activeArea2);
@@ -114,9 +113,9 @@ public class InitDb {
             Account account2= new Account("account2", "000-0000-0000", "account2@gmail.com", "00000000");
             Account account3 = new Account("account3", "000-0000-0000", "account3@gmail.com", "00000000");
 
-            ActivityArea activeArea1 = ActivityArea.createActiveArea(districtJpaRepository.findByDong(Dong.GUMI), 0);
-            ActivityArea activeArea2 = ActivityArea.createActiveArea(districtJpaRepository.findByDong(JEONGJA1), 0);
-            ActivityArea activeArea3 = ActivityArea.createActiveArea(districtJpaRepository.findByDong(Dong.UNJUNG), 0);
+            ActivityArea activeArea1 = ActivityArea.createActiveArea(districtRepository.findByDong(Dong.GUMI), 0);
+            ActivityArea activeArea2 = ActivityArea.createActiveArea(districtRepository.findByDong(JEONGJA1), 0);
+            ActivityArea activeArea3 = ActivityArea.createActiveArea(districtRepository.findByDong(Dong.UNJUNG), 0);
 
             account1.setActivityArea(activeArea1);
             account2.setActivityArea(activeArea2);

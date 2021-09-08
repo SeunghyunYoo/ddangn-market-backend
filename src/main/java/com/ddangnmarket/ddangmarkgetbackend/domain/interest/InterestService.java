@@ -3,9 +3,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.interest;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Interest;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
-import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountJpaRepository;
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostJpaRepository;
-import io.swagger.models.auth.In;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,28 +15,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InterestService {
 
-    private final InterestJpaRepository interestJpaRepository;
-    private final AccountJpaRepository accountJpaRepository;
-    private final PostJpaRepository postJpaRepository;
+    private final InterestRepository interestRepository;
+    private final PostRepository postRepository;
 
     public Long addInterest(Account account, Long postId){
 
-        Post post = postJpaRepository.findById(postId)
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 
         Interest interest = Interest.addInterest(post, account);
-        return interestJpaRepository.save(interest).getId();
+        return interestRepository.save(interest).getId();
     }
 
     public List<Interest> findAllInterests(Account account){
-        return interestJpaRepository.findAllByAccount(account);
+        return interestRepository.findAllByAccount(account);
     }
 
     public void deleteInterest(Account account, Long interestId){
 
-        Interest interest = interestJpaRepository.findByIdAndAccount(interestId, account)
+        Interest interest = interestRepository.findByIdAndAccount(interestId, account)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id이거나 해당 사용자의 interest가 아닙니다"));
 
-        interestJpaRepository.delete(interest);
+        interestRepository.delete(interest);
     }
 }

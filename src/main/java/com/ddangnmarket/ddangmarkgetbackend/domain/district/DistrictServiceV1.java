@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class DistrictService {
+public class DistrictServiceV1 {
 
-    private final DistrictRepository districtRepository;
+    private final DistrictJpaRepository districtJpaRepository;
 
     public List<Dong> getActivityAreas(Account account){
-        List<District> districts = districtRepository.findAll();
+        List<District> districts = districtJpaRepository.findAll();
 
         District accountDistrict = account.getActivityArea().getDistrict();
         Integer range = account.getActivityArea().getRange();

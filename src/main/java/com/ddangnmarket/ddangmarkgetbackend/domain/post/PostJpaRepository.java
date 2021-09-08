@@ -27,7 +27,7 @@ public class PostJpaRepository {
         return Optional.ofNullable(em.find(Post.class, id));
     }
 
-    public Optional<Post> findByIdWithSaleAndPurchase(Long id){
+    public Optional<Post> findWithSaleAndPurchaseById(Long id){
         return em.createQuery("select p from Post p" +
                 " join fetch p.purchase pc" +
                 " join fetch p.sale s" +
@@ -37,7 +37,7 @@ public class PostJpaRepository {
                 .findAny();
     }
 
-    public Optional<Post> findByIdWithSeller(Long id){
+    public Optional<Post> findWithSellerById(Long id){
         return em.createQuery("select p from Post p" +
                 " join fetch p.seller s" +
                 " join fetch p.district d" +
@@ -56,7 +56,7 @@ public class PostJpaRepository {
                 .getResultList();
     }
 
-    public List<Post> findAllByStatus(List<District> districts, SaleStatus saleStatus){
+    public List<Post> findAllBySaleStatus(List<District> districts, SaleStatus saleStatus){
         return em.createQuery("select p from Post p" +
                         " join fetch p.seller s" +
                         " join fetch p.category c" +
@@ -67,7 +67,7 @@ public class PostJpaRepository {
                 .getResultList();
     }
 
-    public List<Post> findAllByStatuses(List<District> districts, List<SaleStatus> saleStatuses){
+    public List<Post> findAllBySaleStatuses(List<District> districts, List<SaleStatus> saleStatuses){
         return em.createQuery("select p from Post p" +
                         " join fetch p.seller s" +
                         " join fetch p.category c" +
@@ -87,7 +87,7 @@ public class PostJpaRepository {
                 .getResultList();
     }
 
-    public List<Post> findAllBySellerAndStatus(Account seller, SaleStatus saleStatus){
+    public List<Post> findAllBySellerAndSaleStatus(Account seller, SaleStatus saleStatus){
         return em.createQuery("select p from Post p" +
                         " join fetch p.category c" +
                         " join fetch p.district d" +
@@ -98,10 +98,10 @@ public class PostJpaRepository {
                 .getResultList();
     }
 
-    public List<Post> findAllBySellerAndStatuses(Account seller, List<SaleStatus> saleStatuses) {
+    public List<Post> findAllBySellerAndSaleStatuses(Account seller, List<SaleStatus> saleStatuses) {
         return em.createQuery("select p from Post p" +
                 " join fetch p.category c" +
-                " join fetch p. district d" +
+                " join fetch p.district d" +
                 " where p.seller =: seller" +
                 " and p.saleStatus in (:saleStatuses)", Post.class)
                 .setParameter("seller", seller)
@@ -120,7 +120,7 @@ public class PostJpaRepository {
                 .getResultList();
     }
 
-    public List<Post> findAllByCategoryAndStatus(List<District> districts, CategoryTag categoryTag, SaleStatus saleStatus){
+    public List<Post> findAllByCategoryAndSaleStatus(List<District> districts, CategoryTag categoryTag, SaleStatus saleStatus){
 
         return em.createQuery("select p from Post p" +
                 " where p.district in (:districts)" +
@@ -132,7 +132,7 @@ public class PostJpaRepository {
                 .getResultList();
     }
 
-    public List<Post> findAllByCategoryAndStatuses(List<District> districts, CategoryTag categoryTag, List<SaleStatus> saleStatuses) {
+    public List<Post> findAllByCategoryAndSaleStatuses(List<District> districts, CategoryTag categoryTag, List<SaleStatus> saleStatuses) {
         return em.createQuery("select p from Post p" +
                 " join fetch p.seller s" +
                 " where p.district in (:districts)" +

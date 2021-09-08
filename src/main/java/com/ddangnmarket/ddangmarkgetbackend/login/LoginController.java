@@ -2,10 +2,10 @@ package com.ddangnmarket.ddangmarkgetbackend.login;
 
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
+import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountServiceV1;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.login.dto.LoginRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.login.dto.LoginResponseDto;
-import com.ddangnmarket.ddangmarkgetbackend.login.dto.LogoutResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

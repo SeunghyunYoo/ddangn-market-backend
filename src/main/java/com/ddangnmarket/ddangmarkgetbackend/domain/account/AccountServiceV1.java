@@ -1,15 +1,15 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.account;
 
 
-import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.ActivityArea;
 import com.ddangnmarket.ddangmarkgetbackend.domain.District;
-import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.ChangeAccountPasswordRequestDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.UpdateAccountInfoRequestDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.ChangeAccountPasswordRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.DuplicateEmailException;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.DuplicateNicknameException;
-import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
-import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
+import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,42 +17,40 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AccountService {
+public class AccountServiceV1 {
 
-    private final DistrictRepository districtRepository;
-    private final AccountRepository accountRepository;
+    private final AccountJpaRepository accountJpaRepository;
+    private final DistrictJpaRepository districtJpaRepository;
 
     public Account signUp(Account account, Dong dong){
         validateDuplicateEmailAccount(account);
         validateDuplicateNicknameAccount(account.getNickname());
-        District district = districtRepository.findByDong(dong);
-//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주소입니다."));;
-
+        District district = districtJpaRepository.findByDong(dong);
         account.changeActivityArea(ActivityArea.createActiveArea(district, 0));
 //        account.setCreatedAt(LocalDateTime.now());
 
-        return accountRepository.save(account);
+        return accountJpaRepository.save(account);
     }
 
 
     public Account findAccount(Long accountId){
-        return accountRepository.findById(accountId).orElseThrow(() ->
+        return accountJpaRepository.findById(accountId).orElseThrow(() ->
                 new IllegalStateException("존재하지 않는 회원입니다."));
     }
 
     public Account findAccountWithActivityArea(Long accountId){
-        return accountRepository.findWithActivityAreaById(accountId)
+        return accountJpaRepository.findByIdWithActivityArea(accountId)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 회원입니다."));
     }
 
     public void delete(String mail, String password) {
-        Account account = accountRepository.findByMail(mail)
+        Account account = accountJpaRepository.findByMail(mail)
                 .orElseThrow(() -> new IllegalStateException("잘못된 회원정보입니다."));
 
         if (!account.getPassword().equals(password)) {
             throw new IllegalArgumentException("잘못된 회원정보입니다.");
         }
-        accountRepository.delete(account);
+        accountJpaRepository.delete(account);
     }
 
     public void updateAccountInfo(Account account, UpdateAccountInfoRequestDto updateAccountInfoRequestDto) {
@@ -75,19 +73,18 @@ public class AccountService {
     }
 
     public void changeActivityArea(Account account, Dong dong, Integer range){
-        District district = districtRepository.findByDong(dong);
-//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주소입니다."));;
+        District district = districtJpaRepository.findByDong(dong);
         account.getActivityArea().changeActiveArea(district, range);
     }
 
     private void validateDuplicateEmailAccount(Account account) {
-        if(accountRepository.findByMail(account.getMail()).isPresent()){
+        if(accountJpaRepository.findByMail(account.getMail()).isPresent()){
             throw new DuplicateEmailException("이 이메일을 사용할 수 없습니다.");
         }
     }
 
     private void validateDuplicateNicknameAccount(String nickname){
-        if(accountRepository.findByNickname(nickname).isPresent()){
+        if(accountJpaRepository.findByNickname(nickname).isPresent()){
             throw new DuplicateNicknameException("이미 존재하는 닉네임입니다.");
         }
     }

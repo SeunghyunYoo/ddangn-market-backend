@@ -3,9 +3,9 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.account;
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseSimpleOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.*;
-import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictService;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 

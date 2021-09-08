@@ -2,11 +2,11 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.post;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
-import com.ddangnmarket.ddangmarkgetbackend.domain.chat.ChatJpaRepository;
-import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chat.ChatRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.UpdatePostRequestDto;
-import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseJpaRepository;
-import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +19,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService {
 
-    private final PostJpaRepository postJpaRepository;
+    private final PostRepository postRepository;
     private final CategoryJpaRepository categoryJpaRepository;
-    private final ChatJpaRepository chatJpaRepository;
-    private final DistrictJpaRepository districtJpaRepository;
-    private final SaleJpaRepository saleJpaRepository;
-    private final PurchaseJpaRepository purchaseJpaRepository;
+    private final ChatRepository chatRepository;
+    private final DistrictRepository districtRepository;
+    private final SaleRepository saleRepository;
+    private final PurchaseRepository purchaseRepository;
 
     public Long post(Post post){
-        return postJpaRepository.save(post).getId();
+        return postRepository.save(post).getId();
     }
 
     public Long post(String title, String desc, int price, CategoryTag categoryTag, Account account) {
@@ -35,59 +35,59 @@ public class PostService {
 
 //        Post post = Post.createPost(title, desc, price, new PostCategory(category), account);
         Post post = Post.createPost(title, desc, price, category, account);
-        return postJpaRepository.save(post).getId();
+        return postRepository.save(post).getId();
     }
 
     public List<Post> findAll(Account account){
         List<District> districts = getDistrict(account);
 
-        return postJpaRepository.findAll(districts);
+        return postRepository.findAll(districts);
     }
 
     public List<Post> findAllByStatus(Account account, SaleStatus saleStatus){
         List<District> districts = getDistrict(account);
 
-        return postJpaRepository.findAllByStatus(districts, saleStatus);
+        return postRepository.findAllBySaleStatus(districts, saleStatus);
     }
 
     public List<Post> findAllByStatuses(Account account, List<SaleStatus> saleStatuses){
         List<District> districts = getDistrict(account);
 
-        return postJpaRepository.findAllByStatuses(districts, saleStatuses);
+        return postRepository.findAllBySaleStatuses(districts, saleStatuses);
     }
 
     public List<Post> findPostAllBySeller(Account account){
-        return postJpaRepository.findAllBySeller(account);
+        return postRepository.findAllBySeller(account);
     }
 
     public List<Post> findPostAllBySellerAndStatus(Account account, SaleStatus saleStatus){
-        return postJpaRepository.findAllBySellerAndStatus(account, saleStatus);
+        return postRepository.findAllBySellerAndSaleStatus(account, saleStatus);
     }
 
     public List<Post> findPostAllBySellerAndStatuses(Account account, List<SaleStatus> saleStatuses){
-        return postJpaRepository.findAllBySellerAndStatuses(account, saleStatuses);
+        return postRepository.findAllBySellerAndSaleStatuses(account, saleStatuses);
     }
 
     public List<Post> findPostAllByCategory(Account account, CategoryTag categoryTag){
         List<District> districts = getDistrict(account);
 
-        return postJpaRepository.findAllByCategory(districts, categoryTag);
+        return postRepository.findAllByCategory(districts, categoryTag);
     }
 
     public List<Post> findAllByCategoryAndStatus(Account account, CategoryTag categoryTag, SaleStatus saleStatus){
         List<District> districts = getDistrict(account);
 
-        return postJpaRepository.findAllByCategoryAndStatus(districts, categoryTag, saleStatus);
+        return postRepository.findAllByCategoryAndSaleStatus(districts, categoryTag, saleStatus);
     }
 
     public List<Post> findAllByCategoryAndStatuses(Account account, CategoryTag categoryTag, List<SaleStatus> saleStatuses) {
         List<District> districts = getDistrict(account);
 
-        return postJpaRepository.findAllByCategoryAndStatuses(districts, categoryTag, saleStatuses);
+        return postRepository.findAllByCategoryAndSaleStatuses(districts, categoryTag, saleStatuses);
     }
 
     public List<Post> findAllPurchase(Account account){
-        return postJpaRepository.findAllPurchase(account);
+        return postRepository.findAllPurchase(account);
     }
 
     /**
@@ -97,7 +97,7 @@ public class PostService {
     public void deleteById(Long postId){
         // TODO 삭제 요청시 -> hide로 변경
         Post post = findById(postId);
-        postJpaRepository.delete(post);
+        postRepository.delete(post);
     }
 
     public void updatePost(Long postId, UpdatePostRequestDto updatePostRequestDto){
@@ -123,7 +123,7 @@ public class PostService {
             post.cancelReserve();
         }
 
-        Chat chat = chatJpaRepository.findById(chatId)
+        Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅입니다."));
         chat.changeComplete();
 
@@ -132,8 +132,8 @@ public class PostService {
         Sale sale = Sale.createSale(seller, post);
         Purchase purchase = Purchase.createPurchase(buyer, post);
 
-        saleJpaRepository.save(sale);
-        purchaseJpaRepository.save(purchase);
+        saleRepository.save(sale);
+        purchaseRepository.save(purchase);
     }
 
     public void cancelSale(Long postId){
@@ -153,7 +153,7 @@ public class PostService {
         }
 
         // 이런 validation이 필요한가?
-        Chat chat = chatJpaRepository.findById(chatId)
+        Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅입니다."));
 
         post.changeReserve(chat);
@@ -171,17 +171,17 @@ public class PostService {
     }
 
     public Post findById(Long postId){
-        return postJpaRepository.findById(postId)
+        return postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
 
     public Post findByIdWithSaleAndPurchase(Long postId){
-        return postJpaRepository.findByIdWithSaleAndPurchase(postId)
+        return postRepository.findWithSaleAndPurchaseById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
 
     private List<District> getDistrict(Account account){
-        List<District> districts = districtJpaRepository.findAll();
+        List<District> districts = districtRepository.findAll();
 
         District accountDistrict = account.getActivityArea().getDistrict();
         Integer range = account.getActivityArea().getRange();

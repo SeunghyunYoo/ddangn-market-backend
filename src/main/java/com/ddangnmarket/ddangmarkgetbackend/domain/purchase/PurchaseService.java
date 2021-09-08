@@ -13,9 +13,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PurchaseService {
 
-    private final PurchaseJpaRepository purchaseJpaRepository;
+    private final PurchaseRepository purchaseRepository;
 
     public List<Purchase> findAllPurchase(Account account){
-        return purchaseJpaRepository.findAllByAccount(account);
+        return purchaseRepository.findAllByAccount(account);
     }
 }

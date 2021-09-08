@@ -5,7 +5,6 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Purchase;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.dto.GetAllPurchaseResponseDto;
-import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.dto.GetPurchaseResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

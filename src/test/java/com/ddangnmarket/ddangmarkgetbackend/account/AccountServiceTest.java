@@ -1,16 +1,13 @@
 package com.ddangnmarket.ddangmarkgetbackend.account;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
-import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
-import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.DuplicateEmailException;
+import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountServiceV1;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -18,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AccountServiceTest {
 
     @Autowired
-    AccountService accountService;
+    AccountServiceV1 accountServiceV1;
 
 
     @Test

@@ -4,16 +4,14 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Account extends BaseEntity{
+@EqualsAndHashCode(callSuper = false)
+public class Account extends DeleteEntity{
     @Id @GeneratedValue
     @Column(name = "account_id")
     private Long id;
@@ -39,7 +37,7 @@ public class Account extends BaseEntity{
         this.password = password;
     }
 
-    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
     //== 연관관계 메서드 ==/
@@ -48,6 +46,17 @@ public class Account extends BaseEntity{
     }
 
     //== 비즈니스 메서드 ==/
+    public void absoluteDeleteAccount(){
+        posts.forEach(Post::absoluteDeletePost);
+    }
+
+    public void deleteAccount(){
+        this.nickname = UUID.randomUUID().toString();
+        this.password = UUID.randomUUID().toString();
+        posts.forEach(Post::deletePost);
+        super.delete();
+    }
+
     public void changePassword(String password){
         this.password = password;
     }
@@ -64,4 +73,6 @@ public class Account extends BaseEntity{
         // posts.forEach(post ->
         //         post.changeDistrict(activityArea.getDistrict()));
     }
+
+
 }

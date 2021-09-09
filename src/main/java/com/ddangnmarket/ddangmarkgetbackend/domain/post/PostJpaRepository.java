@@ -61,9 +61,9 @@ public class PostJpaRepository {
                         " join fetch p.seller s" +
                         " join fetch p.category c" +
                         " where p.district in (:districts)" +
-                        " and p.saleStatus = :status", Post.class)
+                        " and p.postStatus = :postStatus", Post.class)
                 .setParameter("districts", districts)
-                .setParameter("status", postStatus)
+                .setParameter("postStatus", postStatus)
                 .getResultList();
     }
 
@@ -73,9 +73,9 @@ public class PostJpaRepository {
                         " join fetch p.seller s" +
                         " join fetch p.category c" +
                         " where p.district in (:districts)" +
-                        " and p.saleStatus in (:saleStatuses)", Post.class)
+                        " and p.postStatus in (:postStatuses)", Post.class)
                 .setParameter("districts", districts)
-                .setParameter("saleStatuses", postStatuses)
+                .setParameter("postStatuses", postStatuses)
                 .getResultList();
     }
 
@@ -94,9 +94,9 @@ public class PostJpaRepository {
                         " join fetch p.category c" +
                         " join fetch p.district d" +
                         " where p.seller = :seller" +
-                        " and p.saleStatus = :status", Post.class)
+                        " and p.postStatus = :postStatus", Post.class)
                 .setParameter("seller", seller)
-                .setParameter("status", postStatus)
+                .setParameter("postStatus", postStatus)
                 .getResultList();
     }
 
@@ -106,9 +106,9 @@ public class PostJpaRepository {
                 " join fetch p.category c" +
                 " join fetch p.district d" +
                 " where p.seller =: seller" +
-                " and p.saleStatus in (:saleStatuses)", Post.class)
+                " and p.postStatus in (:postStatuses)", Post.class)
                 .setParameter("seller", seller)
-                .setParameter("saleStatuses", postStatuses)
+                .setParameter("postStatuses", postStatuses)
                 .getResultList();
     }
 
@@ -128,10 +128,10 @@ public class PostJpaRepository {
         return em.createQuery("select p from Post p" +
                 " where p.district in (:districts)" +
                 " and p.category.categoryTag = :categoryTag" +
-                " and p.saleStatus = :status", Post.class)
+                " and p.postStatus = :postStatus", Post.class)
                 .setParameter("districts", districts)
                 .setParameter("categoryTag", categoryTag)
-                .setParameter("status", postStatus)
+                .setParameter("postStatus", postStatus)
                 .getResultList();
     }
 
@@ -141,10 +141,10 @@ public class PostJpaRepository {
                 " join fetch p.seller s" +
                 " where p.district in (:districts)" +
                 " and p.category.categoryTag = :categoryTag" +
-                " and p.saleStatus in (:saleStatuses)", Post.class)
+                " and p.postStatus in (:postStatuses)", Post.class)
                 .setParameter("districts", districts)
                 .setParameter("categoryTag", categoryTag)
-                .setParameter("saleStatuses", postStatuses)
+                .setParameter("postStatuses", postStatuses)
                 .getResultList();
     }
 

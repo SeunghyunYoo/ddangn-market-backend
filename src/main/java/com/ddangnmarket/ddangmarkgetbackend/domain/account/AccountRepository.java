@@ -9,16 +9,22 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
+    @Query("select a from Account a where a.id = :id and a.isDeleted = false")
+//    @Query("select a from Account a where a.id = :id")
+    Optional<Account> findById(@Param("id") Long id);
 
+    @Query("select a from Account a where a.mail = :mail and a.isDeleted = false")
+//    @Query("select a from Account a where a.mail = :mail")
+    Optional<Account> findByMail(@Param("mail") String mail);
 
-    Optional<Account> findByMail(String mail);
-
-    Optional<Account> findByNickname(String nickname);
+    @Query("select a from Account a where a.nickname = :nickname and a.isDeleted = false")
+//    @Query("select a from Account a where a.nickname = :nickname")
+    Optional<Account> findByNickname(@Param("nickname") String nickname);
 
     @Query("select a from Account a" +
             " join fetch a.activityArea ar" +
             " join fetch ar.district d" +
-            " where a.id = :id")
+            " where a.id = :id and a.isDeleted = false")
     Optional<Account> findWithActivityAreaById(@Param("id") Long id);
 
 }

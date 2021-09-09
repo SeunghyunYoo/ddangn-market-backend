@@ -45,6 +45,17 @@ public class AccountService {
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 회원입니다."));
     }
 
+    public void absoluteDelete(String mail, String password) {
+        Account account = accountRepository.findByMail(mail)
+                .orElseThrow(() -> new IllegalStateException("잘못된 회원정보입니다."));
+
+        if (!account.getPassword().equals(password)) {
+            throw new IllegalArgumentException("잘못된 회원정보입니다.");
+        }
+//        account.absoluteDeleteAccount();
+        accountRepository.delete(account);
+    }
+
     public void delete(String mail, String password) {
         Account account = accountRepository.findByMail(mail)
                 .orElseThrow(() -> new IllegalStateException("잘못된 회원정보입니다."));
@@ -52,7 +63,7 @@ public class AccountService {
         if (!account.getPassword().equals(password)) {
             throw new IllegalArgumentException("잘못된 회원정보입니다.");
         }
-        accountRepository.delete(account);
+        account.deleteAccount();
     }
 
     public void updateAccountInfo(Account account, UpdateAccountInfoRequestDto updateAccountInfoRequestDto) {

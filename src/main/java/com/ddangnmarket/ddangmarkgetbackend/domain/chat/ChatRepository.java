@@ -22,12 +22,12 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     @Query("select c from Chat c" +
             " join fetch c.account a" +
             " join fetch c.post p" +
-            " where p.id in :postIds ")
+            " where p.id in :postIds and c.isDeleted = false")
     List<Chat> findAllByPostIds(@Param("postIds") Collection<Long> postIds);
 
     @Query("select c from Chat c" +
             " join fetch c.post p" +
             " where c.account = :account" +
-            " and p.seller <> :account")
+            " and p.seller <> :account and c.isDeleted = false")
     List<Chat> findAllByAccount(@Param("account") Account account);
 }

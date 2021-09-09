@@ -16,12 +16,15 @@ public interface InterestRepository extends JpaRepository<Interest, Long>, Inter
 
     Optional<Interest> findByAccountAndPostId(Account account, Long PostId);
 
+    // TODO 쿼리 최적화 필요 sale, purchase 등 불필요한 정보
     @Query("select i from Interest i" +
             " join fetch i.post p" +
             " join fetch p.seller s" +
             " join fetch p.category c" +
             " join fetch i.account a" +
+            " join fetch p.sale sl" +
+            " join fetch p.purchase pc" +
             " where a = :account" +
-            " and i.isDeleted = false")
+            " and i.isDeleted = false and p.isDeleted = false")
     List<Interest> findAllByAccount(@Param("account") Account account);
 }

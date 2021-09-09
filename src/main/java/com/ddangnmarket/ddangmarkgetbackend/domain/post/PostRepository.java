@@ -17,6 +17,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
     @Query("select p from Post p where p.id = :id and p.isDeleted = false")
+//    @EntityGraph(attributePaths = {"sale", "purchase"})
     Optional<Post> findById(@Param("id") Long id);
 
     @EntityGraph(attributePaths = {"sale", "purchase"})
@@ -89,6 +90,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             " join fetch p.seller s" +
             " join fetch p.purchase pc" +
             " join fetch p.sale sl" +
-            " where pc.account = :buyer")
+            " where pc.account = :buyer and p.isDeleted = false")
     List<Post> findAllPurchase(@Param("buyer") Account buyer);
 }

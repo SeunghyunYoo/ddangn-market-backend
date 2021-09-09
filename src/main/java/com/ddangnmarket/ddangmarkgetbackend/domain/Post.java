@@ -50,7 +50,7 @@ public class Post extends DeleteEntity{
     private Category category;
 
 //    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Chat> chats = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -82,10 +82,12 @@ public class Post extends DeleteEntity{
     }
 
     //== 연관관계 메서드 ==/
-    public void setSeller(Account seller) {
-        this.seller = seller;
-        seller.addPost(this);
-    }
+
+
+//    public void setSeller(Account seller) {
+//        this.seller = seller;
+//        seller.addPost(this);
+//    }
 
     //== 바즈니스 로직 ==//
 
@@ -97,7 +99,26 @@ public class Post extends DeleteEntity{
         if(purchase != null){
             purchase.delete();
         }
+        if(chats != null){
+            chats.forEach(Chat::delete);
+        }
 //        chats.forEach(Chat::disconnectPost);
+    }
+
+    public void absoluteDeletePost(){
+        if(sale != null){
+            sale = null;
+        }
+        if(purchase != null){
+            purchase = null;
+        }
+//        if(chats != null){
+//            chats.forEach(chat -> {
+//                chat.setPost(null);
+//            });
+//        }
+        this.chats = null;
+        this.seller = null;
     }
 
     public void addViewCount(){

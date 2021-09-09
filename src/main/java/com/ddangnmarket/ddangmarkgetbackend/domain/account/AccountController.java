@@ -64,6 +64,21 @@ public class AccountController {
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
+    @DeleteMapping("/absolute")
+    public ResponseEntity<ResponseSimpleOKDto> absoluteDeleteAccount(
+            @RequestBody DeleteAccountRequestDto deleteAccountRequestDto,
+            HttpServletRequest request){
+
+        accountService.absoluteDelete(deleteAccountRequestDto.getMail(), deleteAccountRequestDto.getPassword());
+
+        HttpSession session = request.getSession(false);
+        if (session != null){
+            session.invalidate();
+        }
+
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
+    }
+
     @GetMapping("/info")
     public ResponseEntity<ResponseOKDto<GetAccountInfoResponseDto>> getAccountInfo(@ApiIgnore HttpSession session){
         Account account = getSessionCheckedAccountWithArea(session);

@@ -23,8 +23,13 @@ public class InterestService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 
-        Interest interest = Interest.addInterest(post, account);
-        return interestRepository.save(interest).getId();
+        Interest interest = interestRepository.findByAccountAndPostId(account, postId).orElse(null);
+        if (interest == null) {
+            Interest newInterest = Interest.addInterest(post, account);
+            return interestRepository.save(newInterest).getId();
+        }
+        interest.cancelDelete();
+        return interest.getId();
     }
 
     public List<Interest> findAllInterests(Account account){
@@ -36,6 +41,14 @@ public class InterestService {
         Interest interest = interestRepository.findByIdAndAccount(interestId, account)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id이거나 해당 사용자의 interest가 아닙니다"));
 
-        interestRepository.delete(interest);
+
+//        interestRepository.delete(interest);
+        interest.delete();
+    }
+
+    public void deleteInterestByPostId(Account account, Long postId){
+        Interest interest = interestRepository
+                .findByAccountAndPostId(account, postId).orElseThrow();
+        interest.delete();
     }
 }

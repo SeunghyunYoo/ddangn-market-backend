@@ -1,6 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.chat;
 
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
+import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseSimpleOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Chat;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
@@ -55,6 +56,15 @@ public class ChatController {
 
         return new ResponseEntity<>(new ResponseOKDto<>(
                 new CreateChatResponseDto(chatId)), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{chatId}")
+    public ResponseEntity<ResponseSimpleOKDto> deleteChat(@PathVariable Long chatId, @ApiIgnore HttpSession session){
+        Account account = getSessionCheckedAccount(session);
+
+        chatService.deleteChat(account, chatId);
+
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
     private Account getSessionCheckedAccount(HttpSession session) {

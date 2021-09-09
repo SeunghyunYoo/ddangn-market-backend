@@ -4,7 +4,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Purchase;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.SaleStatus;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -38,7 +38,7 @@ public class GetPurchaseResponseDto {
 
         private int price;
 
-        private SaleStatus status;
+        private PostStatus status;
 
         private String sellerNickname;
 
@@ -55,7 +55,7 @@ public class GetPurchaseResponseDto {
             this.title = post.getTitle();
             this.desc = post.getDesc();
             this.price = post.getPrice();
-            this.status = post.getSaleStatus();
+            this.status = post.getPostStatus();
             this.sellerNickname = post.getSeller().getNickname();
             this.categoryTag = post.getCategory().getCategoryTag();
             this.dong = post.getDistrict().getDong();

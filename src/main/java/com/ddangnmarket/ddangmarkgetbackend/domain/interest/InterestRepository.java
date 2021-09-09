@@ -14,11 +14,14 @@ public interface InterestRepository extends JpaRepository<Interest, Long>, Inter
 
     Optional<Interest> findByIdAndAccount(Long id, Account account);
 
+    Optional<Interest> findByAccountAndPostId(Account account, Long PostId);
+
     @Query("select i from Interest i" +
             " join fetch i.post p" +
             " join fetch p.seller s" +
             " join fetch p.category c" +
             " join fetch i.account a" +
-            " where a = :account")
+            " where a = :account" +
+            " and i.isDeleted = false")
     List<Interest> findAllByAccount(@Param("account") Account account);
 }

@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Sale extends BaseEntity {
+public class Sale extends DeleteEntity {
     @Id @GeneratedValue
     @Column(name = "sale_id")
     private Long id;

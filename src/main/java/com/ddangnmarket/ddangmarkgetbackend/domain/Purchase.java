@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Purchase extends BaseEntity{
+public class Purchase extends DeleteEntity{
 
     @Id @GeneratedValue
     @Column(name = "purchase_id")

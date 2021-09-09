@@ -1,6 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.SaleStatus;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Chat extends BaseEntity{
+public class Chat extends DeleteEntity{
 
     @Id @GeneratedValue
     @Column(name = "chat_id")
@@ -25,11 +25,11 @@ public class Chat extends BaseEntity{
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @Enumerated(EnumType.STRING)
-    private ChatStatus chatStatus;
+//    @Enumerated(EnumType.STRING)
+//    private PostStatus postStatus;
 
     public static Chat createChat(Post post, Account account){
-        if (post.getSaleStatus() == SaleStatus.COMPLETE){
+        if (post.getPostStatus() == PostStatus.COMPLETE){
             throw new IllegalArgumentException("이미 판매완료된 상품은 구매할 수 없습니다.");
         }
         validateHasAlreadyChat(post, account);
@@ -37,12 +37,13 @@ public class Chat extends BaseEntity{
         Chat chat = new Chat();
         chat.post = post;
         chat.account = account;
-        chat.chatStatus = ChatStatus.NONE;
+//        chat.postStatus = PostStatus.NEW;
         post.addChat(chat);
         return chat;
     }
 
     private static void validateHasAlreadyChat(Post post, Account account) {
+        //TODO 원래 챗의 delete 플래그를 none으로 바꾸고 해당 챗 리턴
         boolean hasAlreadyChat = post.getChats().stream()
                 .anyMatch(chat -> chat.getAccount().equals(account));
         if (hasAlreadyChat){
@@ -50,16 +51,24 @@ public class Chat extends BaseEntity{
         }
     }
 
-    public void changeReserve(){
-        chatStatus = ChatStatus.RESERVED;
-    }
+//    public void changeReserve(){
+//        postStatus = PostStatus.RESERVE;
+//    }
+//
+//    public void changeNone(){
+//        postStatus = PostStatus.NEW;
+//    }
+//
+//    public void changeComplete(){
+//        postStatus = PostStatus.COMPLETE;
+//    }
+//
+//    public void disconnectPost(){
+////        this.post = null;
+//        this.postStatus = PostStatus.DELETE;
+//    }
 
-    public void changeNone(){
-        chatStatus = ChatStatus.NONE;
+    public void deleteChat(){
+        super.delete();
     }
-
-    public void changeComplete(){
-        chatStatus = ChatStatus.COMPLETE;
-    }
-
 }

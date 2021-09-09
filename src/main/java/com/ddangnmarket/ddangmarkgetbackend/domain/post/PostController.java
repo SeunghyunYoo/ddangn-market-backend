@@ -53,13 +53,13 @@ public class PostController {
      * @return
      */
     @GetMapping("/{postId}")
-    public ResponseEntity<ResponseOKDto<GetPostResponseDto>> getPost(@PathVariable Long postId, @ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseOKDto<GetPostOneResponseDto>> getPost(@PathVariable Long postId, @ApiIgnore HttpSession session){
         getSessionCheckedAccount(session);
 
-        Post post = postService.findById(postId);
+        Post post = postService.findPost(postId);
 
         return new ResponseEntity<>(new ResponseOKDto<>(
-                new GetPostResponseDto(post)), HttpStatus.OK);
+                new GetPostOneResponseDto(post)), HttpStatus.OK);
     }
 
     /**
@@ -163,9 +163,9 @@ public class PostController {
 
         getPostAllParamListValidation(status);
 
-        List<SaleStatus> saleStatuses = convertStringToSaleStatus(status);
+        List<PostStatus> postStatuses = convertStringToSaleStatus(status);
 
-        List<Post> posts = postService.findAllByStatuses(account, saleStatuses);
+        List<Post> posts = postService.findAllByStatuses(account, postStatuses);
         return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
 
     }
@@ -190,9 +190,9 @@ public class PostController {
 
         getPostAllParamListValidation(status);
 
-        List<SaleStatus> saleStatuses = convertStringToSaleStatus(status);
+        List<PostStatus> postStatuses = convertStringToSaleStatus(status);
 
-        List<Post> posts = postService.findPostAllBySellerAndStatuses(account, saleStatuses);
+        List<Post> posts = postService.findPostAllBySellerAndStatuses(account, postStatuses);
         return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
     }
 
@@ -218,11 +218,11 @@ public class PostController {
         }
         getPostAllParamListValidation(status);
 
-        List<SaleStatus> saleStatuses = convertStringToSaleStatus(status);
+        List<PostStatus> postStatuses = convertStringToSaleStatus(status);
 
         List<Post> posts = postService.findAllByCategoryAndStatuses(account,
                 CategoryTag.valueOf(categoryTag.toUpperCase()),
-                saleStatuses);
+                postStatuses);
 
         return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
     }
@@ -247,7 +247,8 @@ public class PostController {
     public ResponseEntity<ResponseSimpleOKDto> deletePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
         getSessionCheckedAccount(session);
         // TODO 거래 완료된 게시글은 삭제 못하도록 변경
-        postService.deleteById(postId);
+//        postService.deleteById(postId);
+        postService.delete(postId);
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
@@ -270,12 +271,12 @@ public class PostController {
         }
     }
 
-    private List<SaleStatus> convertStringToSaleStatus(List<String> status) {
-        List<SaleStatus> saleStatuses = status
+    private List<PostStatus> convertStringToSaleStatus(List<String> status) {
+        List<PostStatus> postStatuses = status
                 .stream().map(String::toUpperCase)
-                .map(SaleStatus::valueOf)
+                .map(PostStatus::valueOf)
                 .collect(toList());
-        return saleStatuses;
+        return postStatuses;
     }
 
 }

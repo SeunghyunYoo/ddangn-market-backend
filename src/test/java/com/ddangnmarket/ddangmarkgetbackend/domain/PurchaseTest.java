@@ -1,6 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.SaleStatus;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -67,7 +67,7 @@ class PurchaseTest {
     }
 
     private Purchase purchase(Account buyer, Post findPost) {
-        findPost.setSaleStatus(SaleStatus.NEW);
+        findPost.setPostStatus(PostStatus.NEW);
         Purchase purchase = new Purchase();
         purchase.setPost(findPost);
         purchase.setAccount(buyer);

@@ -15,42 +15,52 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Optional<Post> findById(Long id);
+
+    @Query("select p from Post p where p.id = :id and p.isDeleted = false")
+    Optional<Post> findById(@Param("id") Long id);
 
     @EntityGraph(attributePaths = {"sale", "purchase"})
-    Optional<Post> findWithSaleAndPurchaseById(Long id);
+    @Query("select p from Post p where p.id = :id and p.isDeleted = false")
+    Optional<Post> findWithSaleAndPurchaseById(@Param("id") Long id);
 
     @EntityGraph(attributePaths = {"seller"})
-    Optional<Post> findWithSellerById(Long id);
+    @Query("select p from Post p where p.id = :id and p.isDeleted = false")
+    Optional<Post> findWithSellerById(@Param("id") Long id);
 
-    @Query("select p from Post p where p.district in :districts")
+    @Query("select p from Post p where p.district in :districts and p.isDeleted = false")
     @EntityGraph(attributePaths = {"seller", "category", "sale", "purchase"})
     List<Post> findAll(@Param("districts") Collection<District> districts);
 
-    @Query("select p from Post p where p.district in :districts and p.saleStatus = :saleStatus")
+    @Query("select p from Post p where p.district in :districts and p.postStatus = :postStatus and p.isDeleted = false")
     @EntityGraph(attributePaths = {"seller", "category", "sale", "purchase"})
-    List<Post> findAllBySaleStatus(
-            @Param("districts") Collection<District> districts, @Param("saleStatus") SaleStatus saleStatus);
+    List<Post> findAllByPostStatus(
+            @Param("districts") Collection<District> districts, @Param("postStatus") PostStatus postStatus);
 
 
-    @Query("select p from Post p where p.district in :districts and p.saleStatus in :saleStatuses")
+    @Query("select p from Post p where p.district in :districts and p.postStatus in :postStatuses and p.isDeleted = false")
     @EntityGraph(attributePaths = {"seller", "category", "sale", "purchase"})
-    List<Post> findAllBySaleStatuses(
-            @Param("districts") Collection<District> districts, @Param("saleStatus") Collection<SaleStatus> saleStatus
+    List<Post> findAllByPostStatuses(
+            @Param("districts") Collection<District> districts, @Param("postStatuses") Collection<PostStatus> postStatuses
     );
 
     @EntityGraph(attributePaths = {"category", "district", "sale", "purchase"})
-    List<Post> findAllBySeller(Account seller);
+    @Query("select p from Post p where p.seller = :seller and p.isDeleted = false")
+    List<Post> findAllBySeller(@Param("seller") Account seller);
 
     @EntityGraph(attributePaths = {"category", "district", "sale", "purchase"})
-    List<Post> findAllBySellerAndSaleStatus(Account seller, SaleStatus saleStatus);
+    @Query("select p from Post p" +
+            " where p.seller = :seller and p.postStatus = :postStatus" +
+            " and p.isDeleted = false")
+    List<Post> findAllBySellerAndPostStatus(
+            @Param("seller") Account seller, @Param("postStatus") PostStatus postStatus);
 
-    @Query("select p from Post p where p.seller in :seller and p.saleStatus in :saleStatuses")
+    @Query("select p from Post p where p.seller in :seller and p.postStatus in :postStatuses and p.isDeleted = false")
     @EntityGraph(attributePaths = {"category", "district", "sale", "purchase"})
-    List<Post> findAllBySellerAndSaleStatuses(
-            @Param("seller") Account seller, @Param("saleStatuses") Collection<SaleStatus> saleStatuses);
+    List<Post> findAllBySellerAndPostStatuses(
+            @Param("seller") Account seller, @Param("postStatuses") Collection<PostStatus> postStatuses);
 
-    @Query("select p from Post p where p.district in :districts and p.category.categoryTag = :categoryTag")
+    @Query("select p from Post p where p.district in :districts and p.category.categoryTag = :categoryTag and p.isDeleted = false")
+
     @EntityGraph(attributePaths = {"seller", "sale", "purchase"})
     List<Post> findAllByCategory(
             @Param("districts") Collection<District> districts, @Param("categoryTag") CategoryTag categoryTag);
@@ -58,22 +68,20 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select p from Post p where p.district in :districts" +
             " and p.category.categoryTag = :categoryTag" +
-            " and p.saleStatus = :saleStatus")
+            " and p.postStatus = :postStatus and p.isDeleted = false")
     @EntityGraph(attributePaths = {"seller", "sale", "purchase"})
-    List<Post> findAllByCategoryAndSaleStatus(
+    List<Post> findAllByCategoryAndPostStatus(
             @Param("districts") Collection<District> districts,
-            @Param("categoryTag") CategoryTag categoryTag, @Param("saleStatus") SaleStatus saleStatus);
-
+            @Param("categoryTag") CategoryTag categoryTag, @Param("postStatus") PostStatus postStatus);
 
     @Query("select p from Post p where p.district in :districts" +
             " and p.category.categoryTag = :categoryTag" +
-            " and p.saleStatus in :saleStatuses")
+            " and p.postStatus in :postStatuses and p.isDeleted = false")
     @EntityGraph(attributePaths = {"seller", "sale", "purchase"})
-    List<Post> findAllByCategoryAndSaleStatuses(
+    List<Post> findAllByCategoryAndPostStatuses(
             @Param("districts") Collection<District> districts,
             @Param("categoryTag") CategoryTag categoryTag,
-            @Param("saleStatuses") Collection<SaleStatus> saleStatuses);
-
+            @Param("postStatuses") Collection<PostStatus> postStatuses);
 
     @Query("select p from Post p" +
             " join fetch p.district d" +

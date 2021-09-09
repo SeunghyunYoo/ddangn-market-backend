@@ -1,16 +1,14 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Interest extends BaseEntity{
+@EqualsAndHashCode(callSuper = false)
+public class Interest extends DeleteEntity{
 
     @Id @GeneratedValue
     @Column(name = "interest_id")
@@ -28,6 +26,7 @@ public class Interest extends BaseEntity{
         Interest interest = new Interest();
         interest.post = post;
         interest.account = account;
+        post.addInterestCount();
         return interest;
     }
 

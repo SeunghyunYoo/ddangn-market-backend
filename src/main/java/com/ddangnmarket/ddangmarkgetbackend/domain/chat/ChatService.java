@@ -54,14 +54,28 @@ public class ChatService {
         if(post.getSeller().getId().equals(buyer.getId())){
             throw new IllegalArgumentException("자신의 게시글에는 채팅방을 만들 수 없습니다.");
         }
+        Chat chat = chatRepository.findByAccountAndPostId(buyer, postId).orElse(null);
 
-        Chat chat = Chat.createChat(post, buyer);
-        return chatRepository.save(chat).getId();
+
+        if(chat != null){
+            chat.cancelDelete();
+            return chat.getId();
+        }
+        Chat newChat = Chat.createChat(post, buyer);
+        return chatRepository.save(newChat).getId();
     }
 
-    public Post getPost(Long postId){
+    public void deleteChat(Account account, Long chatId){
+//        chatRepository.deleteById(chatId);
+        chatRepository.findById(chatId).orElseThrow().deleteChat();
+
+    }
+
+    private Post getPost(Long postId){
+
         return postRepository.findWithSellerById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
+
 
 }

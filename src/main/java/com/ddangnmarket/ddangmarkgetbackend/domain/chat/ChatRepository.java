@@ -14,6 +14,9 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     Optional<Chat> findById(Long id);
 
+
+    Optional<Chat> findByAccountAndPostId(Account account, Long postId);
+
     List<Chat> findAllByPostId(Long postId);
 
     @Query("select c from Chat c" +

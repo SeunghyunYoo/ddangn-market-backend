@@ -1,5 +1,5 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.post;
 
-public enum SaleStatus {
-    NEW, RESERVE, COMPLETE
+public enum PostStatus {
+    NEW, RESERVE, COMPLETE, DELETE
 }

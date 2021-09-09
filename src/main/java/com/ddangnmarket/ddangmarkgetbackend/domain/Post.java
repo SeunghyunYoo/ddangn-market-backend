@@ -1,9 +1,11 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.SaleStatus;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +13,9 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(exclude = {"title", "desc", "price"}, callSuper = false)
+@EqualsAndHashCode(exclude = {"title", "desc", "price", "viewCount", "chatCount", "interestCount"}, callSuper = false)
 // 같은 내용의 게시글 등록 허용
-public class Post extends BaseEntity{
+public class Post extends DeleteEntity{
 
     @Id @GeneratedValue
     @Column(name = "post_id")
@@ -26,8 +28,18 @@ public class Post extends BaseEntity{
 
     private int price;
 
+    private int viewCount;
+
+    private int chatCount;
+
+    private int interestCount;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime updatedAt;
+
     @Enumerated(EnumType.STRING)
-    private SaleStatus saleStatus;
+    private PostStatus postStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
@@ -37,7 +49,8 @@ public class Post extends BaseEntity{
     @JoinColumn(name ="category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post")
     private List<Chat> chats = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,6 +63,7 @@ public class Post extends BaseEntity{
     @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
     private Purchase purchase;
 
+
     // == 생성 메서드 == //
     public static Post createPost(String title, String desc, int price, Category category, Account seller){
         Post post = new Post();
@@ -58,8 +72,11 @@ public class Post extends BaseEntity{
         post.price = price;
         post.category = category;
         post.seller = seller;
-        post.saleStatus = SaleStatus.NEW;
+        post.postStatus = PostStatus.NEW;
         post.district = seller.getActivityArea().getDistrict();
+        post.viewCount = 0;
+        post.chatCount = 0;
+        post.interestCount = 0;
         seller.addPost(post);
         return post;
     }
@@ -72,8 +89,28 @@ public class Post extends BaseEntity{
 
     //== 바즈니스 로직 ==//
 
+    public void deletePost(){
+        super.delete();
+        if(sale != null){
+            sale.delete();
+        }
+        if(purchase != null){
+            purchase.delete();
+        }
+//        chats.forEach(Chat::disconnectPost);
+    }
+
+    public void addViewCount(){
+        this.viewCount +=1;
+    }
+
+    public void addInterestCount(){
+        this.interestCount +=1;
+    }
+
     public void addChat(Chat chat){
         chats.add(chat);
+        this.chatCount += 1;
     }
 
     public void updatePost(String title, String desc, int price, Category category){
@@ -81,10 +118,11 @@ public class Post extends BaseEntity{
         this.desc = desc;
         this.price = price;
         this.category = category;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void changeComplete(){
-        saleStatus = SaleStatus.COMPLETE;
+        postStatus = PostStatus.COMPLETE;
     }
 
     /**
@@ -94,9 +132,9 @@ public class Post extends BaseEntity{
     public void cancelSale(){
         sale = null;
         purchase = null;
-        saleStatus = SaleStatus.NEW;
+        postStatus = PostStatus.NEW;
         // mappedBy라 여기서 변경 못함 Chat에서
-        chats.forEach(Chat::changeNone);
+//        chats.forEach(Chat::changeNone);
     }
 
     /**
@@ -107,23 +145,23 @@ public class Post extends BaseEntity{
         // 다른 chat으로 예약 변경 -> 기존의 reserved 였던 것들 취소
         // -> target chat 예약으로 지정
 //        chats.stream()
-//               .filter(c -> c.getChatStatus() == ChatStatus.RESERVED)
+//               .filter(c -> c.getPostStatus() == PostStatus.RESERVE)
 //               .findAny()
 //               .ifPresent(Chat::changeNone);
-        chats.forEach(Chat::changeNone);
-        chat.changeReserve();
+//        chats.forEach(Chat::changeNone);
+//        chat.changeReserve();
 
-        if (saleStatus == SaleStatus.COMPLETE) {
+        if (postStatus == PostStatus.COMPLETE) {
             sale = null;
             purchase = null;
         }
 
-        saleStatus = SaleStatus.RESERVE;
+        postStatus = PostStatus.RESERVE;
     }
 
     public void cancelReserve(){
-        chats.forEach(Chat::changeNone);
-        saleStatus = SaleStatus.NEW;
+//        chats.forEach(Chat::changeNone);
+        postStatus = PostStatus.NEW;
     }
 
     public void changeDistrict(District district){

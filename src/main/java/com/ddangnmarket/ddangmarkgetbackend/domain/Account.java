@@ -60,7 +60,8 @@ public class Account extends BaseEntity{
     public void changeActivityArea(ActivityArea activityArea){
         this.activityArea = activityArea;
         activityArea.updateAccount(this);
-        posts.forEach(post ->
-                post.changeDistrict(activityArea.getDistrict()));
+        // 유저 활동 지역 바꿔도 기존에 등록한 게시글의 위치는 유지하도록 설정
+        // posts.forEach(post ->
+        //         post.changeDistrict(activityArea.getDistrict()));
     }
 }

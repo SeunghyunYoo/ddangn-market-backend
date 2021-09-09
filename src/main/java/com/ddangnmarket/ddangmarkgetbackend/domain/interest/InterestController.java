@@ -55,6 +55,15 @@ public class InterestController {
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<ResponseSimpleOKDto> deleteInterestByPostId(@PathVariable Long postId, @ApiIgnore HttpSession session){
+        Account account = getSessionCheckedAccount(session);
+
+        interestService.deleteInterestByPostId(account, postId);
+
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
+    }
+
 
     private Account getSessionCheckedAccount(HttpSession session) {
         Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);

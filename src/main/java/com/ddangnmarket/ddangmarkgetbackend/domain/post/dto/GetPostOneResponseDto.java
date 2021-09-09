@@ -1,21 +1,21 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.post.dto;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag;
-import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class GetPostResponseDto {
+public class GetPostOneResponseDto {
 
     private Long postId;
 
     private String title;
 
-//    private String desc;
+    private String desc;
 
     private int price;
 
@@ -35,10 +35,10 @@ public class GetPostResponseDto {
 
     private String updatedAt;
 
-    public GetPostResponseDto(Post post){
+    public GetPostOneResponseDto(Post post){
         this.postId = post.getId();
         this.title = post.getTitle();
-//        this.desc = post.getDesc();
+        this.desc = post.getDesc();
         this.price = post.getPrice();
         this.viewCount = post.getViewCount();
         this.chatCount = post.getChatCount();

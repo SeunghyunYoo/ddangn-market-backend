@@ -36,6 +36,11 @@ public class PostService {
 //        Post post = Post.createPost(title, desc, price, new PostCategory(category), account);
         Post post = Post.createPost(title, desc, price, category, account);
         return postRepository.save(post).getId();
+
+    }
+
+    public void delete(Long postId){
+        findById(postId).deletePost();
     }
 
     public List<Post> findAll(Account account){
@@ -44,28 +49,34 @@ public class PostService {
         return postRepository.findAll(districts);
     }
 
-    public List<Post> findAllByStatus(Account account, SaleStatus saleStatus){
+    public List<Post> findAllByStatus(Account account, PostStatus postStatus){
         List<District> districts = getDistrict(account);
 
-        return postRepository.findAllBySaleStatus(districts, saleStatus);
+
+        return postRepository.findAllByPostStatus(districts, postStatus);
+
     }
 
-    public List<Post> findAllByStatuses(Account account, List<SaleStatus> saleStatuses){
+    public List<Post> findAllByStatuses(Account account, List<PostStatus> postStatuses){
         List<District> districts = getDistrict(account);
 
-        return postRepository.findAllBySaleStatuses(districts, saleStatuses);
+
+        return postRepository.findAllByPostStatuses(districts, postStatuses);
+
     }
 
     public List<Post> findPostAllBySeller(Account account){
         return postRepository.findAllBySeller(account);
     }
 
-    public List<Post> findPostAllBySellerAndStatus(Account account, SaleStatus saleStatus){
-        return postRepository.findAllBySellerAndSaleStatus(account, saleStatus);
+
+    public List<Post> findPostAllBySellerAndStatus(Account account, PostStatus postStatus){
+        return postRepository.findAllBySellerAndPostStatus(account, postStatus);
     }
 
-    public List<Post> findPostAllBySellerAndStatuses(Account account, List<SaleStatus> saleStatuses){
-        return postRepository.findAllBySellerAndSaleStatuses(account, saleStatuses);
+    public List<Post> findPostAllBySellerAndStatuses(Account account, List<PostStatus> postStatuses){
+        return postRepository.findAllBySellerAndPostStatuses(account, postStatuses);
+
     }
 
     public List<Post> findPostAllByCategory(Account account, CategoryTag categoryTag){
@@ -74,16 +85,20 @@ public class PostService {
         return postRepository.findAllByCategory(districts, categoryTag);
     }
 
-    public List<Post> findAllByCategoryAndStatus(Account account, CategoryTag categoryTag, SaleStatus saleStatus){
+    public List<Post> findAllByCategoryAndPostStatus(Account account, CategoryTag categoryTag, PostStatus postStatus){
         List<District> districts = getDistrict(account);
 
-        return postRepository.findAllByCategoryAndSaleStatus(districts, categoryTag, saleStatus);
+
+        return postRepository.findAllByCategoryAndPostStatus(districts, categoryTag, postStatus);
+
     }
 
-    public List<Post> findAllByCategoryAndStatuses(Account account, CategoryTag categoryTag, List<SaleStatus> saleStatuses) {
+    public List<Post> findAllByCategoryAndStatuses(Account account, CategoryTag categoryTag, List<PostStatus> postStatuses) {
         List<District> districts = getDistrict(account);
 
-        return postRepository.findAllByCategoryAndSaleStatuses(districts, categoryTag, saleStatuses);
+
+        return postRepository.findAllByCategoryAndPostStatuses(districts, categoryTag, postStatuses);
+
     }
 
     public List<Post> findAllPurchase(Account account){
@@ -97,7 +112,6 @@ public class PostService {
     public void deleteById(Long postId){
         // TODO 삭제 요청시 -> hide로 변경
         Post post = findById(postId);
-        postRepository.delete(post);
     }
 
     public void updatePost(Long postId, UpdatePostRequestDto updatePostRequestDto){
@@ -116,16 +130,17 @@ public class PostService {
     public void sale(Account seller, Long postId, Long chatId){
         Post post = findById(postId);
 
-        if(post.getSaleStatus().equals(SaleStatus.COMPLETE)){
+        if(post.getPostStatus().equals(PostStatus.COMPLETE)){
             post.cancelSale();
         }
-        if(post.getSaleStatus().equals(SaleStatus.RESERVE)){
+        if(post.getPostStatus().equals(PostStatus.RESERVE)){
             post.cancelReserve();
         }
 
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅입니다."));
-        chat.changeComplete();
+//        chat.changeComplete();
+        post.changeComplete();
 
         Account buyer = chat.getAccount();
 
@@ -139,7 +154,7 @@ public class PostService {
     public void cancelSale(Long postId){
         // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
         Post post = findById(postId);
-        if(post.getSaleStatus().equals(SaleStatus.COMPLETE)) {
+        if(post.getPostStatus().equals(PostStatus.COMPLETE)) {
             post.cancelSale();
         }
     }
@@ -148,7 +163,7 @@ public class PostService {
         Post post = findById(postId);
         // TODO 판매 완료된 건 예약 상태로 바꾸게 허용할지 말지
         //  validateSaleComplete(post);
-        if(post.getSaleStatus() == SaleStatus.COMPLETE){
+        if(post.getPostStatus() == PostStatus.COMPLETE){
             post.cancelSale();
         }
 
@@ -165,12 +180,21 @@ public class PostService {
     }
 
     private void validateSaleComplete(Post post) {
-        if (post.getSaleStatus().equals(SaleStatus.COMPLETE)){
+        if (post.getPostStatus().equals(PostStatus.COMPLETE)){
             throw new IllegalStateException("이미 판매 완료된 상품입니다.");
         }
     }
 
-    public Post findById(Long postId){
+
+    public Post findPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+        post.addViewCount();
+        return post;
+    }
+
+    private Post findById(Long postId){
+
         return postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
@@ -191,5 +215,4 @@ public class PostService {
                         accountDistrict.getPosition().calcDiff(district.getPosition()) <= range)
                 .collect(Collectors.toList());
     }
-
 }

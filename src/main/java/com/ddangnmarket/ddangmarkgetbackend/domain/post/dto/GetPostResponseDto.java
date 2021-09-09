@@ -23,6 +23,8 @@ public class GetPostResponseDto {
 
     private int chatCount;
 
+    private int interestCount;
+
     private PostStatus status;
 
     private String sellerNickname;
@@ -42,6 +44,7 @@ public class GetPostResponseDto {
         this.price = post.getPrice();
         this.viewCount = post.getViewCount();
         this.chatCount = post.getChatCount();
+        this.interestCount = post.getInterestCount();
         this.status = post.getPostStatus();
         this.sellerNickname = post.getSeller().getNickname();
         this.categoryTag = post.getCategory().getCategoryTag();

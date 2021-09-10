@@ -6,6 +6,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.chat.ChatRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.UpdatePostRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.reply.ReplyRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -185,10 +186,11 @@ public class PostService {
         }
     }
 
-
+    private final ReplyRepository replyRepository;
     public Post findPost(Long postId) {
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findAllInfoById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+//        replyRepository.findByPostId(postId);
         post.addViewCount();
         return post;
     }

@@ -1,12 +1,15 @@
 package com.ddangnmarket.ddangmarkgetbackend;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
+import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Position;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseService;
+import com.ddangnmarket.ddangmarkgetbackend.domain.reply.ReplyRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong.*;
 
@@ -42,6 +46,9 @@ public class InitDb {
         private final DistrictRepository districtRepository;
         private final PurchaseRepository purchaseRepository;
         private final SaleRepository saleRepository;
+        private final PostRepository postRepository;
+        private final AccountRepository accountRepository;
+        private final ReplyRepository replyRepository;
 
 
 
@@ -98,13 +105,14 @@ public class InitDb {
             Category furniture = categoryJpaRepository.findByCategoryTag(CategoryTag.FURNITURE);
 
             Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, digital, account1);
-            em.persist(post1);
+            postRepository.save(post1);
             Post post2 = Post.createPost("스프링 책 판매", "스프링 책 팔아요", 10000, book, account1);
-            em.persist(post2);
+            postRepository.save(post2);
             Post post3 = Post.createPost("티셔츠 판매 ", "티셔츠 팔아요", 100000, clothes, account1);
-            em.persist(post3);
+            postRepository.save(post3);
             Post post4 = Post.createPost("책상 판매", "책상 팔아요", 10000, furniture, account1);
-            em.persist(post4);
+            postRepository.save(post4);
+
 
             Chat chat1 = Chat.createChat(post1, account2);
             em.persist(chat1);
@@ -125,8 +133,12 @@ public class InitDb {
             purchaseRepository.save(purchase);
 
             //
+            em.flush();
+            em.clear();
 
-
+            Post post = postRepository.findById(post1.getId()).orElseThrow();
+            Account account = accountRepository.findById(account2.getId()).orElseThrow();
+            Reply.createReply(post, account, "test");
         }
 
         public void initAccountPostV2(){

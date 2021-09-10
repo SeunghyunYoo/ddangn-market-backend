@@ -10,12 +10,14 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.DuplicateEm
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.DuplicateNicknameException;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
+import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 
 @Service
@@ -43,6 +45,11 @@ public class AccountService {
     public Account findAccount(Long accountId){
         return accountRepository.findById(accountId).orElseThrow(() ->
                 new IllegalStateException("존재하지 않는 회원입니다."));
+    }
+
+    public Account findAccount(HttpSession session){
+        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
+        return findAccount(accountId);
     }
 
     public Account findAccountWithActivityArea(Long accountId){

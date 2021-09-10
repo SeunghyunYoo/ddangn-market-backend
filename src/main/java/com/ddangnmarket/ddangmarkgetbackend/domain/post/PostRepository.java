@@ -19,6 +19,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p where p.id = :id and p.isDeleted = false")
 //    @EntityGraph(attributePaths = {"sale", "purchase"})
     Optional<Post> findById(@Param("id") Long id);
+    // TODO sale, purchase 왜 같이 조회를 하는지
+
+    @Query("select p from Post p where p.id = :id and p.isDeleted = false")
+    @EntityGraph(attributePaths = {"seller", "category", "district"})
+    Optional<Post> findAllInfoById(@Param("id") Long id);
 
     @EntityGraph(attributePaths = {"sale", "purchase"})
     @Query("select p from Post p where p.id = :id and p.isDeleted = false")

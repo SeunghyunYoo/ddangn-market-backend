@@ -12,10 +12,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.AddInterestRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.GetAllInterestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostService;
-<<<<<<< Updated upstream
-=======
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
->>>>>>> Stashed changes
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetAllPostResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.PostRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.login.dto.LoginRequestDto;

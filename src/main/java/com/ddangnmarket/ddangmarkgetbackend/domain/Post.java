@@ -63,6 +63,8 @@ public class Post extends DeleteEntity{
     @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
     private Purchase purchase;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reply> replies;
 
     // == 생성 메서드 == //
     public static Post createPost(String title, String desc, int price, Category category, Account seller){
@@ -189,4 +191,11 @@ public class Post extends DeleteEntity{
         this.district = district;
     }
 
+    public void addReply(Reply reply){
+        replies.add(reply);
+    }
+
+    public void removeReply(Reply reply){
+        replies.remove(reply);
+    }
 }

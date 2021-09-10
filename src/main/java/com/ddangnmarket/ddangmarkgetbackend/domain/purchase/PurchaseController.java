@@ -1,17 +1,17 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.purchase;
 
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
+import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseSimpleOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Purchase;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.dto.GetAllPurchaseResponseDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.dto.ReviewPurchaseRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpSession;
@@ -33,6 +33,18 @@ public class PurchaseController {
 
         return new ResponseEntity<>(new ResponseOKDto<>(
                 new GetAllPurchaseResponseDto(purchases)), HttpStatus.OK);
+    }
+
+    @PostMapping("/{purchaseId}/reviews")
+    public ResponseEntity<ResponseSimpleOKDto> review(
+            @PathVariable Long purchaseId, @RequestBody ReviewPurchaseRequestDto requestDto
+            , @ApiIgnore HttpSession session){
+
+        Account account = getSessionCheckedAccount(session);
+
+        purchaseService.review(purchaseId, requestDto.getScore(), requestDto.getReview());
+
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
     private Account getSessionCheckedAccount(HttpSession session) {

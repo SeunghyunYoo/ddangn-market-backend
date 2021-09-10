@@ -3,7 +3,6 @@ package com.ddangnmarket.ddangmarkgetbackend.domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -35,10 +34,13 @@ public class Account extends DeleteEntity{
         this.phone = phone;
         this.mail = mail;
         this.password = password;
+        this.mannerTemp = 37.5;
     }
 
     @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
+
+    private double mannerTemp;
 
     //== 연관관계 메서드 ==/
     public void addPost(Post post){

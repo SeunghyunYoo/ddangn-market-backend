@@ -8,8 +8,10 @@ import java.util.List;
 @Data
 public class ActivityAreaResponseDto {
     private List<Dong> activityAreas;
+    private int range;
 
-    public ActivityAreaResponseDto(List<Dong> activityAreas){
+    public ActivityAreaResponseDto(List<Dong> activityAreas, int range){
         this.activityAreas = activityAreas;
+        this.range = range;
     }
 }

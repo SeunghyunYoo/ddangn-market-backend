@@ -13,13 +13,17 @@ public class GetAccountInfoResponseDto {
     private String mail;
     private String nickname;
     private String phone;
-    private List<Dong> activeAreas;
+    private List<Dong> activityAreas;
+    private int range;
+    private double mannerTemp;
 
-    public GetAccountInfoResponseDto(Account account, List<Dong> activeAreas){
+    public GetAccountInfoResponseDto(Account account, List<Dong> activityAreas){
         this.mail = account.getMail();
         this.nickname = account.getNickname();
         this.phone = account.getPhone();
-        this.activeAreas = activeAreas;
+        this.activityAreas = activityAreas;
+        this.range = account.getActivityArea().getRange();
+        this.mannerTemp = account.getMannerTemp();
     }
 
 }

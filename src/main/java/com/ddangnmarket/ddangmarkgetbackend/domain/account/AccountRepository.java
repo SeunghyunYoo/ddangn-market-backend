@@ -1,10 +1,12 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.account;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
@@ -26,5 +28,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " join fetch ar.district d" +
             " where a.id = :id and a.isDeleted = false")
     Optional<Account> findWithActivityAreaById(@Param("id") Long id);
+
 
 }

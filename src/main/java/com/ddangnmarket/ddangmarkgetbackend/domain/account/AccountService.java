@@ -11,12 +11,17 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.DuplicateNi
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class AccountService {
 
     private final DistrictRepository districtRepository;
@@ -102,5 +107,9 @@ public class AccountService {
             throw new DuplicateNicknameException("이미 존재하는 닉네임입니다.");
         }
     }
+//    @Scheduled(fixedRate = 1000 * 60 * 10, initialDelay = 3000)
+//    public void test(){
+//        log.info("Scheduling test {}", LocalDateTime.now());
+//    }
 
 }

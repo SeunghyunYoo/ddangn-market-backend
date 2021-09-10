@@ -29,6 +29,8 @@ public class GetPostOneResponseDto {
 
     private String sellerNickname;
 
+    private double sellerMannerTemp;
+
     private CategoryTag categoryTag;
 
     private Dong dong;
@@ -47,6 +49,7 @@ public class GetPostOneResponseDto {
         this.interestCount = post.getInterestCount();
         this.status = post.getPostStatus();
         this.sellerNickname = post.getSeller().getNickname();
+        this.sellerMannerTemp = post.getSeller().getMannerTemp();
         this.categoryTag = post.getCategory().getCategoryTag();
         this.dong = post.getDistrict().getDong();
         this.createdAt = post.getCreatedAt().toString();

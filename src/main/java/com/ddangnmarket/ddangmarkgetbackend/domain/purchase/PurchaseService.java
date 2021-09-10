@@ -18,4 +18,9 @@ public class PurchaseService {
     public List<Purchase> findAllPurchase(Account account){
         return purchaseRepository.findAllByAccount(account);
     }
+
+    public void review(Long purchaseId, int score, String review){
+        Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow();
+        purchase.review(score, review);
+    }
 }

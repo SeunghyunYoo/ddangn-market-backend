@@ -25,6 +25,11 @@ public class Purchase extends DeleteEntity{
     @JoinColumn(name = "account_id")
     private Account account;
 
+    private int score;
+
+    @Lob
+    private String review;
+
 
     public static Purchase createPurchase(Account buyer, Post post){
 //        if (post.getsaleStatus().equals(saleStatus.COMPLETE)){
@@ -39,5 +44,10 @@ public class Purchase extends DeleteEntity{
     public void cancelPurchase(){
         post = null;
         account = null;
+    }
+
+    public void review(int score, String review){
+        this.score = score;
+        this.review = review;
     }
 }

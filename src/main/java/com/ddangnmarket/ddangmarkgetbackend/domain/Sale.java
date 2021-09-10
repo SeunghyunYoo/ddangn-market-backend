@@ -20,6 +20,11 @@ public class Sale extends DeleteEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    private int score;
+
+    @Lob
+    private String review;
+
     // TODO seller -> 판매 승인 -> sale table 저장
     //
 
@@ -47,6 +52,11 @@ public class Sale extends DeleteEntity {
     public void cancelSale(){
         post = null;
         account = null;
+    }
+
+    public void review(int score, String review){
+        this.score = score;
+        this.review = review;
     }
 
 }

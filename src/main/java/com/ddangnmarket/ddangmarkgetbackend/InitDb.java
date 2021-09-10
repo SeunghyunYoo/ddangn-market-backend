@@ -5,6 +5,9 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepositor
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Position;
+import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseService;
+import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +40,10 @@ public class InitDb {
         private final EntityManager em;
         private final CategoryJpaRepository categoryJpaRepository;
         private final DistrictRepository districtRepository;
+        private final PurchaseRepository purchaseRepository;
+        private final SaleRepository saleRepository;
+
+
 
         public void initCategory(){
             for(CategoryTag categoryTag : CategoryTag.values()){
@@ -106,6 +113,20 @@ public class InitDb {
 
             Chat chat3 = Chat.createChat(post2, account2);
             em.persist(chat3);
+
+            // 게시글 1 판매
+            post1.changeComplete();
+            Sale sale = Sale.createSale(account1, post1);
+            Purchase purchase = Purchase.createPurchase(account2, post1);
+            sale.review(3, "good");
+            purchase.review(2, "bad");
+
+            saleRepository.save(sale);
+            purchaseRepository.save(purchase);
+
+            //
+
+
         }
 
         public void initAccountPostV2(){

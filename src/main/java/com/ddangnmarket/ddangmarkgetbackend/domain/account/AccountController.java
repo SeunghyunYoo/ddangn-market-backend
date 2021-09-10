@@ -120,7 +120,7 @@ public class AccountController {
         List<Dong> activityAreas = districtService.getActivityAreas(account);
 
         return new ResponseEntity<>(new ResponseOKDto<>(
-                new ActivityAreaResponseDto(activityAreas)), HttpStatus.OK);
+                new ActivityAreaResponseDto(activityAreas, activityAreaRequestDto.getRange())), HttpStatus.OK);
     }
 
     private Account getSessionCheckedAccount(HttpSession session) {

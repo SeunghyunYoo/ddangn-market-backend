@@ -47,6 +47,10 @@ public class AccountService {
                 new IllegalStateException("존재하지 않는 회원입니다."));
     }
 
+    public Account findAccountWithActivityAreas(Long accountId){
+        return accountRepository.findWithActivityAreaById(accountId).orElseThrow();
+    }
+
     public Account findAccount(HttpSession session){
         Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
         return findAccount(accountId);

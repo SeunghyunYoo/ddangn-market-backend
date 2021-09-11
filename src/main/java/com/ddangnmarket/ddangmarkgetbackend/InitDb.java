@@ -113,6 +113,11 @@ public class InitDb {
             Post post4 = Post.createPost("책상 판매", "책상 팔아요", 10000, furniture, account1);
             postRepository.save(post4);
 
+            Post post5 = Post.createPost("티셔츠 판매 ", "티셔츠 팔아요", 100000, clothes, account2);
+            postRepository.save(post5);
+            Post post6 = Post.createPost("책상 판매", "책상 팔아요", 10000, furniture, account2);
+            postRepository.save(post6);
+
 
             Chat chat1 = Chat.createChat(post1, account2);
             em.persist(chat1);
@@ -137,8 +142,14 @@ public class InitDb {
             em.clear();
 
             Post post = postRepository.findById(post1.getId()).orElseThrow();
-            Account account = accountRepository.findById(account2.getId()).orElseThrow();
-            Reply.createReply(post, account, "test");
+            Account account11 = accountRepository.findById(account1.getId()).orElseThrow();
+            Account account22 = accountRepository.findById(account2.getId()).orElseThrow();
+            Account account33 = accountRepository.findById(account3.getId()).orElseThrow();
+            Reply.createReply(post, account22, "content1");
+            Reply.createReply(post, account33, "content2");
+            Reply.createReply(post, account22, "content3");
+            Reply.createReply(post, account33, "content4");
+            Reply.createReply(post, account11, "content5");
         }
 
         public void initAccountPostV2(){

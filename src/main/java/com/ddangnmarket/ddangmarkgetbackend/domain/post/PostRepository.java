@@ -17,12 +17,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
     @Query("select p from Post p where p.id = :id and p.isDeleted = false")
-//    @EntityGraph(attributePaths = {"sale", "purchase"})
+    @EntityGraph(attributePaths = {"sale", "purchase"})
     Optional<Post> findById(@Param("id") Long id);
     // TODO sale, purchase 왜 같이 조회를 하는지
+    // -> toOne 관계는 대상 테이블에 외래키가 있을 시, 프록시 기능의 한계로 항상 즉시 로딩
 
     @Query("select p from Post p where p.id = :id and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"seller", "category", "district"})
+    @EntityGraph(attributePaths = {"seller", "category", "district", "sale", "purchase"})
     Optional<Post> findAllInfoById(@Param("id") Long id);
 
     @EntityGraph(attributePaths = {"sale", "purchase"})
@@ -52,6 +53,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @EntityGraph(attributePaths = {"category", "district", "sale", "purchase"})
     @Query("select p from Post p where p.seller = :seller and p.isDeleted = false")
     List<Post> findAllBySeller(@Param("seller") Account seller);
+
+    @Query("select p from Post p where p.seller = :seller and p.isDeleted = false")
+    @EntityGraph(attributePaths = {"sale", "purchase"})
+    List<Post> findAllIdsBySeller(@Param("seller") Account seller);
 
     @EntityGraph(attributePaths = {"category", "district", "sale", "purchase"})
     @Query("select p from Post p" +

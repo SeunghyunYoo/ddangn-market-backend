@@ -36,6 +36,7 @@ public class ChatController {
                 new GetAllChatResponseDto(chats)), HttpStatus.OK);
     }
 
+
     @GetMapping("/sales")
     public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChatByPost(
             @RequestParam Long postId, @ApiIgnore HttpSession session){

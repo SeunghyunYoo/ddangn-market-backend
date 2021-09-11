@@ -37,7 +37,7 @@ public class ChatService {
     }
 
     public List<Chat> findAllChat(Account account){
-        List<Long> postIds = postRepository.findAllBySeller(account)
+        List<Long> postIds = postRepository.findAllIdsBySeller(account)
                 .stream().map(Post::getId).collect(Collectors.toList());
 
         List<Chat> allBySeller = chatRepository.findAllByPostIds(postIds);
@@ -48,6 +48,8 @@ public class ChatService {
                 .sorted(Comparator.comparing(Chat::getUpdatedAt).reversed())
                 .collect(Collectors.toList());
     }
+
+
 
     public Long createChat(Account buyer, Long postId){
         Post post = getPost(postId);

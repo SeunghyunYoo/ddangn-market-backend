@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class GetChatResponseDto {
+public class GetChatOneResponseDto {
     private Long chatId;
     private SellerDto seller;
     private BuyerDto buyer;
@@ -18,7 +18,7 @@ public class GetChatResponseDto {
     private String createdAt;
     private String updatedAt;
 
-    public GetChatResponseDto(Chat chat){
+    public GetChatOneResponseDto(Chat chat){
         this.chatId = chat.getId();
         this.seller = new SellerDto(chat.getPost().getSeller());
         this.buyer = new BuyerDto(chat.getAccount());

@@ -14,19 +14,31 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     Optional<Chat> findById(Long id);
 
-
     Optional<Chat> findByAccountAndPostId(Account account, Long postId);
 
     List<Chat> findAllByPostId(Long postId);
 
     @Query("select c from Chat c" +
             " join fetch c.account a" +
+            " join fetch a.activityArea aa" +
+            " join fetch aa.district" +
             " join fetch c.post p" +
+            " join fetch p.seller s" +
+            " join fetch s.activityArea sa" +
+            " join fetch sa.district" +
+            " join fetch p.district d" +
             " where p.id in :postIds and c.isDeleted = false")
     List<Chat> findAllByPostIds(@Param("postIds") Collection<Long> postIds);
 
     @Query("select c from Chat c" +
+            " join fetch c.account a" +
+            " join fetch a.activityArea aa" +
+            " join fetch aa.district" +
             " join fetch c.post p" +
+            " join fetch p.seller s" +
+            " join fetch s.activityArea sa" +
+            " join fetch sa.district" +
+            " join fetch p.district d" +
             " where c.account = :account" +
             " and p.seller <> :account and c.isDeleted = false")
     List<Chat> findAllByAccount(@Param("account") Account account);

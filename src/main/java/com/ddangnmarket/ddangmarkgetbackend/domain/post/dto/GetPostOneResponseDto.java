@@ -1,8 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.post.dto;
 
-import com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag;
-import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
-import com.ddangnmarket.ddangmarkgetbackend.domain.Reply;
+import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import lombok.Data;
@@ -33,15 +31,15 @@ public class GetPostOneResponseDto {
 
     private PostStatus status;
 
-    private String sellerNickname;
-
-    private double sellerMannerTemp;
+    private SellerDto seller;
 
     private CategoryTag categoryTag;
 
     private Dong dong;
 
     private List<ReplyDto> replies;
+
+    private List<ChatDto> chats;
 
     private String createdAt;
 
@@ -56,15 +54,26 @@ public class GetPostOneResponseDto {
         this.chatCount = post.getChatCount();
         this.interestCount = post.getInterestCount();
         this.status = post.getPostStatus();
-        this.sellerNickname = post.getSeller().getNickname();
-        this.sellerMannerTemp = post.getSeller().getMannerTemp();
+        this.seller = new SellerDto(post.getSeller());
         this.categoryTag = post.getCategory().getCategoryTag();
         this.dong = post.getDistrict().getDong();
         this.replies = post.getReplies().stream().map(ReplyDto::new).collect(toList());
+        this.chats = post.getChats().stream().map(ChatDto::new).collect(toList());
         this.createdAt = post.getCreatedAt().toString();
         this.updatedAt = post.getUpdatedAt().toString();
 
     }
+    @Data
+    static class SellerDto{
+        private String nickname;
+        private double mannerTemp;
+
+        SellerDto(Account account){
+            this.nickname = account.getNickname();
+            this.mannerTemp = account.getMannerTemp();
+        }
+    }
+
     @Data
     @NoArgsConstructor
     static class ReplyDto {
@@ -80,6 +89,22 @@ public class GetPostOneResponseDto {
             this.content = reply.getContent();
             this.createdAt = reply.getCreatedAt().toString();
             this.updatedAt = reply.getUpdatedAt().toString();
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    static class ChatDto {
+        private Long ChatId;
+        private String nickname;
+        private String createdAt;
+        private String updatedAt;
+
+        ChatDto(Chat chat){
+            this.ChatId = chat.getId();
+            this.nickname = chat.getAccount().getNickname();
+            this.createdAt = chat.getCreatedAt().toString();
+            this.updatedAt = chat.getUpdatedAt().toString();
         }
 
     }

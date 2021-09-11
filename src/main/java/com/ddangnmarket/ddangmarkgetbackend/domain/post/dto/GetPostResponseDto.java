@@ -1,5 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.post.dto;
 
+import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
@@ -27,9 +28,7 @@ public class GetPostResponseDto {
 
     private PostStatus status;
 
-    private String sellerNickname;
-
-    private double sellerMannerTemp;
+    private SellerDto seller;
 
     private CategoryTag categoryTag;
 
@@ -48,11 +47,22 @@ public class GetPostResponseDto {
         this.chatCount = post.getChatCount();
         this.interestCount = post.getInterestCount();
         this.status = post.getPostStatus();
-        this.sellerNickname = post.getSeller().getNickname();
-        this.sellerMannerTemp = post.getSeller().getMannerTemp();
+        this.seller = new SellerDto(post.getSeller());
         this.categoryTag = post.getCategory().getCategoryTag();
         this.dong = post.getDistrict().getDong();
         this.createdAt = post.getCreatedAt().toString();
         this.updatedAt = post.getUpdatedAt().toString();
+    }
+
+    @Data
+    @NoArgsConstructor
+    static class SellerDto {
+        private String nickname;
+        private double mannerTemp;
+
+        SellerDto(Account account){
+            this.nickname = account.getNickname();
+            this.mannerTemp = account.getMannerTemp();
+        }
     }
 }

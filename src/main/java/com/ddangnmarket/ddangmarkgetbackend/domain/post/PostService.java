@@ -46,10 +46,10 @@ public class PostService {
     }
 
     public Long post(String title, String desc, int price, CategoryTag categoryTag, Account account
-            , MultipartFile file, HttpSession session) throws IOException {
+            , MultipartFile file) throws IOException {
         Category category = categoryJpaRepository.findByCategoryTag(categoryTag);
 
-        UploadFile uploadFile = fileStore.storeFile(session, file);
+        UploadFile uploadFile = fileStore.storeFile(file);
         Post post = Post.createPost(title, desc, price, category, account);
         post.setUploadFile(uploadFile);
 

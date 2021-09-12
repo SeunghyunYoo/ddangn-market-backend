@@ -56,7 +56,7 @@ public class PostControllerV2 {
         PostRequestDto postRequestDto = objectMapper.readValue(data, PostRequestDto.class);
 
         Long postId = postService.post(postRequestDto.getTitle(), postRequestDto.getDesc(),
-                postRequestDto.getPrice(), postRequestDto.getCategoryTag(), account, file, session);
+                postRequestDto.getPrice(), postRequestDto.getCategoryTag(), account, file);
 
         return new ResponseEntity<>(new ResponseOKDto<>(
                 new PostResponseDto(postId)), HttpStatus.OK);
@@ -67,7 +67,7 @@ public class PostControllerV2 {
         // file: <- 이게 붙으면 내부파일에 직접 접근
         Post post = postService.findPost(postId);
         String storeFileName = post.getUploadFile().getStoreFileName();
-        return new UrlResource("file:" + fileStore.getFullPath(session, storeFileName));
+        return new UrlResource("file:" + fileStore.getFullPath(storeFileName));
     }
 
     private Account getSessionCheckedAccount(HttpSession session) {

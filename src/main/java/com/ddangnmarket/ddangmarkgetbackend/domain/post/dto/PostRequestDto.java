@@ -19,11 +19,10 @@ public class PostRequestDto {
     @NotEmpty
     private String desc;
 
-    @NotEmpty
     @Min(value = 100)
     private int price;
 
-    @NotEmpty
+
     private CategoryTag categoryTag;
 
 }

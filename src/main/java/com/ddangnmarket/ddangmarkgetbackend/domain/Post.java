@@ -5,6 +5,8 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(exclude = {"title", "desc", "price", "viewCount", "chatCount", "interestCount"}, callSuper = false)
+@EqualsAndHashCode(exclude = {"title", "desc", "price", "viewCount", "chatCount", "interestCount", "uploadFile"}, callSuper = false)
 // 같은 내용의 게시글 등록 허용
 public class Post extends DeleteEntity{
 
@@ -25,6 +27,9 @@ public class Post extends DeleteEntity{
 
     @Lob
     private String desc;
+
+    @Embedded
+    private UploadFile uploadFile;
 
     private int price;
 
@@ -72,6 +77,7 @@ public class Post extends DeleteEntity{
         post.title = title;
         post.desc = desc;
         post.price = price;
+        post.uploadFile = new UploadFile("","");
         post.category = category;
         post.seller = seller;
         post.postStatus = PostStatus.NEW;

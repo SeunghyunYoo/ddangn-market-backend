@@ -8,10 +8,12 @@ import com.ddangnmarket.ddangmarkgetbackend.exception.dto.ValidError;
 import com.ddangnmarket.ddangmarkgetbackend.exception.dto.ValidationErrorMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.util.List;
 
@@ -68,6 +71,33 @@ public class ExControllerAdvice {
                 HttpStatus.BAD_REQUEST.value(), errorMessage);
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({ValueInstantiationException.class})
+    public ResponseEntity<ErrorResult> valueInstantiationExHandler(ValueInstantiationException e){
+        if(e.getCause() instanceof NullPointerException){
+            ErrorResult errorResult = new ErrorResult(
+                    HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value()
+                    , "모든 요청 필드값을 넣어주세요");
+            return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
+        }
+        String message = e.getMessage();
+        ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value(), message);
+        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ConstraintViolationException.class})
+    public ResponseEntity<ErrorResult> contraintValidationExHandler(ConstraintViolationException e){
+        if(e.getCause() instanceof NullPointerException){
+            ErrorResult errorResult = new ErrorResult(
+                    HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value()
+                    , "모든 요청 필드값을 넣어주세요");
+            return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
+        }
+        String message = e.getMessage();
+        ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value(), message);
+        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler({ValidationException.class})
     public ResponseEntity<ErrorResult> validationExHandler(ValidationException e){

@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(exclude = {"title", "desc", "price", "viewCount", "chatCount", "interestCount", "uploadFile"}, callSuper = false)
+@EqualsAndHashCode(exclude = {"title", "desc", "price", "viewCount", "chatCount", "interestCount", "uploadFiles"}, callSuper = false)
 // 같은 내용의 게시글 등록 허용
 public class Post extends DeleteEntity{
 
@@ -28,8 +28,8 @@ public class Post extends DeleteEntity{
     @Lob
     private String desc;
 
-    @Embedded
-    private UploadFile uploadFile;
+    @OneToMany(mappedBy = "post")
+    private List<UploadFile> uploadFiles = new ArrayList<>();
 
     private int price;
 
@@ -77,7 +77,6 @@ public class Post extends DeleteEntity{
         post.title = title;
         post.desc = desc;
         post.price = price;
-        post.uploadFile = new UploadFile("","");
         post.category = category;
         post.seller = seller;
         post.postStatus = PostStatus.NEW;
@@ -98,6 +97,11 @@ public class Post extends DeleteEntity{
 //    }
 
     //== 바즈니스 로직 ==//
+
+    public void addUploadFile(UploadFile file){
+        uploadFiles.add(file);
+        file.setPost(this);
+    }
 
     public void deletePost(){
         super.delete();

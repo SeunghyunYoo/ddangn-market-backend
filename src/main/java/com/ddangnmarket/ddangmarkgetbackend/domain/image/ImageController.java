@@ -11,12 +11,12 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/v1/images")
+//@RestController
+//@RequiredArgsConstructor
+//@RequestMapping("/api/v1/images")
 public class ImageController {
 
-    @PostMapping
+//    @PostMapping
     public void uploadImage(@RequestPart("image") MultipartFile file, HttpSession session) throws IOException {
         if(!file.isEmpty()){
             String path = session.getServletContext().getRealPath("/") + "images/" + file.getOriginalFilename();

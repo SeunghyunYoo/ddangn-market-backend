@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -35,7 +36,7 @@ public class PostController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<ResponseOKDto<PostResponseDto>> post(@RequestBody PostRequestDto postRequestDto, @ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseOKDto<PostResponseDto>> post(@Validated @RequestBody PostRequestDto postRequestDto, @ApiIgnore HttpSession session){
 
         Account account = getSessionCheckedAccount(session);
 

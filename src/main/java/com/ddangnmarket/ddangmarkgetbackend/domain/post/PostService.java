@@ -4,16 +4,14 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.ChatRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
-import com.ddangnmarket.ddangmarkgetbackend.domain.file.FileStore;
+import com.ddangnmarket.ddangmarkgetbackend.domain.file.UploadFileRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.UpdatePostRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.reply.ReplyRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +28,7 @@ public class PostService {
     private final DistrictRepository districtRepository;
     private final SaleRepository saleRepository;
     private final PurchaseRepository purchaseRepository;
-    private final FileStore fileStore;
+    private final UploadFileRepository uploadFileRepository;
 
     public Long post(Post post){
         return postRepository.save(post).getId();
@@ -45,14 +43,15 @@ public class PostService {
 
     }
 
-    public Long post(String title, String desc, int price, CategoryTag categoryTag, Account account
-            , MultipartFile file) throws IOException {
+    public Long post(String title, String desc, int price, CategoryTag categoryTag
+            ,List<Long> fileIds, Account account) throws IOException {
         Category category = categoryJpaRepository.findByCategoryTag(categoryTag);
 
-        UploadFile uploadFile = fileStore.storeFile(file);
+        List<UploadFile> uploadFiles = uploadFileRepository.findAllByIds(fileIds);
         Post post = Post.createPost(title, desc, price, category, account);
-        post.setUploadFile(uploadFile);
-
+        if(uploadFiles.size() != 0){
+            uploadFiles.forEach(post::addUploadFile);
+        }
         return postRepository.save(post).getId();
 
     }

@@ -1,18 +1,14 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.interest;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
-import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.EntityGraph;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -35,7 +31,7 @@ class InterestServiceTest {
         em.flush();
         em.clear();
 
-        Account findAccount = accountService.findAccount(signUpAccount.getId());
+        Account findAccount = accountService.checkSessionAndFindAccount(signUpAccount.getId());
 
 
     }

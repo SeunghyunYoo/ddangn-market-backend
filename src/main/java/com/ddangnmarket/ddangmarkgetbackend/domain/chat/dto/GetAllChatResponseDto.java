@@ -25,7 +25,7 @@ public class GetAllChatResponseDto {
 
     @Data
     @NoArgsConstructor
-    static class GetChatResponseDto {
+    public static class GetChatResponseDto {
         private Long chatId;
         private SellerDto seller;
         private BuyerDto buyer;
@@ -44,7 +44,7 @@ public class GetAllChatResponseDto {
 
         @Data
         @NoArgsConstructor
-        static class SellerDto{
+        public static class SellerDto{
             private String nickname;
             private Dong dong;
 
@@ -56,7 +56,7 @@ public class GetAllChatResponseDto {
 
         @Data
         @NoArgsConstructor
-        static class BuyerDto{
+        public static class BuyerDto{
             private String nickname;
             private Dong dong;
 
@@ -68,7 +68,7 @@ public class GetAllChatResponseDto {
 
         @Data
         @NoArgsConstructor
-        static class PostDto{
+        public static class PostDto{
             private Long postId;
             private PostStatus postStatus;
             private Dong dong;

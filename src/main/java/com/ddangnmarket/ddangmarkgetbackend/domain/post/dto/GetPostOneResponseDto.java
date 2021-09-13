@@ -23,6 +23,8 @@ public class GetPostOneResponseDto {
 
     private int price;
 
+    private List<String> storeFileNames;
+
     private int viewCount;
 
     private int chatCount;
@@ -50,6 +52,7 @@ public class GetPostOneResponseDto {
         this.title = post.getTitle();
         this.desc = post.getDesc();
         this.price = post.getPrice();
+        this.storeFileNames = post.getUploadFiles().stream().map(UploadFile::getStoreFileName).collect(toList());
         this.viewCount = post.getViewCount();
         this.chatCount = post.getChatCount();
         this.interestCount = post.getInterestCount();

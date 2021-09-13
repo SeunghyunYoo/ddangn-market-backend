@@ -13,12 +13,10 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -42,7 +40,7 @@ public class AccountService {
     }
 
 
-    public Account findAccount(Long accountId){
+    public Account checkSessionAndFindAccount(Long accountId){
         return accountRepository.findById(accountId).orElseThrow(() ->
                 new IllegalStateException("존재하지 않는 회원입니다."));
     }
@@ -51,9 +49,9 @@ public class AccountService {
         return accountRepository.findWithActivityAreaById(accountId).orElseThrow();
     }
 
-    public Account findAccount(HttpSession session){
+    public Account checkSessionAndFindAccount(HttpSession session){
         Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-        return findAccount(accountId);
+        return checkSessionAndFindAccount(accountId);
     }
 
     public Account findAccountWithActivityArea(Long accountId){

@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong.GUMI;
 import static com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus.RESERVE;
@@ -89,7 +90,7 @@ class PostControllerTest {
         //== 게시글 == //
 
         // 게시글 등록
-        PostRequestDto postRequestDto = new PostRequestDto("title", "desc", 1000, CategoryTag.OTHERS);
+        PostRequestDto postRequestDto = new PostRequestDto("title", "desc", 1000, CategoryTag.OTHERS, List.of());
         MockPost(session, "/api/v1/posts", postRequestDto);
 
         // 전체 게시글 조회
@@ -179,9 +180,9 @@ class PostControllerTest {
                 MockGetPosts(session, "/api/v1/posts/sales?status=reserve");
 
         assertThat(allReserved1.getData().getPosts().get(0).getStatus()).isEqualTo(RESERVE);
-        GetChatResponseDto reservedChat1 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
+        GetAllChatResponseDto.GetChatResponseDto reservedChat1 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
                 .getData().getChats().get(0);
-        assertThat(reservedChat1.getPostStatus()).isEqualTo(PostStatus.RESERVE);
+        assertThat(reservedChat1.getPost().getPostStatus()).isEqualTo(PostStatus.RESERVE);
 
         // 판매 예약 변경
         MockPost(session, "/api/v1/posts/" + postId2 +"/reserve/" + chatId2.toString());
@@ -191,17 +192,17 @@ class PostControllerTest {
         assertThat(allReserved2.getData().getPosts().get(0).getStatus()).isEqualTo(RESERVE);
         reservedChat1 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
                 .getData().getChats().get(0);
-        assertThat(reservedChat1.getPostStatus()).isEqualTo(PostStatus.NEW);
-        GetChatResponseDto reservedChat2 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
+        assertThat(reservedChat1.getPost().getPostStatus()).isEqualTo(PostStatus.NEW);
+        GetAllChatResponseDto.GetChatResponseDto reservedChat2 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
                 .getData().getChats().get(1);
-        assertThat(reservedChat2.getPostStatus()).isEqualTo(PostStatus.RESERVE);
+        assertThat(reservedChat2.getPost().getPostStatus()).isEqualTo(PostStatus.RESERVE);
 
         // 판매 예약 취소 /api/v1/posts/{postId}/sales/cancel
 
         MockPost(session, "/api/v1/posts/" + postId2 +"/reserve/cancel");
         reservedChat2 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
                 .getData().getChats().get(1);
-        assertThat(reservedChat2.getPostStatus()).isEqualTo(PostStatus.NEW);
+        assertThat(reservedChat2.getPost().getPostStatus()).isEqualTo(PostStatus.NEW);
         // 다시 예약
         MockPost(session, "/api/v1/posts/" + postId2 +"/reserve/" + chatId2);
 

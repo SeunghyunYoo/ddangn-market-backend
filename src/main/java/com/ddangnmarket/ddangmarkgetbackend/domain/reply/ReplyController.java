@@ -4,7 +4,6 @@ import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseSimpleOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.reply.dto.ReplyRequestDto;
-import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class ReplyController{
             @PathVariable Long postId, @RequestBody ReplyRequestDto requestDto,
             @ApiIgnore HttpSession session){
 
-        Account account = accountService.findAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
 
         replyService.createReply(account, postId, requestDto.getContent());
 

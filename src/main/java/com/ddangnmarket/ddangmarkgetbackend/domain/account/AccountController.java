@@ -125,7 +125,7 @@ public class AccountController {
 
     private Account getSessionCheckedAccount(HttpSession session) {
         Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-        return accountService.findAccount(accountId);
+        return accountService.checkSessionAndFindAccount(accountId);
     }
 
     private Account getSessionCheckedAccountWithArea(HttpSession session) {

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-public class FileStore {
+public class UploadFileStore {
 //    @Value("${image.dir}")
     @Value("${file.dir}")
     private String fileDir;
@@ -27,7 +27,7 @@ public class FileStore {
         return fileDir + filename;
     }
 
-    public List<UploadFile> storeFiles(HttpSession session, List<MultipartFile> multipartFiles) throws IOException {
+    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
         List<UploadFile> storeFileResult = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             if(!multipartFile.isEmpty()){
@@ -47,10 +47,6 @@ public class FileStore {
         String storeFileName = createStoreFileName(originalFilename);
         multipartFile.transferTo(new File(getFullPath(storeFileName)));
         return new UploadFile(originalFilename, storeFileName);
-    }
-
-    private String getBaseDir(HttpSession session){
-        return session.getServletContext().getRealPath("/");
     }
 
     private String createStoreFileName(String originalFilename) {

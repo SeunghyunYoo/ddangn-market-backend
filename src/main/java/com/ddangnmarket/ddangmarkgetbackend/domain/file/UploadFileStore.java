@@ -27,25 +27,29 @@ public class UploadFileStore {
         return fileDir + filename;
     }
 
-    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
+    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) {
         List<UploadFile> storeFileResult = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
-            if(!multipartFile.isEmpty()){
+            if(!multipartFile.isEmpty()) {
                 UploadFile uploadFile = storeFile(multipartFile);
                 storeFileResult.add(uploadFile);
             }
         }
-        return  storeFileResult;
+        return storeFileResult;
     }
 
-    public UploadFile storeFile(MultipartFile multipartFile) throws IOException {
+    public UploadFile storeFile(MultipartFile multipartFile) {
         if(multipartFile == null || multipartFile.isEmpty()){
             return null;
         }
-
         String originalFilename = multipartFile.getOriginalFilename();
         String storeFileName = createStoreFileName(originalFilename);
-        multipartFile.transferTo(new File(getFullPath(storeFileName)));
+        try {
+            multipartFile.transferTo(new File(getFullPath(storeFileName)));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("해당 파일을 저장할 수 없습니다.");
+        }
         return new UploadFile(originalFilename, storeFileName);
     }
 

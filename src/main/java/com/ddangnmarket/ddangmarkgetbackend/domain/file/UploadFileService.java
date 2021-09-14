@@ -29,11 +29,18 @@ public class UploadFileService {
     private final UploadFileRepository uploadFileRepository;
     private final UploadFileStore uploadFileStore;
 
-    public List<Long> uploadFile(List<MultipartFile> files) throws IOException {
+    public List<Long> uploadFiles(List<MultipartFile> files) {
         List<UploadFile> uploadFiles = uploadFileStore.storeFiles(files);
 
         uploadFileRepository.saveAll(uploadFiles);
         return uploadFiles.stream().map(UploadFile::getId).collect(toList());
+    }
+
+    public Long uploadFile(MultipartFile file){
+        // TODO 단일 값 예외처리 필요
+        UploadFile uploadFile = uploadFileStore.storeFile(file);
+        uploadFileRepository.save(uploadFile);
+        return 0L;
     }
 
     public Resource downloadImage(Long imageId) throws MalformedURLException {

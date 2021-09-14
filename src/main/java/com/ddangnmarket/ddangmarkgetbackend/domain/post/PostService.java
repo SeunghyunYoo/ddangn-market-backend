@@ -44,7 +44,7 @@ public class PostService {
     }
 
     public Long post(String title, String desc, int price, CategoryTag categoryTag
-            ,List<Long> fileIds, Account account) throws IOException {
+            ,List<Long> fileIds, Account account) {
         Category category = categoryJpaRepository.findByCategoryTag(categoryTag);
 
         List<UploadFile> uploadFiles = uploadFileRepository.findAllByIds(fileIds);

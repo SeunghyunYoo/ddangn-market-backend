@@ -1,12 +1,10 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.file;
 
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
-import com.ddangnmarket.ddangmarkgetbackend.domain.UploadFile;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.file.dto.UploadFileResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
@@ -30,10 +27,10 @@ public class UploadFileController {
     private final UploadFileService uploadFileService;
 
     @PostMapping
-    public ResponseEntity<ResponseOKDto<UploadFileResponseDto>> uploadImage(@RequestParam List<MultipartFile> files, @ApiIgnore HttpSession session) throws IOException {
+    public ResponseEntity<ResponseOKDto<UploadFileResponseDto>> uploadImage(@RequestParam List<MultipartFile> files, @ApiIgnore HttpSession session) {
         accountService.checkSessionAndFindAccount(session);
 
-        List<Long> fileIds = uploadFileService.uploadFile(files);
+        List<Long> fileIds = uploadFileService.uploadFiles(files);
 
         return new ResponseEntity<>(new ResponseOKDto<>(new UploadFileResponseDto(fileIds)), HttpStatus.OK);
     }

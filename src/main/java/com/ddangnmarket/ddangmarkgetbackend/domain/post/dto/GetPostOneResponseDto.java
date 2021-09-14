@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -23,7 +22,7 @@ public class GetPostOneResponseDto {
 
     private int price;
 
-    private List<String> storeFileNames;
+    private List<Long> fileIds;
 
     private int viewCount;
 
@@ -52,7 +51,7 @@ public class GetPostOneResponseDto {
         this.title = post.getTitle();
         this.desc = post.getDesc();
         this.price = post.getPrice();
-        this.storeFileNames = post.getUploadFiles().stream().map(UploadFile::getStoreFileName).collect(toList());
+        this.fileIds = post.getUploadFiles().stream().map(UploadFile::getId).collect(toList());
         this.viewCount = post.getViewCount();
         this.chatCount = post.getChatCount();
         this.interestCount = post.getInterestCount();

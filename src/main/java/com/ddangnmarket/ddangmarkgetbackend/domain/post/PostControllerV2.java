@@ -31,7 +31,7 @@ public class PostControllerV2 {
     @PostMapping
     public ResponseEntity<ResponseOKDto<PostResponseDto>> post(
             @RequestBody PostRequestDto postRequestDto,
-            @ApiIgnore HttpSession session) throws IOException {
+            @ApiIgnore HttpSession session) {
 
         Account account = getSessionCheckedAccount(session);
 

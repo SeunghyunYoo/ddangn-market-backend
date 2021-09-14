@@ -37,10 +37,9 @@ public class UploadFileService {
     }
 
     public Long uploadFile(MultipartFile file){
-        // TODO 단일 값 예외처리 필요
         UploadFile uploadFile = uploadFileStore.storeFile(file);
         uploadFileRepository.save(uploadFile);
-        return 0L;
+        return uploadFile.getId();
     }
 
     public Resource downloadImage(Long imageId) throws MalformedURLException {

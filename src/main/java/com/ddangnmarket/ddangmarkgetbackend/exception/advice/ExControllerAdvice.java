@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
@@ -144,5 +145,12 @@ public class ExControllerAdvice {
         ErrorResult errorResult = new ErrorResult(HttpStatus.NOT_FOUND.name(),
                 HttpStatus.NOT_FOUND.value(), "존재하지 않는 경로입니다");
         return new ResponseEntity<>(errorResult, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({MaxUploadSizeExceededException.class})
+    public ResponseEntity<ErrorResult> httpMessageExHandler(MaxUploadSizeExceededException e){
+        ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(),
+                HttpStatus.BAD_REQUEST.value(), "파일의 용량이 지원하는 용량을 초과합니다.");
+        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
 }

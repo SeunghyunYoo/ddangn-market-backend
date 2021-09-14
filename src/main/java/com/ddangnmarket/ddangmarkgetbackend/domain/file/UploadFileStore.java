@@ -40,7 +40,7 @@ public class UploadFileStore {
 
     public UploadFile storeFile(MultipartFile multipartFile) {
         if(multipartFile == null || multipartFile.isEmpty()){
-            return null;
+            throw new IllegalArgumentException("파일이 존재하지 않습니다.");
         }
         String originalFilename = multipartFile.getOriginalFilename();
         String storeFileName = createStoreFileName(originalFilename);
@@ -48,7 +48,7 @@ public class UploadFileStore {
             multipartFile.transferTo(new File(getFullPath(storeFileName)));
         } catch (IOException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("해당 파일을 저장할 수 없습니다.");
+            throw new RuntimeException("해당 파일을 저장할 수 없습니다.", e);
         }
         return new UploadFile(originalFilename, storeFileName);
     }

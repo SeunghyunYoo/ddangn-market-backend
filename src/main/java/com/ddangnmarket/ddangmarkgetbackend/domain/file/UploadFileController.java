@@ -2,7 +2,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.file;
 
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
-import com.ddangnmarket.ddangmarkgetbackend.domain.file.dto.UploadFileResponseDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.file.dto.UploadImagesResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -27,13 +27,15 @@ public class UploadFileController {
     private final UploadFileService uploadFileService;
 
     @PostMapping
-    public ResponseEntity<ResponseOKDto<UploadFileResponseDto>> uploadImage(@RequestParam List<MultipartFile> files, @ApiIgnore HttpSession session) {
+    public ResponseEntity<ResponseOKDto<UploadImagesResponseDto>> uploadImages(@RequestParam List<MultipartFile> files, @ApiIgnore HttpSession session) {
         accountService.checkSessionAndFindAccount(session);
 
         List<Long> fileIds = uploadFileService.uploadFiles(files);
 
-        return new ResponseEntity<>(new ResponseOKDto<>(new UploadFileResponseDto(fileIds)), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseOKDto<>(new UploadImagesResponseDto(fileIds)), HttpStatus.OK);
     }
+
+
 
     @GetMapping("{imageId}")
     public Resource downloadImage(@PathVariable Long imageId, @ApiIgnore HttpSession session) throws MalformedURLException {

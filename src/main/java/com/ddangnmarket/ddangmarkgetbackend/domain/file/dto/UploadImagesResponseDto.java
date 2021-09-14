@@ -10,10 +10,10 @@ import java.util.List;
  */
 @NoArgsConstructor
 @Data
-public class UploadFileResponseDto {
-    private List<Long> fileIds;
+public class UploadImagesResponseDto {
+    private List<Long> imageIds;
 
-    public UploadFileResponseDto(List<Long> fileIds){
-        this.fileIds = fileIds;
+    public UploadImagesResponseDto(List<Long> imageIds){
+        this.imageIds = imageIds;
     }
 }

@@ -51,6 +51,10 @@ public class ActivityArea extends BaseEntity{
         }
     }
 
+    public boolean isAccessibleArea(District district){
+        return this.district.getPosition().calcDiff(district.getPosition()) <= this.range;
+    }
+
     public void updateAccount(Account account){
         this.account = account;
     }

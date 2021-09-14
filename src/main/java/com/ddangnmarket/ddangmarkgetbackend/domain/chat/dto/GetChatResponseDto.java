@@ -2,6 +2,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Chat;
+import com.ddangnmarket.ddangmarkgetbackend.domain.ChatStatus;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetChatResponseDto {
     private Long chatId;
+    private ChatStatus chatStatus;
     private SellerDto seller;
     private BuyerDto buyer;
     private PostStatus postStatus;
@@ -20,6 +22,7 @@ public class GetChatResponseDto {
 
     public GetChatResponseDto(Chat chat){
         this.chatId = chat.getId();
+        this.chatStatus = chat.getChatStatus();
         this.seller = new SellerDto(chat.getPost().getSeller());
         this.buyer = new BuyerDto(chat.getAccount());
         this.postStatus = chat.getPost().getPostStatus();

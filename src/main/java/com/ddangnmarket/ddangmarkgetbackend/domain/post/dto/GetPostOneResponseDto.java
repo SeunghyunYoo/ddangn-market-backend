@@ -1,6 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.post.dto;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import lombok.Data;

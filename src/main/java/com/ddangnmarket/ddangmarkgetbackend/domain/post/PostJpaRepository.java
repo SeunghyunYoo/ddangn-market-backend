@@ -1,6 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.post;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

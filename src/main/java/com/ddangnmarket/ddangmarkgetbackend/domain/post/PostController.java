@@ -4,6 +4,7 @@ import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseSimpleOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.*;
 import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;

@@ -3,12 +3,12 @@ package com.ddangnmarket.ddangmarkgetbackend;
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Position;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseRepository;
-import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.reply.ReplyRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong.*;
 

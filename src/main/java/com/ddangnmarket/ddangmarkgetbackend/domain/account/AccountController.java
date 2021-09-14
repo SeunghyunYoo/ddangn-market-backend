@@ -114,7 +114,7 @@ public class AccountController {
         Account account = getSessionCheckedAccountWithArea(session);
 
         accountService.changeActivityArea(account,
-                Dong.fromString(activityAreaRequestDto.getDong()),
+                activityAreaRequestDto.getDong(),
                 activityAreaRequestDto.getRange());
 
         List<Dong> activityAreas = districtService.getActivityAreas(account);

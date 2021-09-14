@@ -25,8 +25,8 @@ public class Chat extends DeleteEntity{
     @JoinColumn(name = "post_id")
     private Post post;
 
-//    @Enumerated(EnumType.STRING)
-//    private PostStatus postStatus;
+    @Enumerated(EnumType.STRING)
+    private ChatStatus chatStatus;
 
     public static Chat createChat(Post post, Account account){
         if (post.getPostStatus() == PostStatus.COMPLETE){
@@ -37,7 +37,7 @@ public class Chat extends DeleteEntity{
         Chat chat = new Chat();
         chat.post = post;
         chat.account = account;
-//        chat.postStatus = PostStatus.NEW;
+        chat.chatStatus = ChatStatus.NONE;
         post.addChat(chat);
         return chat;
     }
@@ -51,17 +51,17 @@ public class Chat extends DeleteEntity{
         }
     }
 
-//    public void changeReserve(){
-//        postStatus = PostStatus.RESERVE;
-//    }
-//
-//    public void changeNone(){
-//        postStatus = PostStatus.NEW;
-//    }
-//
-//    public void changeComplete(){
-//        postStatus = PostStatus.COMPLETE;
-//    }
+    public void changeReserve(){
+        chatStatus = ChatStatus.RESERVE;
+    }
+
+    public void changeNone(){
+        chatStatus = ChatStatus.NONE;
+    }
+
+    public void changeComplete(){
+        chatStatus = ChatStatus.COMPLETE;
+    }
 //
 //    public void disconnectPost(){
 ////        this.post = null;

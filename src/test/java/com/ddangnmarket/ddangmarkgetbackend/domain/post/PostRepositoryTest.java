@@ -2,9 +2,8 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.post;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
-import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +15,6 @@ import java.util.List;
 
 import static com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

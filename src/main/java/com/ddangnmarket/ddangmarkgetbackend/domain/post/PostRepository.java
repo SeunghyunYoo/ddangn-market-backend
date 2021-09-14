@@ -1,7 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.post;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
-import com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.District;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import org.springframework.data.jpa.repository.EntityGraph;

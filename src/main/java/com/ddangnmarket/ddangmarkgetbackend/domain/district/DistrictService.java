@@ -1,6 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.district;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
+import com.ddangnmarket.ddangmarkgetbackend.domain.ActivityArea;
 import com.ddangnmarket.ddangmarkgetbackend.domain.District;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,10 @@ public class DistrictService {
     public List<Dong> getActivityAreas(Account account){
         List<District> districts = districtRepository.findAll();
 
-        District accountDistrict = account.getActivityArea().getDistrict();
-        Integer range = account.getActivityArea().getRange();
+        ActivityArea activityArea = account.getActivityArea();
 
         return districts.stream()
-                .filter(district ->
-                    accountDistrict.getPosition().calcDiff(district.getPosition()) <= range)
+                .filter(activityArea::isAccessibleArea)
                 .map(District::getDong)
                 .collect(Collectors.toList());
     }

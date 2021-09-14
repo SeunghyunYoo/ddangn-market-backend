@@ -34,7 +34,7 @@ public class Account extends DeleteEntity{
         this.phone = phone;
         this.mail = mail;
         this.password = password;
-        this.mannerTemp = 37.5;
+        this.mannerTemp = 36.5;
     }
 
     @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY, orphanRemoval = true)

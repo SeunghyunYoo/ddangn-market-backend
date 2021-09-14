@@ -29,4 +29,6 @@ public class District extends BaseEntity{
     public void changeDong(Dong dong){
         this.dong = dong;
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.account.dto;
 
+import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class ActivityAreaRequestDto {
     @NotNull
-    private String dong;
+    private Dong dong;
 
     @Range(min = 0, max = 3)
     private Integer range;

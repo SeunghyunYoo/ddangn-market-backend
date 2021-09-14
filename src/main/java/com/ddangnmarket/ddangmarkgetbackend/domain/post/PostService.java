@@ -2,6 +2,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.post;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.ChatRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.file.UploadFileRepository;
@@ -13,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,12 +48,25 @@ public class PostService {
         Category category = categoryJpaRepository.findByCategoryTag(categoryTag);
 
         List<UploadFile> uploadFiles = uploadFileRepository.findAllByIds(fileIds);
+        validateExistFileIds(fileIds, uploadFiles);
+
+        Post post = createPostWithFiles(title, desc, price, account, category, uploadFiles);
+        return postRepository.save(post).getId();
+
+    }
+
+    private void validateExistFileIds(List<Long> fileIds, List<UploadFile> uploadFiles) {
+        if(uploadFiles.size() != fileIds.size()){
+            throw new IllegalArgumentException("존재하지 않는 imageId 입니다.");
+        }
+    }
+
+    private Post createPostWithFiles(String title, String desc, int price, Account account, Category category, List<UploadFile> uploadFiles) {
         Post post = Post.createPost(title, desc, price, category, account);
         if(uploadFiles.size() != 0){
             uploadFiles.forEach(post::addUploadFile);
         }
-        return postRepository.save(post).getId();
-
+        return post;
     }
 
     public void delete(Long postId){
@@ -69,17 +82,13 @@ public class PostService {
     public List<Post> findAllByStatus(Account account, PostStatus postStatus){
         List<District> districts = getDistrict(account);
 
-
         return postRepository.findAllByPostStatus(districts, postStatus);
-
     }
 
     public List<Post> findAllByStatuses(Account account, List<PostStatus> postStatuses){
         List<District> districts = getDistrict(account);
 
-
         return postRepository.findAllByPostStatuses(districts, postStatuses);
-
     }
 
     public List<Post> findPostAllBySeller(Account account){
@@ -105,17 +114,13 @@ public class PostService {
     public List<Post> findAllByCategoryAndPostStatus(Account account, CategoryTag categoryTag, PostStatus postStatus){
         List<District> districts = getDistrict(account);
 
-
         return postRepository.findAllByCategoryAndPostStatus(districts, categoryTag, postStatus);
-
     }
 
     public List<Post> findAllByCategoryAndStatuses(Account account, CategoryTag categoryTag, List<PostStatus> postStatuses) {
         List<District> districts = getDistrict(account);
 
-
         return postRepository.findAllByCategoryAndPostStatuses(districts, categoryTag, postStatuses);
-
     }
 
     public List<Post> findAllPurchase(Account account){

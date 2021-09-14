@@ -20,7 +20,7 @@ public class MannerService {
     private final AccountRepository accountRepository;
     private final PurchaseRepository purchaseRepository;
     private final SaleRepository saleRepository;
-    private final double DEFAULT_MANNER_TEMP = 37.5;
+    private final double DEFAULT_MANNER_TEMP = 36.5;
 
     @Scheduled(fixedRate = 1000*60*10, initialDelay = 1000*10)
     public void updateManner(){

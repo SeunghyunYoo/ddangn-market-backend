@@ -1,11 +1,9 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import lombok.*;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.List;
 
 @Entity
 @Getter

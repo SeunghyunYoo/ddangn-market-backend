@@ -2,12 +2,12 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.account;
 
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
-import com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag;
+import com.ddangnmarket.ddangmarkgetbackend.domain.ChatStatus;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.ActivityAreaRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.SignUpRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.CreateChatRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.GetAllChatResponseDto;
-import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.GetChatResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.AddInterestRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.GetAllInterestDto;
@@ -118,7 +118,7 @@ class PostControllerTest {
         System.out.println("=============");
         System.out.println("활동 지역 변경");
         ActivityAreaRequestDto activityAreaRequestDto =
-                new ActivityAreaRequestDto(Dong.YATAP3.name(), 0);
+                new ActivityAreaRequestDto(Dong.YATAP3, 0);
         MockPost(session, "/api/v1/accounts/activity-area", activityAreaRequestDto);
 
         // 위치 변경시 원래 올린 게시글은 위치 변경되지 않음
@@ -182,7 +182,7 @@ class PostControllerTest {
         assertThat(allReserved1.getData().getPosts().get(0).getStatus()).isEqualTo(RESERVE);
         GetAllChatResponseDto.GetChatResponseDto reservedChat1 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
                 .getData().getChats().get(0);
-        assertThat(reservedChat1.getPost().getPostStatus()).isEqualTo(PostStatus.RESERVE);
+        assertThat(reservedChat1.getChatStatus()).isEqualTo(ChatStatus.RESERVE);
 
         // 판매 예약 변경
         MockPost(session, "/api/v1/posts/" + postId2 +"/reserve/" + chatId2.toString());
@@ -192,17 +192,17 @@ class PostControllerTest {
         assertThat(allReserved2.getData().getPosts().get(0).getStatus()).isEqualTo(RESERVE);
         reservedChat1 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
                 .getData().getChats().get(0);
-        assertThat(reservedChat1.getPost().getPostStatus()).isEqualTo(PostStatus.NEW);
+        assertThat(reservedChat1.getChatStatus()).isEqualTo(ChatStatus.NONE);
         GetAllChatResponseDto.GetChatResponseDto reservedChat2 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
                 .getData().getChats().get(1);
-        assertThat(reservedChat2.getPost().getPostStatus()).isEqualTo(PostStatus.RESERVE);
+        assertThat(reservedChat2.getChatStatus()).isEqualTo(ChatStatus.RESERVE);
 
         // 판매 예약 취소 /api/v1/posts/{postId}/sales/cancel
 
         MockPost(session, "/api/v1/posts/" + postId2 +"/reserve/cancel");
         reservedChat2 = MockGetChats(session, "/api/v1/chats/sales?postId=" + postId2)
                 .getData().getChats().get(1);
-        assertThat(reservedChat2.getPost().getPostStatus()).isEqualTo(PostStatus.NEW);
+        assertThat(reservedChat2.getChatStatus()).isEqualTo(ChatStatus.NONE);
         // 다시 예약
         MockPost(session, "/api/v1/posts/" + postId2 +"/reserve/" + chatId2);
 
@@ -219,8 +219,6 @@ class PostControllerTest {
         // 판매 취소
 
         // 판매 -> 예약
-
-
 
     }
 

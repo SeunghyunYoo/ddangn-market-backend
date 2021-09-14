@@ -3,6 +3,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.reply;
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostRepository;
@@ -15,8 +16,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

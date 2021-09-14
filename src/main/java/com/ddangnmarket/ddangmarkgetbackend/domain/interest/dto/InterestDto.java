@@ -1,7 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
-import com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Interest;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;

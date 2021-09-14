@@ -1,6 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.category.validation;
 
-import com.ddangnmarket.ddangmarkgetbackend.domain.CategoryTag;
+import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

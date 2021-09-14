@@ -167,7 +167,7 @@ public class Post extends DeleteEntity{
         purchase = null;
         postStatus = PostStatus.NEW;
         // mappedBy라 여기서 변경 못함 Chat에서
-//        chats.forEach(Chat::changeNone);
+        chats.forEach(Chat::changeNone);
     }
 
     /**
@@ -177,12 +177,12 @@ public class Post extends DeleteEntity{
     public void changeReserve(Chat chat){
         // 다른 chat으로 예약 변경 -> 기존의 reserved 였던 것들 취소
         // -> target chat 예약으로 지정
-//        chats.stream()
-//               .filter(c -> c.getPostStatus() == PostStatus.RESERVE)
-//               .findAny()
-//               .ifPresent(Chat::changeNone);
+        chats.stream()
+               .filter(c -> c.getChatStatus() == ChatStatus.RESERVE)
+               .findAny()
+               .ifPresent(Chat::changeNone);
 //        chats.forEach(Chat::changeNone);
-//        chat.changeReserve();
+        chat.changeReserve();
 
         if (postStatus == PostStatus.COMPLETE) {
             sale = null;
@@ -193,7 +193,7 @@ public class Post extends DeleteEntity{
     }
 
     public void cancelReserve(){
-//        chats.forEach(Chat::changeNone);
+        chats.forEach(Chat::changeNone);
         postStatus = PostStatus.NEW;
     }
 

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -30,7 +31,7 @@ public class PostControllerV2 {
 
     @PostMapping
     public ResponseEntity<ResponseOKDto<PostResponseDto>> post(
-            @RequestBody PostRequestDto postRequestDto,
+            @RequestBody @Validated PostRequestDto postRequestDto,
             @ApiIgnore HttpSession session) {
 
         Account account = getSessionCheckedAccount(session);

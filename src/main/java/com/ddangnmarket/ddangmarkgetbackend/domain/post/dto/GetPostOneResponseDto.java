@@ -99,12 +99,14 @@ public class GetPostOneResponseDto {
     @NoArgsConstructor
     static class ChatDto {
         private Long ChatId;
+        private ChatStatus chatStatus;
         private String nickname;
         private String createdAt;
         private String updatedAt;
 
         ChatDto(Chat chat){
             this.ChatId = chat.getId();
+            this.chatStatus = chat.getChatStatus();
             this.nickname = chat.getAccount().getNickname();
             this.createdAt = chat.getCreatedAt().toString();
             this.updatedAt = chat.getUpdatedAt().toString();

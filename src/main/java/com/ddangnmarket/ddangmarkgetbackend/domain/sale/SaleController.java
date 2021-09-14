@@ -1,10 +1,8 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.sale;
 
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseSimpleOKDto;
-import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.sale.dto.ReviewSaleRequestDto;
-import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +24,11 @@ public class SaleController {
             @PathVariable Long saleId, @RequestBody ReviewSaleRequestDto requestDto,
             @ApiIgnore HttpSession session){
 
-        Account sessionCheckedAccount = getSessionCheckedAccount(session);
+        accountService.checkSessionAndFindAccount(session);
 
         saleService.review(saleId, requestDto.getScore(), requestDto.getReview());
 
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
-    private Account getSessionCheckedAccount(HttpSession session) {
-        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-        return accountService.checkSessionAndFindAccount(accountId);
-    }
 }

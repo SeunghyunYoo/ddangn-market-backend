@@ -6,7 +6,6 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.dto.*;
-import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -81,7 +80,7 @@ public class AccountController {
 
     @GetMapping("/info")
     public ResponseEntity<ResponseOKDto<GetAccountInfoResponseDto>> getAccountInfo(@ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccountWithArea(session);
+        Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
         // TODO Account2Area fetch join 고민 필요
         List<Dong> activityAreas = districtService.getActivityAreas(account);
 
@@ -93,7 +92,7 @@ public class AccountController {
     public ResponseEntity<ResponseSimpleOKDto> updateAccountInfo(
             @Validated @RequestBody UpdateAccountInfoRequestDto updateAccountInfoRequestDto,
             @ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
         accountService.updateAccountInfo(account, updateAccountInfoRequestDto);
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
@@ -102,7 +101,7 @@ public class AccountController {
     public ResponseEntity<ResponseSimpleOKDto> changePassword(
             @Validated @RequestBody ChangeAccountPasswordRequestDto changeAccountPasswordRequestDto,
             @ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
         accountService.changePassword(account, changeAccountPasswordRequestDto);
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
@@ -111,7 +110,7 @@ public class AccountController {
     public ResponseEntity<ResponseOKDto<ActivityAreaResponseDto>> addActivityArea(
             @Validated @RequestBody ActivityAreaRequestDto activityAreaRequestDto,
             @ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccountWithArea(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
 
         accountService.changeActivityArea(account,
                 activityAreaRequestDto.getDong(),
@@ -121,16 +120,6 @@ public class AccountController {
 
         return new ResponseEntity<>(new ResponseOKDto<>(
                 new ActivityAreaResponseDto(activityAreas, activityAreaRequestDto.getRange())), HttpStatus.OK);
-    }
-
-    private Account getSessionCheckedAccount(HttpSession session) {
-        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-        return accountService.checkSessionAndFindAccount(accountId);
-    }
-
-    private Account getSessionCheckedAccountWithArea(HttpSession session) {
-        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-        return accountService.findAccountWithActivityArea(accountId);
     }
 
 }

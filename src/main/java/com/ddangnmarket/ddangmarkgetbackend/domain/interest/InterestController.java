@@ -8,7 +8,6 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.AddInterestRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.AddInterestResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.GetAllInterestDto;
-import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,7 @@ public class InterestController {
 
     @PostMapping("/new")
     public ResponseEntity<ResponseOKDto<AddInterestResponseDto>> addInterest(@RequestBody AddInterestRequestDto addInterestRequestDto, @ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
 
         Long interestId = interestService.addInterest(account, addInterestRequestDto.getPostId());
 
@@ -38,7 +37,7 @@ public class InterestController {
 
     @GetMapping
     public ResponseEntity<ResponseOKDto<GetAllInterestDto>> getAllInterest(@ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
 
         List<Interest> interests = interestService.findAllInterests(account);
 
@@ -48,7 +47,7 @@ public class InterestController {
 
     @DeleteMapping("/{interestId}")
     public ResponseEntity<ResponseSimpleOKDto> deleteInterest(@PathVariable Long interestId, @ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
 
         interestService.deleteInterest(account, interestId);
 
@@ -57,17 +56,10 @@ public class InterestController {
 
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<ResponseSimpleOKDto> deleteInterestByPostId(@PathVariable Long postId, @ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
 
         interestService.deleteInterestByPostId(account, postId);
 
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
-    }
-
-
-    private Account getSessionCheckedAccount(HttpSession session) {
-        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-
-        return accountService.checkSessionAndFindAccount(accountId);
     }
 }

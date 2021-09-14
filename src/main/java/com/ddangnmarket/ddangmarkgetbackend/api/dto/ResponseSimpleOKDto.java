@@ -18,4 +18,10 @@ public class ResponseSimpleOKDto {
         timestamp = LocalDateTime.now().toString();
         message = HttpStatus.OK.name();
     }
+    public ResponseSimpleOKDto(String message){
+        code = HttpStatus.OK.name();
+        status = HttpStatus.OK.value();
+        timestamp = LocalDateTime.now().toString();
+        this.message = message;
+    }
 }

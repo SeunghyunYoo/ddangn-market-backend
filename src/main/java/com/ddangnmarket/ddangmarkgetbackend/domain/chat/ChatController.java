@@ -8,7 +8,6 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.CreateChatRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.CreateChatResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.GetAllChatResponseDto;
-import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,7 @@ public class ChatController {
 
     @GetMapping
     public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChat(@ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
 
         List<Chat> chats = chatService.findAllChat(account);
 
@@ -40,7 +39,7 @@ public class ChatController {
     @GetMapping("/sales")
     public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChatByPost(
             @RequestParam Long postId, @ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
 
         List<Chat> chats = chatService.findAllChatByPost(account, postId);
 
@@ -51,7 +50,7 @@ public class ChatController {
     @PostMapping
     public ResponseEntity<ResponseOKDto<CreateChatResponseDto>> createChat(
             @RequestBody CreateChatRequestDto createChatRequestDto, @ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
 
         Long chatId = chatService.createChat(account, createChatRequestDto.getPostId());
 
@@ -61,16 +60,11 @@ public class ChatController {
 
     @DeleteMapping("/{chatId}")
     public ResponseEntity<ResponseSimpleOKDto> deleteChat(@PathVariable Long chatId, @ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
 
         chatService.deleteChat(account, chatId);
 
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
-    private Account getSessionCheckedAccount(HttpSession session) {
-        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-
-        return accountService.checkSessionAndFindAccount(accountId);
-    }
 }

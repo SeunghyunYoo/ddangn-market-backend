@@ -40,18 +40,19 @@ public class AccountService {
     }
 
 
-    public Account checkSessionAndFindAccount(Long accountId){
+    public Account checkSessionAndFindAccount(HttpSession session){
+        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
+        return findAccount(accountId);
+    }
+
+    public Account findAccount(Long accountId){
         return accountRepository.findById(accountId).orElseThrow(() ->
                 new IllegalStateException("존재하지 않는 회원입니다."));
     }
 
-    public Account findAccountWithActivityAreas(Long accountId){
-        return accountRepository.findWithActivityAreaById(accountId).orElseThrow();
-    }
-
-    public Account checkSessionAndFindAccount(HttpSession session){
+    public Account checkSessionAndFindAccountWithActivityArea(HttpSession session) {
         Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-        return checkSessionAndFindAccount(accountId);
+        return findAccountWithActivityArea(accountId);
     }
 
     public Account findAccountWithActivityArea(Long accountId){
@@ -101,7 +102,7 @@ public class AccountService {
 
     public void changeActivityArea(Account account, Dong dong, Integer range){
         District district = districtRepository.findByDong(dong);
-//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주소입니다."));;
+
         account.getActivityArea().changeActiveArea(district, range);
     }
 
@@ -116,9 +117,5 @@ public class AccountService {
             throw new DuplicateNicknameException("이미 존재하는 닉네임입니다.");
         }
     }
-//    @Scheduled(fixedRate = 1000 * 60 * 10, initialDelay = 3000)
-//    public void test(){
-//        log.info("Scheduling test {}", LocalDateTime.now());
-//    }
 
 }

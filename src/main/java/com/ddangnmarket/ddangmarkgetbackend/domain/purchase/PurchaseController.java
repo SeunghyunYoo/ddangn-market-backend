@@ -7,7 +7,6 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Purchase;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.dto.GetAllPurchaseResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.dto.ReviewPurchaseRequestDto;
-import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,7 @@ public class PurchaseController {
 
     @GetMapping
     public ResponseEntity<ResponseOKDto<GetAllPurchaseResponseDto>> getAllPurchase(@ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
 
         List<Purchase> purchases = purchaseService.findAllPurchase(account);
 
@@ -40,15 +39,10 @@ public class PurchaseController {
             @PathVariable Long purchaseId, @RequestBody ReviewPurchaseRequestDto requestDto
             , @ApiIgnore HttpSession session){
 
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccount(session);
 
         purchaseService.review(purchaseId, requestDto.getScore(), requestDto.getReview());
 
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
-    }
-
-    private Account getSessionCheckedAccount(HttpSession session) {
-        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-        return accountService.checkSessionAndFindAccount(accountId);
     }
 }

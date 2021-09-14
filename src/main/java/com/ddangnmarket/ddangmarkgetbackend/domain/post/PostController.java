@@ -6,7 +6,6 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.*;
-import com.ddangnmarket.ddangmarkgetbackend.login.SessionConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<ResponseOKDto<PostResponseDto>> post(@Validated @RequestBody PostRequestDto postRequestDto, @ApiIgnore HttpSession session){
 
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         Long postId = postService.post(postRequestDto.getTitle(), postRequestDto.getDesc(),
                 postRequestDto.getPrice(), postRequestDto.getCategoryTag(), account);
@@ -56,7 +55,7 @@ public class PostController {
      */
     @GetMapping("/{postId}")
     public ResponseEntity<ResponseOKDto<GetPostOneResponseDto>> getPost(@PathVariable Long postId, @ApiIgnore HttpSession session){
-        getSessionCheckedAccount(session);
+        accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         Post post = postService.findPost(postId);
 
@@ -75,7 +74,7 @@ public class PostController {
     public ResponseEntity<ResponseSimpleOKDto> updatePost(
             @PathVariable Long postId,
             @RequestBody UpdatePostRequestDto updatePostRequestDto, @ApiIgnore HttpSession session){
-        getSessionCheckedAccount(session);
+        accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         postService.updatePost(postId, updatePostRequestDto);
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
@@ -84,7 +83,7 @@ public class PostController {
     @PostMapping("/{postId}/sales/{chatId}")
     public ResponseEntity<ResponseSimpleOKDto> salePost(
             @PathVariable Long postId, @PathVariable Long chatId, @ApiIgnore HttpSession session){
-        Account seller = getSessionCheckedAccount(session);
+        Account seller = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         validateIsSellerPost(postId, seller);
 
@@ -94,7 +93,7 @@ public class PostController {
 
     @PostMapping("/{postId}/sales/cancel")
     public ResponseEntity<ResponseSimpleOKDto> cancelSalePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
-        Account seller = getSessionCheckedAccount(session);
+        Account seller = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         validateIsSellerPost(postId, seller);
         // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
@@ -112,7 +111,7 @@ public class PostController {
     @PostMapping("/{postId}/reserve/{chatId}")
     public ResponseEntity<ResponseSimpleOKDto> reservePost(@PathVariable Long postId, @PathVariable Long chatId,
                             @ApiIgnore HttpSession session){
-        Account seller = getSessionCheckedAccount(session);
+        Account seller = accountService.checkSessionAndFindAccountWithActivityArea(session);
         
         // TODO 여기서 1대다 (seller -> posts) 쿼리 너무 많이 날라감
         // sale purchase 테이블을 조회하는데, orphan removal 영향인지 check 필요
@@ -130,7 +129,7 @@ public class PostController {
      */
     @PostMapping("/{postId}/reserve/cancel")
     public ResponseEntity<ResponseSimpleOKDto> cancelReservePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
-        Account seller = getSessionCheckedAccount(session);
+        Account seller = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         validateIsSellerPost(postId, seller);
 
@@ -156,7 +155,7 @@ public class PostController {
             @RequestParam(required = false) @Nullable List<String> status,
             @ApiIgnore HttpSession session){
 
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         if (status == null || status.size() == 0){
             List<Post> posts = postService.findAll(account);
@@ -183,7 +182,7 @@ public class PostController {
             @RequestParam(required = false) @Nullable List<String> status,
             @ApiIgnore HttpSession session) {
 
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         if (status == null){
             List<Post> posts = postService.findPostAllBySeller(account);
@@ -210,7 +209,7 @@ public class PostController {
             @RequestParam(name = "category") String categoryTag,
             @RequestParam(name = "status", required = false) @Nullable List<String> status,
             @ApiIgnore HttpSession session){
-        Account account = getSessionCheckedAccount(session);
+        Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         if(status == null){
             // 예외 메세지 처리 필요
@@ -247,17 +246,13 @@ public class PostController {
      */
     @DeleteMapping("/{postId}")
     public ResponseEntity<ResponseSimpleOKDto> deletePost(@PathVariable Long postId, @ApiIgnore HttpSession session){
-        getSessionCheckedAccount(session);
+        accountService.checkSessionAndFindAccountWithActivityArea(session);
         // TODO 거래 완료된 게시글은 삭제 못하도록 변경
 //        postService.deleteById(postId);
         postService.delete(postId);
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
-    private Account getSessionCheckedAccount(HttpSession session) {
-        Long accountId = (Long) session.getAttribute(SessionConst.LOGIN_ACCOUNT);
-        return accountService.findAccountWithActivityAreas(accountId);
-    }
 
     private void getPostAllParamListValidation(List<String> status) {
         boolean statusMatch = status.stream().noneMatch(STATUS_PARAMS::contains);

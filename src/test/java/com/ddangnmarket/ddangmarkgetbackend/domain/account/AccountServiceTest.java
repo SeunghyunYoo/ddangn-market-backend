@@ -32,7 +32,7 @@ class AccountServiceTest {
         em.flush();
         em.clear();
 
-        Account findAccount = accountService.checkSessionAndFindAccount(signUpAccount.getId());
+        Account findAccount = accountService.findAccount(signUpAccount.getId());
         assertThat(findAccount.getNickname()).isEqualTo(account1.getNickname());
     }
 
@@ -44,7 +44,7 @@ class AccountServiceTest {
         em.flush();
         em.clear();
 
-        Account findAccount = accountService.findAccountWithActivityArea(signUpAccount.getId());
+        Account findAccount = accountService.findAccountWithActivityAreas(signUpAccount.getId());
         ActivityArea activityArea = findAccount.getActivityArea();
         assertThat(activityArea.getDistrict().getDong()).isEqualTo(Dong.GUMI);
 
@@ -53,9 +53,9 @@ class AccountServiceTest {
         em.flush();
         em.clear();
 
-        Dong changedDong = accountService.findAccountWithActivityArea(signUpAccount.getId())
+        Dong changedDong = accountService.findAccountWithActivityAreas(signUpAccount.getId())
                 .getActivityArea().getDistrict().getDong();
-        Integer changedRange = accountService.findAccountWithActivityArea(signUpAccount.getId())
+        Integer changedRange = accountService.findAccountWithActivityAreas(signUpAccount.getId())
                 .getActivityArea().getRange();
         assertThat(changedDong).isEqualTo(Dong.YATAP1);
         assertThat(changedRange).isEqualTo(3);
@@ -69,14 +69,14 @@ class AccountServiceTest {
         em.flush();
         em.clear();
 
-        Account findAccount = accountService.checkSessionAndFindAccount(signUpAccount.getId());
+        Account findAccount = accountService.findAccount(signUpAccount.getId());
         accountService.updateAccountInfo(findAccount,
                 new UpdateAccountInfoRequestDto("test2", "010-0000-0000"));
 
         em.flush();
         em.clear();
 
-        Account changedAccount = accountService.checkSessionAndFindAccount(signUpAccount.getId());
+        Account changedAccount = accountService.findAccount(signUpAccount.getId());
         assertThat(changedAccount.getNickname()).isEqualTo("test2");
         assertThat(changedAccount.getPhone()).isEqualTo("010-0000-0000");
     }
@@ -89,12 +89,12 @@ class AccountServiceTest {
         em.flush();
         em.clear();
 
-        Account findAccount = accountService.checkSessionAndFindAccount(signUpAccount.getId());
+        Account findAccount = accountService.findAccount(signUpAccount.getId());
         accountService.changePassword(findAccount, new ChangeAccountPasswordRequestDto("11111111"));
 
         em.flush();
         em.clear();
-        Account changedAccount = accountService.checkSessionAndFindAccount(signUpAccount.getId());
+        Account changedAccount = accountService.findAccount(signUpAccount.getId());
         assertThat(changedAccount.getPassword()).isEqualTo("11111111");
     }
 }

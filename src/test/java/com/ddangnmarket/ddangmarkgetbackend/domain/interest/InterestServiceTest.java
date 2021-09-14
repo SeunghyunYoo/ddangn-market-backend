@@ -31,7 +31,7 @@ class InterestServiceTest {
         em.flush();
         em.clear();
 
-        Account findAccount = accountService.checkSessionAndFindAccount(signUpAccount.getId());
+        Account findAccount = accountService.findAccount(signUpAccount.getId());
 
 
     }

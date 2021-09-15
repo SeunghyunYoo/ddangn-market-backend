@@ -26,7 +26,7 @@ public class ChatController {
     private final AccountService accountService;
 
     @GetMapping
-    public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChat(@ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChats(@ApiIgnore HttpSession session){
         Account account = accountService.checkSessionAndFindAccount(session);
 
         List<Chat> chats = chatService.findChats(account);
@@ -37,7 +37,7 @@ public class ChatController {
 
 
     @GetMapping("/sales")
-    public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChatByPost(
+    public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChatsByPost(
             @RequestParam Long postId, @ApiIgnore HttpSession session){
         Account account = accountService.checkSessionAndFindAccount(session);
 
@@ -62,6 +62,7 @@ public class ChatController {
     public ResponseEntity<ResponseSimpleOKDto> deleteChat(@PathVariable Long chatId, @ApiIgnore HttpSession session){
         Account account = accountService.checkSessionAndFindAccount(session);
 
+        //TODO 실제 채팅방 구현 후 고민
         chatService.deleteChat(account, chatId);
 
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);

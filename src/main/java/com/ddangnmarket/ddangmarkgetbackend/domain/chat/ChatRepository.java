@@ -2,6 +2,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.chat;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Chat;
+import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +15,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     Optional<Chat> findById(Long id);
 
-    Optional<Chat> findByAccountAndPostId(Account account, Long postId);
+    Optional<Chat> findByAccountAndPost(Account account, Post post);
 
     List<Chat> findAllByPostId(Long postId);
 

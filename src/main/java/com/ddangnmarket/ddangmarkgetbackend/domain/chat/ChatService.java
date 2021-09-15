@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,11 +31,14 @@ public class ChatService {
 
         Post post = findPost(postId);
 
-//        if(!post.getSeller().getId().equals(seller.getId())){
+        validateIsSellerPost(seller, post);
+        return chatRepository.findAllByPostId(postId);
+    }
+
+    private void validateIsSellerPost(Account seller, Post post) {
         if(!post.getSeller().equals(seller)){
             throw new IllegalArgumentException("해당 판매자의 게시글이 아닙니다.");
         }
-        return chatRepository.findAllByPostId(postId);
     }
 
     public List<Chat> findChats(Account account){
@@ -51,16 +55,13 @@ public class ChatService {
     }
 
 
-
     public Long createChat(Account buyer, Long postId){
         Post post = findPost(postId);
-        if(post.getSeller().getId().equals(buyer.getId())){
-            throw new IllegalArgumentException("자신의 게시글에는 채팅방을 만들 수 없습니다.");
-        }
-        Chat chat = chatRepository.findByAccountAndPostId(buyer, postId).orElse(null);
+        validateIsBuyerPost(buyer, post);
+        Optional<Chat> optChat = chatRepository.findByAccountAndPost(buyer, post);
 
-
-        if(chat != null){
+        if(optChat.isPresent()){
+            Chat chat = optChat.get();
             chat.cancelDelete();
             return chat.getId();
         }
@@ -68,7 +69,14 @@ public class ChatService {
         return chatRepository.save(newChat).getId();
     }
 
+    private void validateIsBuyerPost(Account buyer, Post post) {
+        if(post.getSeller().equals(buyer)){
+            throw new IllegalArgumentException("자신의 게시글에는 채팅방을 만들 수 없습니다.");
+        }
+    }
+
     public void deleteChat(Account account, Long chatId){
+        // TODO 실제 채팅 구현 필요, 그 후 삭제 적용, buyer, seller 채팅 방 연관
 //        chatRepository.deleteById(chatId);
         chatRepository.findById(chatId).orElseThrow().deleteChat();
 

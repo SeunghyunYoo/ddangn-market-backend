@@ -31,4 +31,13 @@ public class ReplyController{
 
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
+
+    @DeleteMapping("{postId}/replies/{replyId}")
+    public ResponseEntity<ResponseSimpleOKDto> delete(
+            @PathVariable Long postId, @PathVariable Long replyId, @ApiIgnore HttpSession session){
+        Account account = accountService.checkSessionAndFindAccount(session);
+
+        replyService.deleteReply(account, replyId, postId);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
+    }
 }

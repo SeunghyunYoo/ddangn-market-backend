@@ -21,8 +21,12 @@ public class ReplyService {
         Reply.createReply(post, account, content);
     }
 
-    public void deleteReply(Long replyId){
-        Reply reply = replyRepository.findById(replyId).orElseThrow();
+    public void deleteReply(Account account, Long replyId, Long postId){
+        Reply reply = replyRepository.findByIdAndPostId(replyId, postId).orElseThrow();
+
+        if(!reply.getAccount().equals(account)){
+            throw new IllegalArgumentException("해당 사용자의 댓글이 아닙니다.");
+        }
         reply.deleteReply();
     }
 }

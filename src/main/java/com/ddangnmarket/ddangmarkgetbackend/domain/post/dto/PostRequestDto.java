@@ -25,13 +25,6 @@ public class PostRequestDto {
 
     private List<Long> fileIds = new ArrayList<>();
 
-    public PostRequestDto(String title, String desc, int price, CategoryTag categoryTag){
-        this.title = title;
-        this.desc = desc;
-        this.price = price;
-        this.categoryTag = categoryTag;
-    }
-
     public PostRequestDto(String title, String desc, int price, CategoryTag categoryTag, List<Long> fileIds){
         this.title = title;
         this.desc = desc;

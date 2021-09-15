@@ -5,6 +5,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Interest;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +31,7 @@ public class InterestDto {
         private Long id;
         private String title;
         private int price;
+        private PostStatus postStatus;
         private CategoryTag category;
         private String createdAt;
         private String updatedAt;
@@ -40,6 +42,7 @@ public class InterestDto {
             this.id = post.getId();
             this.title = post.getTitle();
             this.price = post.getPrice();
+            this.postStatus = post.getPostStatus();
             this.category = post.getCategory().getCategoryTag();
             this.seller = new SellerDto(post.getSeller());
             this.dong = post.getDistrict().getDong();

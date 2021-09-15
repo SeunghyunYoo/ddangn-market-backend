@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -23,11 +24,12 @@ public class InterestService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 
-        Interest interest = interestRepository.findByAccountAndPostId(account, postId).orElse(null);
-        if (interest == null) {
+        Optional<Interest> optInterest = interestRepository.findByAccountAndPostId(account, postId);
+        if (optInterest.isEmpty()) {
             Interest newInterest = Interest.addInterest(post, account);
             return interestRepository.save(newInterest).getId();
         }
+        Interest interest = optInterest.get();
         interest.cancelDelete();
         return interest.getId();
     }
@@ -40,7 +42,6 @@ public class InterestService {
 
         Interest interest = interestRepository.findByIdAndAccount(interestId, account)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id이거나 해당 사용자의 interest가 아닙니다"));
-
 
 //        interestRepository.delete(interest);
         interest.delete();

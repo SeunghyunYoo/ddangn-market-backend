@@ -25,7 +25,8 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
 
     @GetMapping
-    public ResponseEntity<ResponseOKDto<GetAllPurchaseResponseDto>> getAllPurchase(@ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseOKDto<GetAllPurchaseResponseDto>> getAllPurchase(
+            @ApiIgnore HttpSession session){
         Account account = accountService.checkSessionAndFindAccount(session);
 
         List<Purchase> purchases = purchaseService.findAllPurchase(account);
@@ -36,8 +37,8 @@ public class PurchaseController {
 
     @PostMapping("/{purchaseId}/reviews")
     public ResponseEntity<ResponseSimpleOKDto> review(
-            @PathVariable Long purchaseId, @RequestBody ReviewPurchaseRequestDto requestDto
-            , @ApiIgnore HttpSession session){
+            @PathVariable Long purchaseId, @RequestBody ReviewPurchaseRequestDto requestDto,
+            @ApiIgnore HttpSession session){
 
         Account account = accountService.checkSessionAndFindAccount(session);
 

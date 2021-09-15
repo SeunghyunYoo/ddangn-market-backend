@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-public class GetAllInterestDto {
+public class GetAllInterestResponseDto {
     private List<InterestDto> interests;
 
-    public GetAllInterestDto(List<Interest> interests){
+    public GetAllInterestResponseDto(List<Interest> interests){
         this.interests = interests.stream().map(InterestDto::new).collect(Collectors.toList());
     }
 }

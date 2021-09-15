@@ -7,7 +7,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Interest;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.AddInterestRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.AddInterestResponseDto;
-import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.GetAllInterestDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.GetAllInterestResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,13 +36,13 @@ public class InterestController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseOKDto<GetAllInterestDto>> getAllInterest(@ApiIgnore HttpSession session){
+    public ResponseEntity<ResponseOKDto<GetAllInterestResponseDto>> getAllInterest(@ApiIgnore HttpSession session){
         Account account = accountService.checkSessionAndFindAccount(session);
 
         List<Interest> interests = interestService.findAllInterests(account);
 
         return new ResponseEntity<>(new ResponseOKDto<>(
-                new GetAllInterestDto(interests)), HttpStatus.OK);
+                new GetAllInterestResponseDto(interests)), HttpStatus.OK);
     }
 
     @DeleteMapping("/{interestId}")

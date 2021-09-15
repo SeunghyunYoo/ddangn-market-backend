@@ -10,9 +10,8 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.CreateChatRequestDto
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.GetAllChatResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.AddInterestRequestDto;
-import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.GetAllInterestDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.interest.dto.GetAllInterestResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostService;
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetAllPostResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.PostRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.login.dto.LoginRequestDto;
@@ -136,7 +135,7 @@ class PostControllerTest {
         // 관심상품 조회
         System.out.println("=============");
         System.out.println("전체 관심 게시글 조회");
-        ResponseOKDto<GetAllInterestDto> allInterests =
+        ResponseOKDto<GetAllInterestResponseDto> allInterests =
                 MockGetInterests(session, "/api/v1/interests");
         Long interestId = allInterests.getData().getInterests().get(0).getId();
         assertThat(allInterests.getData().getInterests().size()).isEqualTo(1);
@@ -146,7 +145,7 @@ class PostControllerTest {
         // 관심상품 삭제
         MockDelete(session, "/api/v1/interests/" + interestId.toString());
 
-        ResponseOKDto<GetAllInterestDto> allInterestsAfterDelete =
+        ResponseOKDto<GetAllInterestResponseDto> allInterestsAfterDelete =
                 MockGetInterests(session, "/api/v1/interests");
         assertThat(allInterestsAfterDelete.getData().getInterests().size()).isEqualTo(0);
 
@@ -281,7 +280,7 @@ class PostControllerTest {
         return objectMapper.readValue(responseStr, new TypeReference<>() {});
     }
 
-    private ResponseOKDto<GetAllInterestDto> MockGetInterests(MockHttpSession session, String url) throws Exception {
+    private ResponseOKDto<GetAllInterestResponseDto> MockGetInterests(MockHttpSession session, String url) throws Exception {
         String responseStr = mockMvc.perform(get(url)
                         .contentType(MediaType.APPLICATION_JSON)
                         .session(session))

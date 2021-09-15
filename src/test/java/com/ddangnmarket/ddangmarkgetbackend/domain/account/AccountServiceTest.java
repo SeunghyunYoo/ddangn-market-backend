@@ -44,7 +44,7 @@ class AccountServiceTest {
         em.flush();
         em.clear();
 
-        Account findAccount = accountService.findAccountWithActivityAreas(signUpAccount.getId());
+        Account findAccount = accountService.findAccountWithActivityArea(signUpAccount.getId());
         ActivityArea activityArea = findAccount.getActivityArea();
         assertThat(activityArea.getDistrict().getDong()).isEqualTo(Dong.GUMI);
 
@@ -53,9 +53,9 @@ class AccountServiceTest {
         em.flush();
         em.clear();
 
-        Dong changedDong = accountService.findAccountWithActivityAreas(signUpAccount.getId())
+        Dong changedDong = accountService.findAccountWithActivityArea(signUpAccount.getId())
                 .getActivityArea().getDistrict().getDong();
-        Integer changedRange = accountService.findAccountWithActivityAreas(signUpAccount.getId())
+        Integer changedRange = accountService.findAccountWithActivityArea(signUpAccount.getId())
                 .getActivityArea().getRange();
         assertThat(changedDong).isEqualTo(Dong.YATAP1);
         assertThat(changedRange).isEqualTo(3);

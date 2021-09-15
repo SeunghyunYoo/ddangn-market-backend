@@ -82,7 +82,7 @@ public class AccountController {
     public ResponseEntity<ResponseOKDto<GetAccountInfoResponseDto>> getAccountInfo(@ApiIgnore HttpSession session){
         Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
         // TODO Account2Area fetch join 고민 필요
-        List<Dong> activityAreas = districtService.getActivityAreas(account);
+        List<Dong> activityAreas = districtService.getAccountActivityAreas(account);
 
         return new ResponseEntity<>(new ResponseOKDto<>(
                 new GetAccountInfoResponseDto(account, activityAreas)),HttpStatus.OK);
@@ -116,7 +116,7 @@ public class AccountController {
                 activityAreaRequestDto.getDong(),
                 activityAreaRequestDto.getRange());
 
-        List<Dong> activityAreas = districtService.getActivityAreas(account);
+        List<Dong> activityAreas = districtService.getAccountActivityAreas(account);
 
         return new ResponseEntity<>(new ResponseOKDto<>(
                 new ActivityAreaResponseDto(activityAreas, activityAreaRequestDto.getRange())), HttpStatus.OK);

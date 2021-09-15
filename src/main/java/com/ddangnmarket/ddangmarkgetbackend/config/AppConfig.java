@@ -1,6 +1,5 @@
 package com.ddangnmarket.ddangmarkgetbackend.config;
 
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostControllerV2;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.deser.BeanDeserializer;
@@ -8,7 +7,6 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerBase;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.NameTokenizers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

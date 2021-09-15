@@ -26,17 +26,18 @@ public class ChatService {
      * @param postId
      * @return
      */
-    public List<Chat> findAllChatByPost(Account seller, Long postId){
+    public List<Chat> findChatsByPostId(Account seller, Long postId){
 
-        Post post = getPost(postId);
+        Post post = findPost(postId);
 
-        if(!post.getSeller().getId().equals(seller.getId())){
+//        if(!post.getSeller().getId().equals(seller.getId())){
+        if(!post.getSeller().equals(seller)){
             throw new IllegalArgumentException("해당 판매자의 게시글이 아닙니다.");
         }
         return chatRepository.findAllByPostId(postId);
     }
 
-    public List<Chat> findAllChat(Account account){
+    public List<Chat> findChats(Account account){
         List<Long> postIds = postRepository.findAllIdsBySeller(account)
                 .stream().map(Post::getId).collect(Collectors.toList());
 
@@ -52,7 +53,7 @@ public class ChatService {
 
 
     public Long createChat(Account buyer, Long postId){
-        Post post = getPost(postId);
+        Post post = findPost(postId);
         if(post.getSeller().getId().equals(buyer.getId())){
             throw new IllegalArgumentException("자신의 게시글에는 채팅방을 만들 수 없습니다.");
         }
@@ -73,7 +74,7 @@ public class ChatService {
 
     }
 
-    private Post getPost(Long postId){
+    private Post findPost(Long postId){
 
         return postRepository.findWithSellerById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));

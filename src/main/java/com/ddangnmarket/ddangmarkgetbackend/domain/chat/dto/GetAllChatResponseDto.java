@@ -74,10 +74,12 @@ public class GetAllChatResponseDto {
         public static class PostDto{
             private Long postId;
             private PostStatus postStatus;
+            private String title;
             private Dong dong;
 
             PostDto(Post post){
                 this.postId = post.getId();
+                this.title = post.getTitle();
                 this.postStatus = post.getPostStatus();
                 this.dong = post.getDistrict().getDong();
             }

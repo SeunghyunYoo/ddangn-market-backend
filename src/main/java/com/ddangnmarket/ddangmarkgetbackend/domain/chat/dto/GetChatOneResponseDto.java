@@ -64,12 +64,14 @@ public class GetChatOneResponseDto {
         private Long postId;
         private PostStatus postStatus;
         private String title;
+        private Dong dong;
         private int price;
 
         PostDto(Post post){
             this.postId = post.getId();
             this.postStatus = post.getPostStatus();
             this.title = post.getTitle();
+            this.dong = post.getDistrict().getDong();
             this.price = post.getPrice();
         }
     }

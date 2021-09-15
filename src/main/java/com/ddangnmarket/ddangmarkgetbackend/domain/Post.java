@@ -88,14 +88,6 @@ public class Post extends DeleteEntity{
         return post;
     }
 
-    //== 연관관계 메서드 ==/
-
-
-//    public void setSeller(Account seller) {
-//        this.seller = seller;
-//        seller.addPost(this);
-//    }
-
     //== 바즈니스 로직 ==//
 
     public void addUploadFile(UploadFile file){
@@ -195,10 +187,6 @@ public class Post extends DeleteEntity{
     public void cancelReserve(){
         chats.forEach(Chat::changeNone);
         postStatus = PostStatus.NEW;
-    }
-
-    public void changeDistrict(District district){
-        this.district = district;
     }
 
     public void addReply(Reply reply){

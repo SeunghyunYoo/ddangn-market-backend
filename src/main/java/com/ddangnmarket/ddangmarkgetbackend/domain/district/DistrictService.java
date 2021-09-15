@@ -17,7 +17,7 @@ public class DistrictService {
 
     private final DistrictRepository districtRepository;
 
-    public List<Dong> getActivityAreas(Account account){
+    public List<Dong> getAccountActivityAreas(Account account){
         List<District> districts = districtRepository.findAll();
 
         ActivityArea activityArea = account.getActivityArea();
@@ -27,4 +27,5 @@ public class DistrictService {
                 .map(District::getDong)
                 .collect(Collectors.toList());
     }
+
 }

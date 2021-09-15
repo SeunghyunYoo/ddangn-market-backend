@@ -29,7 +29,7 @@ public class ChatController {
     public ResponseEntity<ResponseOKDto<GetAllChatResponseDto>> getAllChat(@ApiIgnore HttpSession session){
         Account account = accountService.checkSessionAndFindAccount(session);
 
-        List<Chat> chats = chatService.findAllChat(account);
+        List<Chat> chats = chatService.findChats(account);
 
         return new ResponseEntity<>(new ResponseOKDto<>(
                 new GetAllChatResponseDto(chats)), HttpStatus.OK);
@@ -41,7 +41,7 @@ public class ChatController {
             @RequestParam Long postId, @ApiIgnore HttpSession session){
         Account account = accountService.checkSessionAndFindAccount(session);
 
-        List<Chat> chats = chatService.findAllChatByPost(account, postId);
+        List<Chat> chats = chatService.findChatsByPostId(account, postId);
 
         return new ResponseEntity<>(new ResponseOKDto<>(
                 new GetAllChatResponseDto(chats)), HttpStatus.OK);

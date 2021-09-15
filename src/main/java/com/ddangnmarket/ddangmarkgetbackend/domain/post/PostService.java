@@ -8,7 +8,6 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.file.UploadFileRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.UpdatePostRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseRepository;
-import com.ddangnmarket.ddangmarkgetbackend.domain.reply.ReplyRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,23 +33,14 @@ public class PostService {
         return postRepository.save(post).getId();
     }
 
-    public Long post(String title, String desc, int price, CategoryTag categoryTag, Account account) {
-        Category category = categoryJpaRepository.findByCategoryTag(categoryTag);
-
-//        Post post = Post.createPost(title, desc, price, new PostCategory(category), account);
-        Post post = Post.createPost(title, desc, price, category, account);
-        return postRepository.save(post).getId();
-
-    }
-
-    public Long post(String title, String desc, int price, CategoryTag categoryTag
-            ,List<Long> fileIds, Account account) {
+    public Long post(Account account, String title, String desc, int price, CategoryTag categoryTag
+            ,List<Long> fileIds) {
         Category category = categoryJpaRepository.findByCategoryTag(categoryTag);
 
         List<UploadFile> uploadFiles = uploadFileRepository.findAllByIds(fileIds);
         validateExistFileIds(fileIds, uploadFiles);
 
-        Post post = createPostWithFiles(title, desc, price, account, category, uploadFiles);
+        Post post = createPostWithFiles(account, title, desc, price, category, uploadFiles);
         return postRepository.save(post).getId();
 
     }
@@ -61,7 +51,7 @@ public class PostService {
         }
     }
 
-    private Post createPostWithFiles(String title, String desc, int price, Account account, Category category, List<UploadFile> uploadFiles) {
+    private Post createPostWithFiles(Account account, String title, String desc, int price, Category category, List<UploadFile> uploadFiles) {
         Post post = Post.createPost(title, desc, price, category, account);
         if(uploadFiles.size() != 0){
             uploadFiles.forEach(post::addUploadFile);
@@ -69,8 +59,122 @@ public class PostService {
         return post;
     }
 
-    public void delete(Long postId){
-        findById(postId).deletePost();
+    public void updatePost(Account seller, Long postId, UpdatePostRequestDto updatePostRequestDto){
+        validateIsSellerPost(postId, seller);
+        Post post = findPostByIdOrThrow(postId);
+        Category category = categoryJpaRepository.findByCategoryTag(
+                updatePostRequestDto.getCategoryTag());
+
+        post.updatePost(
+                updatePostRequestDto.getTitle(),
+                updatePostRequestDto.getDesc(),
+                updatePostRequestDto.getPrice(),
+                category
+        );
+    }
+
+    private Post findPostByIdOrThrow(Long postId){
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+    }
+
+    private void validateIsSellerPost(Long postId, Account seller) {
+        seller.getPosts().stream()
+                .filter(post-> post.getId().equals(postId))
+                .findAny().orElseThrow(()->
+                        new IllegalArgumentException("해당 사용자의 게시글이 아닙니다."));
+    }
+
+    public void sale(Account seller, Long postId, Long chatId){
+        validateIsSellerPost(postId, seller);
+
+        Post post = findPostByIdOrThrow(postId);
+
+        Chat chat = findChatByIdOrThrow(chatId);
+
+        changeStatusToComplete(post, chat);
+
+        Account buyer = chat.getAccount();
+
+        saveSaleAndPurchaseHistory(seller, buyer, post);
+    }
+
+    private Chat findChatByIdOrThrow(Long chatId) {
+        return chatRepository.findById(chatId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅입니다."));
+    }
+
+    private void changeStatusToComplete(Post post, Chat chat){
+        resetOtherChatsStatus(post);
+        chat.changeComplete();
+        post.changeComplete();
+    }
+
+    private void resetOtherChatsStatus(Post post){
+        if(post.getPostStatus().equals(PostStatus.COMPLETE)){
+            post.cancelSale();
+        }
+        if(post.getPostStatus().equals(PostStatus.RESERVE)){
+            post.cancelReserve();
+        }
+    }
+
+    private void saveSaleAndPurchaseHistory(Account seller, Account buyer, Post post){
+        Sale sale = Sale.createSale(seller, post);
+        Purchase purchase = Purchase.createPurchase(buyer, post);
+
+        saleRepository.save(sale);
+        purchaseRepository.save(purchase);
+    }
+
+    public void cancelSale(Account seller, Long postId){
+        validateIsSellerPost(postId, seller);
+        // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
+        Post post = findPostByIdOrThrow(postId);
+        if(post.getPostStatus().equals(PostStatus.COMPLETE)) {
+            post.cancelSale();
+        }
+    }
+
+    public void changeReserve(Account seller, Long postId, Long chatId) {
+        validateIsSellerPost(postId, seller);
+
+        Post post = findPostByIdOrThrow(postId);
+        // TODO 판매 완료된 건 예약 상태로 바꾸게 허용할지 말지
+        //  validateSaleComplete(post);
+        if(post.getPostStatus() == PostStatus.COMPLETE){
+            post.cancelSale();
+        }
+
+        Chat chat = findChatByIdOrThrow(chatId);
+
+        post.changeReserve(chat);
+    }
+
+    public void cancelReserve(Account seller, Long postId){
+        validateIsSellerPost(postId, seller);
+
+        Post post = findPostByIdOrThrow(postId);
+        post.cancelReserve();
+    }
+
+    public void delete(Account seller, Long postId){
+        validateIsSellerPost(postId, seller);
+        findPostByIdOrThrow(postId).deletePost();
+    }
+
+    private void validateSaleComplete(Post post) {
+        if (post.getPostStatus().equals(PostStatus.COMPLETE)){
+            throw new IllegalStateException("이미 판매 완료된 상품입니다.");
+        }
+    }
+
+    public Post findPostAndAddViewCount(Long postId) {
+        Post post = postRepository.findAllInfoById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+//        replyRepository.findByPostId(postId);
+        post.addViewCount();
+        return post;
     }
 
     public List<Post> findAll(Account account){
@@ -79,10 +183,14 @@ public class PostService {
         return postRepository.findAll(districts);
     }
 
-    public List<Post> findAllByStatus(Account account, PostStatus postStatus){
-        List<District> districts = getDistrict(account);
+    private List<District> getDistrict(Account account){
+        List<District> districts = districtRepository.findAll();
 
-        return postRepository.findAllByPostStatus(districts, postStatus);
+        ActivityArea activityArea = account.getActivityArea();
+
+        return districts.stream()
+                .filter(activityArea::isAccessibleArea)
+                .collect(Collectors.toList());
     }
 
     public List<Post> findAllByStatuses(Account account, List<PostStatus> postStatuses){
@@ -93,11 +201,6 @@ public class PostService {
 
     public List<Post> findPostAllBySeller(Account account){
         return postRepository.findAllBySeller(account);
-    }
-
-
-    public List<Post> findPostAllBySellerAndStatus(Account account, PostStatus postStatus){
-        return postRepository.findAllBySellerAndPostStatus(account, postStatus);
     }
 
     public List<Post> findPostAllBySellerAndStatuses(Account account, List<PostStatus> postStatuses){
@@ -111,131 +214,9 @@ public class PostService {
         return postRepository.findAllByCategory(districts, categoryTag);
     }
 
-    public List<Post> findAllByCategoryAndPostStatus(Account account, CategoryTag categoryTag, PostStatus postStatus){
-        List<District> districts = getDistrict(account);
-
-        return postRepository.findAllByCategoryAndPostStatus(districts, categoryTag, postStatus);
-    }
-
     public List<Post> findAllByCategoryAndStatuses(Account account, CategoryTag categoryTag, List<PostStatus> postStatuses) {
         List<District> districts = getDistrict(account);
 
         return postRepository.findAllByCategoryAndPostStatuses(districts, categoryTag, postStatuses);
-    }
-
-    public List<Post> findAllPurchase(Account account){
-        return postRepository.findAllPurchase(account);
-    }
-
-    /**
-     * 사용자가 삭제 요청시 -> 구매완료된 상품일 경우 hide로 변경
-     * @param postId
-     */
-    public void deleteById(Long postId){
-        // TODO 삭제 요청시 -> hide로 변경
-        Post post = findById(postId);
-    }
-
-    public void updatePost(Long postId, UpdatePostRequestDto updatePostRequestDto){
-        Post post = findById(postId);
-        Category category = categoryJpaRepository.findByCategoryTag(
-                updatePostRequestDto.getCategoryTag());
-
-        post.updatePost(
-                updatePostRequestDto.getTitle(),
-                updatePostRequestDto.getDesc(),
-                updatePostRequestDto.getPrice(),
-                category
-        );
-    }
-
-    public void sale(Account seller, Long postId, Long chatId){
-        Post post = findById(postId);
-
-        if(post.getPostStatus().equals(PostStatus.COMPLETE)){
-            post.cancelSale();
-        }
-        if(post.getPostStatus().equals(PostStatus.RESERVE)){
-            post.cancelReserve();
-        }
-
-        Chat chat = chatRepository.findById(chatId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅입니다."));
-//        chat.changeComplete();
-        post.changeComplete();
-
-        Account buyer = chat.getAccount();
-
-        Sale sale = Sale.createSale(seller, post);
-        Purchase purchase = Purchase.createPurchase(buyer, post);
-
-        saleRepository.save(sale);
-        purchaseRepository.save(purchase);
-    }
-
-    public void cancelSale(Long postId){
-        // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
-        Post post = findById(postId);
-        if(post.getPostStatus().equals(PostStatus.COMPLETE)) {
-            post.cancelSale();
-        }
-    }
-
-    public void changeReserve(Long postId, Long chatId) {
-        Post post = findById(postId);
-        // TODO 판매 완료된 건 예약 상태로 바꾸게 허용할지 말지
-        //  validateSaleComplete(post);
-        if(post.getPostStatus() == PostStatus.COMPLETE){
-            post.cancelSale();
-        }
-
-        // 이런 validation이 필요한가?
-        Chat chat = chatRepository.findById(chatId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅입니다."));
-
-        post.changeReserve(chat);
-    }
-
-    public void cancelReserve(Long postId){
-        Post post = findById(postId);
-        post.cancelReserve();
-    }
-
-    private void validateSaleComplete(Post post) {
-        if (post.getPostStatus().equals(PostStatus.COMPLETE)){
-            throw new IllegalStateException("이미 판매 완료된 상품입니다.");
-        }
-    }
-
-    private final ReplyRepository replyRepository;
-    public Post findPost(Long postId) {
-        Post post = postRepository.findAllInfoById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
-//        replyRepository.findByPostId(postId);
-        post.addViewCount();
-        return post;
-    }
-
-    private Post findById(Long postId){
-
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
-    }
-
-    public Post findByIdWithSaleAndPurchase(Long postId){
-        return postRepository.findWithSaleAndPurchaseById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
-    }
-
-    private List<District> getDistrict(Account account){
-        List<District> districts = districtRepository.findAll();
-
-        District accountDistrict = account.getActivityArea().getDistrict();
-        Integer range = account.getActivityArea().getRange();
-
-        return districts.stream()
-                .filter(district ->
-                        accountDistrict.getPosition().calcDiff(district.getPosition()) <= range)
-                .collect(Collectors.toList());
     }
 }

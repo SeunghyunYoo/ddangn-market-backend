@@ -1,5 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
+import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoom;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,16 +29,21 @@ public class Chat extends DeleteEntity{
     @Enumerated(EnumType.STRING)
     private ChatStatus chatStatus;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "chat_room_id")
+    private ChatRoom chatRoom;
+
     public static Chat createChat(Post post, Account account){
         if (post.getPostStatus() == PostStatus.COMPLETE){
             throw new IllegalArgumentException("이미 판매완료된 상품은 구매할 수 없습니다.");
         }
         validateHasAlreadyChat(post, account);
-
+        ChatRoom chatRoom = ChatRoom.creteChatRoom();
         Chat chat = new Chat();
         chat.post = post;
         chat.account = account;
         chat.chatStatus = ChatStatus.NONE;
+        chat.chatRoom = chatRoom;
         post.addChat(chat);
         return chat;
     }

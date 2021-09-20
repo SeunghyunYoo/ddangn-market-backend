@@ -3,6 +3,8 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.chat;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Chat;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoomRedisRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoomRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ public class ChatService {
 
     private final ChatRepository chatRepository;
     private final PostRepository postRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomRedisRepository chatRoomRedisRepository;
 
     /**
      * 판매자가 올린 게시글에 대한 구매 채팅 리스트

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetChatOneResponseDto {
     private Long chatId;
+    private String chatRoomId;
     private ChatStatus chatStatus;
     private SellerDto seller;
     private BuyerDto buyer;
@@ -22,6 +23,7 @@ public class GetChatOneResponseDto {
 
     public GetChatOneResponseDto(Chat chat){
         this.chatId = chat.getId();
+        this.chatRoomId = chat.getChatRoom().getRoomId();
         this.chatStatus = chat.getChatStatus();
         this.seller = new SellerDto(chat.getPost().getSeller());
         this.buyer = new BuyerDto(chat.getAccount());

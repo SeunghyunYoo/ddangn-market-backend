@@ -50,6 +50,7 @@ public class ChatJpaRepository {
     public List<Chat> findAllByAccount(Account account){
         return em.createQuery("select c from Chat c" +
                         " join fetch c.post p" +
+                        " join fetch c.chatRoom cr" +
                         " where c.account = :account" +
                         " and p.seller <> :account", Chat.class)
                 .setParameter("account", account)
@@ -59,6 +60,7 @@ public class ChatJpaRepository {
     public List<Chat> findAllByAccount(Long accountId){
         return em.createQuery("select c from Chat c" +
                 " join fetch c.post p" +
+                " join fetch c.chatRoom cr" +
                 " join fetch p.seller s" +
                 " where c.account.id = :accountId", Chat.class)
                 .setParameter("accountId", accountId)

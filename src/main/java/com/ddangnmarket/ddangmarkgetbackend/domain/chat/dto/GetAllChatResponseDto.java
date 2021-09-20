@@ -28,6 +28,7 @@ public class GetAllChatResponseDto {
     @NoArgsConstructor
     public static class GetChatResponseDto {
         private Long chatId;
+        private String chatRoomId;
         private ChatStatus chatStatus;
         private SellerDto seller;
         private BuyerDto buyer;
@@ -37,6 +38,7 @@ public class GetAllChatResponseDto {
 
         public GetChatResponseDto(Chat chat){
             this.chatId = chat.getId();
+            this.chatRoomId = chat.getChatRoom().getRoomId();
             this.chatStatus = chat.getChatStatus();
             this.seller = new SellerDto(chat.getPost().getSeller());
             this.buyer = new BuyerDto(chat.getAccount());

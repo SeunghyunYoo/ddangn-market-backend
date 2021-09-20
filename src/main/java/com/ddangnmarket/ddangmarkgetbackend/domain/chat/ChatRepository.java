@@ -24,6 +24,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
             " join fetch a.activityArea aa" +
             " join fetch aa.district" +
             " join fetch c.post p" +
+            " join fetch c.chatRoom cr" +
             " join fetch p.seller s" +
             " join fetch s.activityArea sa" +
             " join fetch sa.district" +
@@ -36,6 +37,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
             " join fetch a.activityArea aa" +
             " join fetch aa.district" +
             " join fetch c.post p" +
+            " join fetch c.chatRoom cr" +
             " join fetch p.seller s" +
             " join fetch s.activityArea sa" +
             " join fetch sa.district" +

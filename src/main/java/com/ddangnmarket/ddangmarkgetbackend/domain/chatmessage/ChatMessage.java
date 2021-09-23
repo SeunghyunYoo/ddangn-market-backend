@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatMessage {
+    private final int TWO = 2;
 
     @Id @GeneratedValue
     @Column(name = "chat_message_id")
@@ -43,7 +44,7 @@ public class ChatMessage {
         this.message = message;
         this.roomId = roomId;
         this.createdAt = LocalDateTime.now();
-        this.unreadCount = 1;
+        this.unreadCount = TWO - 1;
     }
 
     public void decreaseUnreadCount(){

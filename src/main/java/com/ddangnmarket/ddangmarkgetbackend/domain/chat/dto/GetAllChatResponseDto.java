@@ -4,6 +4,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Chat;
 import com.ddangnmarket.ddangmarkgetbackend.domain.ChatStatus;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.EnterInfo;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetAllPostResponseDto;
@@ -20,8 +21,9 @@ import java.util.stream.Collectors;
 public class GetAllChatResponseDto {
     private List<GetChatResponseDto> chats;
 
-    public GetAllChatResponseDto(List<Chat> chats){
-        this.chats = chats.stream().map(GetChatResponseDto::new).collect(Collectors.toList());
+    public GetAllChatResponseDto(List<Chat> chats, Account account){
+//        this.chats = chats.stream().map(GetChatResponseDto::new).collect(Collectors.toList());
+        this.chats = chats.stream().map(chat -> new GetChatResponseDto(chat, account)).collect(Collectors.toList());
     }
 
     @Data
@@ -29,6 +31,7 @@ public class GetAllChatResponseDto {
     public static class GetChatResponseDto {
         private Long chatId;
         private String chatRoomId;
+        private Integer unreadCount;
         private ChatStatus chatStatus;
         private SellerDto seller;
         private BuyerDto buyer;
@@ -36,9 +39,14 @@ public class GetAllChatResponseDto {
         private String createdAt;
         private String updatedAt;
 
-        public GetChatResponseDto(Chat chat){
+        public GetChatResponseDto(Chat chat, Account account){
             this.chatId = chat.getId();
             this.chatRoomId = chat.getChatRoom().getRoomId();
+            this.unreadCount = chat.getChatRoom().getEnterInfos().stream()
+                    .filter(enterInfo -> enterInfo.getAccount().equals(account))
+                    .map(EnterInfo::getUnreadCount)
+                    .findAny()
+                    .orElse(0);
             this.chatStatus = chat.getChatStatus();
             this.seller = new SellerDto(chat.getPost().getSeller());
             this.buyer = new BuyerDto(chat.getAccount());

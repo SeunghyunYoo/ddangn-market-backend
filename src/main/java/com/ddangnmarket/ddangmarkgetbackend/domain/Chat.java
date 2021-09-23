@@ -1,6 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoom;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.EnterInfo;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,6 +40,12 @@ public class Chat extends DeleteEntity{
         }
         validateHasAlreadyChat(post, account);
         ChatRoom chatRoom = ChatRoom.creteChatRoom();
+        chatRoom.addEnterInfo(EnterInfo.createEnterInfo(account));
+        chatRoom.addEnterInfo(EnterInfo.createEnterInfo(post.getSeller()));
+
+
+//        chatRoom.addEnterInfo(account.getNickname());
+//        chatRoom.addEnterInfo(post.getSeller().getNickname());
         Chat chat = new Chat();
         chat.post = post;
         chat.account = account;

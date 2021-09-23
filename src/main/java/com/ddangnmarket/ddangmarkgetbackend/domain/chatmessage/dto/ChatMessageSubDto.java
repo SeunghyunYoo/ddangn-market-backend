@@ -4,8 +4,6 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.chatmessage.ChatMessage;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
 /**
@@ -18,15 +16,17 @@ public class ChatMessageSubDto {
     private String sender;
     private String message;
     private String roomId;
-    private int unreadCount;
+    private int accountCount;
+    private long connectionCount;
     private String createdAt;
 
-    public ChatMessageSubDto(ChatMessage chatMessage){
+    public ChatMessageSubDto(ChatMessage chatMessage, int accountCount, long connectionCount){
         this.messageType = chatMessage.getMessageType();
         this.sender = chatMessage.getSender();
         this.message = chatMessage.getMessage();
         this.roomId = chatMessage.getRoomId();
-        this.unreadCount = chatMessage.getUnreadCount();
+        this.accountCount = accountCount;
+        this.connectionCount = connectionCount;
 //        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 //        this.createdAt = dateFormat.format(chatMessage.getCreatedAt());
         int hour = LocalDateTime.from(chatMessage.getCreatedAt()).getHour();

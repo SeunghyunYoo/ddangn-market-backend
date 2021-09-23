@@ -8,6 +8,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.CreateChatRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.CreateChatResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.dto.GetAllChatResponseDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/chats")
@@ -31,8 +33,9 @@ public class ChatController {
 
         List<Chat> chats = chatService.findChats(account);
 
+
         return new ResponseEntity<>(new ResponseOKDto<>(
-                new GetAllChatResponseDto(chats)), HttpStatus.OK);
+                new GetAllChatResponseDto(chats, account)), HttpStatus.OK);
     }
 
 
@@ -44,7 +47,7 @@ public class ChatController {
         List<Chat> chats = chatService.findChatsByPostId(account, postId);
 
         return new ResponseEntity<>(new ResponseOKDto<>(
-                new GetAllChatResponseDto(chats)), HttpStatus.OK);
+                new GetAllChatResponseDto(chats, account)), HttpStatus.OK);
     }
 
     @PostMapping

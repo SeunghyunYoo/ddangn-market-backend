@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @author SeunghyunYoo
  */
 public enum MessageType {
-    ENTER, READ, TALK, LEAVE;
+    ENTER, TALK, LEAVE, NOTIFICATION_1ST_ENTER, NOTIFICATION_ENTER;
 
     @JsonCreator
     public static MessageType fromString(String key){

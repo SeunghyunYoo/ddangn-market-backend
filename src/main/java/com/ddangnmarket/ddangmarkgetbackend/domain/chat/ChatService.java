@@ -3,8 +3,10 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.chat;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Chat;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoom;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoomRedisRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoomRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.EnterInfo;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -69,7 +71,19 @@ public class ChatService {
             chat.cancelDelete();
             return chat.getId();
         }
+
+        // TODO
+//        ChatRoom chatRoom = ChatRoom.creteChatRoom();
+//        ChatRoom saveChatRoom = chatRoomRepository.save(chatRoom);
+//        chatRoomRedisRepository.save(saveChatRoom);
+//        Account seller = post.getSeller();
+//        ChatRoom chatRoom = ChatRoom.creteChatRoom();
+//        chatRoom.addEnterInfo(EnterInfo.createEnterInfo(buyer));
+//        chatRoom.addEnterInfo(EnterInfo.createEnterInfo(seller));
         Chat newChat = Chat.createChat(post, buyer);
+
+//        ChatRoom chatRoom = newChat.getChatRoom();
+//        chatRoomRedisRepository.save(chatRoom);
         return chatRepository.save(newChat).getId();
     }
 

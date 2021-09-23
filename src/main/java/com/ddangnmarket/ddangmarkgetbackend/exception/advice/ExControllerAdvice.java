@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -148,7 +149,7 @@ public class ExControllerAdvice {
     }
 
     @ExceptionHandler({MaxUploadSizeExceededException.class})
-    public ResponseEntity<ErrorResult> httpMessageExHandler(MaxUploadSizeExceededException e){
+    public ResponseEntity<ErrorResult> MaxUploadSizeExceededExHandler(MaxUploadSizeExceededException e){
         ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(),
                 HttpStatus.BAD_REQUEST.value(), "파일의 용량이 지원하는 용량을 초과합니다.");
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);

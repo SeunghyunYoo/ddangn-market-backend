@@ -21,10 +21,18 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
             " and m.sender <> :sender")
     List<ChatMessage> findUnreadMsgByRoomId(@Param("sender") String sender, @Param("roomId") String roomId);
 
+    @Query("select count(m) from ChatMessage m" +
+            " where m.roomId = :roomId" +
+            " and m.unreadCount <> 0" +
+            " and m.sender <> :sender")
+    Integer findUnreadCountByRoomId(@Param("sender") String sender, @Param("roomId") String roomId);
+
     @Query("select m from ChatMessage m" +
             " where m.roomId = :roomId" +
             " and m.messageType ='ENTER'" +
             " and m.sender = :sender")
-    Optional<ChatMessage> findEnterMsg(@Param("sender") String sender, @Param("roomId") String roomId);
+    Optional<ChatMessage> findMsgForCheck1stEnter(@Param("sender") String sender, @Param("roomId") String roomId);
+
+    boolean existsBySenderAndRoomId(String sender, String roomId);
 
 }

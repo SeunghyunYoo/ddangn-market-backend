@@ -1,6 +1,5 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.chatmessage;
 
-import com.ddangnmarket.ddangmarkgetbackend.domain.chatmessage.dto.MessageType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +18,14 @@ public class ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
 
-    public List<ChatMessage> findAllMessage(String roomId){
+    public List<ChatMessage> findAllMessage(String sender, String roomId){
+        List<ChatMessage> unreadMessages = chatMessageRepository.findUnreadMsgByRoomId(sender, roomId);
+        unreadMessages.forEach(ChatMessage::decreaseUnreadCount);
+
         return chatMessageRepository.findAllByRoomIdOrderByCreatedAtAsc(roomId);
     }
+
+
 
     public void saveMessage(ChatMessage chatMessage) {
 //        if (chatMessage.getMessageType() == MessageType.TALK) {
@@ -32,10 +36,5 @@ public class ChatMessageService {
     public void unreadToRead(String roomId, String sender){
         List<ChatMessage> unreadMessages = chatMessageRepository.findUnreadMsgByRoomId(sender, roomId);
         unreadMessages.forEach(ChatMessage::decreaseUnreadCount);
-    }
-
-    public boolean is1stEnter(String roomId, String sender){
-        Optional<ChatMessage> enterMsg = chatMessageRepository.findEnterMsg(sender, roomId);
-        return enterMsg.isEmpty();
     }
 }

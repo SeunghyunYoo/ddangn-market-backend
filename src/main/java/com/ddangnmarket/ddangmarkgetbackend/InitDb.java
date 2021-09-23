@@ -4,6 +4,10 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoom;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoomRedisRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoomRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.EnterInfo;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Position;
@@ -12,6 +16,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.reply.ReplyRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -27,9 +32,13 @@ import static com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong.*;
 public class InitDb {
 
     private final InitService initService;
+    private final RedisConnectionFactory redisConnectionFactory;
 
     @PostConstruct
     public void init(){
+
+        redisConnectionFactory.getConnection().flushAll();
+
         initService.initCategory();
         initService.initDistrict();
 //        initService.initAccountPost();
@@ -47,6 +56,8 @@ public class InitDb {
         private final SaleRepository saleRepository;
         private final PostRepository postRepository;
         private final AccountRepository accountRepository;
+        private final ChatRoomRedisRepository chatRoomRedisRepository;
+        private final ChatRoomRepository chatRoomRepository;
         private final ReplyRepository replyRepository;
 
 
@@ -82,6 +93,7 @@ public class InitDb {
         }
 
         public void initAccountPost(){
+
             Account account1 = new Account("account1", "000-0000-0000", "account1@gmail.com", "00000000");
             Account account2= new Account("account2", "000-0000-0000", "account2@gmail.com", "00000000");
             Account account3 = new Account("account3", "000-0000-0000", "account3@gmail.com", "00000000");
@@ -120,6 +132,8 @@ public class InitDb {
 
             Chat chat1 = Chat.createChat(post1, account2);
             em.persist(chat1);
+
+
             Chat chat2 = Chat.createChat(post1, account3);
             em.persist(chat2);
 
@@ -199,6 +213,7 @@ public class InitDb {
 
             Chat chat1 = Chat.createChat(post1, account2);
             em.persist(chat1);
+
             Chat chat2 = Chat.createChat(post1, account3);
             em.persist(chat2);
 

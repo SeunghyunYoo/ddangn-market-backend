@@ -17,7 +17,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
             " join fetch p.category c" +
             " join fetch p.district d" +
             " join fetch p.seller s" +
-            " where pc.account = : account")
+            " where pc.account = :account")
     List<Purchase> findAllByAccount(@Param("account") Account account);
 
 

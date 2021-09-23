@@ -5,6 +5,8 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Interest;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class InterestService {
 
     private final InterestRepository interestRepository;
+    private final InterestJpaRepository interestJpaRepository;
     private final PostRepository postRepository;
 
     public Long addInterest(Account account, Long postId){
@@ -36,6 +39,11 @@ public class InterestService {
 
     public List<Interest> findAllInterests(Account account){
         return interestRepository.findAllByAccount(account);
+    }
+
+    public Page<Interest> findPageInterests(Account account, int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return interestRepository.findInterestsByAccount(pageRequest, account);
     }
 
     public void deleteInterest(Account account, Long interestId){

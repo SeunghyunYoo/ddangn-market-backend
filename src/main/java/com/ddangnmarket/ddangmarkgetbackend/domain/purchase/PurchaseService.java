@@ -14,6 +14,7 @@ import java.util.List;
 public class PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
+//    private final PurchaseJpaRepository purchaseRepository;
 
     public List<Purchase> findAllPurchase(Account account){
         return purchaseRepository.findAllByAccount(account);

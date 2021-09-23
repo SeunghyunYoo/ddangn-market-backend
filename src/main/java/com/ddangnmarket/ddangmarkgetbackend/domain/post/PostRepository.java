@@ -1,9 +1,12 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain.post;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
+import com.ddangnmarket.ddangmarkgetbackend.domain.Category;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.District;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -102,4 +105,63 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             " join fetch p.sale sl" +
             " where pc.account = :buyer and p.isDeleted = false")
     List<Post> findAllPurchase(@Param("buyer") Account buyer);
+
+
+    @Query("select p from Post p" +
+            " where p.district in :districts" +
+            " and p.isDeleted = false")
+    @EntityGraph(attributePaths = {"district", "category", "seller", "purchase", "sale"})
+    Page<Post> findPagePosts(
+            Pageable pageable,
+            @Param("districts") Collection<District> districts);
+
+    @Query("select p from Post p" +
+            " where p.postStatus in :postStatuses" +
+            " and p.district in :districts" +
+            " and p.isDeleted = false")
+    @EntityGraph(attributePaths = {"district", "category", "seller", "purchase", "sale"})
+    Page<Post> findPagePostsByStatuses(
+            Pageable pageable,
+            @Param("postStatuses") Collection<PostStatus> postStatuses,
+            @Param("districts") Collection<District> districts);
+
+    @Query("select p from Post p" +
+            " where p.seller = :seller" +
+            " and p.isDeleted = false")
+    @EntityGraph(attributePaths = {"district", "category", "purchase", "sale"})
+    Page<Post> findPagePostsBySeller(
+            Pageable pageable,
+            @Param("seller") Account seller);
+
+    @Query("select p from Post p" +
+            " where p.postStatus in :postStatuses" +
+            " and p.seller = :seller" +
+            " and p.isDeleted = false")
+    @EntityGraph(attributePaths = {"district", "category", "purchase", "sale"})
+    Page<Post> findPagePostsBySellerAndStatuses(
+            Pageable pageable,
+            @Param("seller") Account seller,
+            @Param("postStatuses") Collection<PostStatus> postStatuses);
+
+    @Query("select p from Post p" +
+            " where p.district in :districts" +
+            " and p.category.categoryTag = :categoryTag" +
+            " and p.isDeleted = false")
+    @EntityGraph(attributePaths = {"district", "category", "seller", "purchase", "sale"})
+    Page<Post> findPagePostsByCategory(
+            Pageable pageable,
+            @Param("categoryTag") CategoryTag categoryTag,
+            @Param("districts") Collection<District> districts);
+
+    @Query("select p from Post p" +
+            " where p.district in :districts" +
+            " and p.postStatus in :postStatuses" +
+            " and p.category.categoryTag = :categoryTag" +
+            " and p.isDeleted = false")
+    @EntityGraph(attributePaths = {"district", "category", "seller", "purchase", "sale"})
+    Page<Post> findPagePostsByCategoryAndStatuses(
+            Pageable pageable,
+            @Param("categoryTag") CategoryTag categoryTag,
+            @Param("postStatuses") Collection<PostStatus> postStatuses,
+            @Param("districts") Collection<District> districts);
 }

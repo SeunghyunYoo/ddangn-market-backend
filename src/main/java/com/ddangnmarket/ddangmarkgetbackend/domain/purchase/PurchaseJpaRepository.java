@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PreUpdate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,6 +23,15 @@ public class PurchaseJpaRepository {
 
     public void delete(Purchase purchase){
         em.remove(purchase);
+    }
+
+
+    public Optional<Purchase> findById(Long id){
+        return em.createQuery("select p from Purchase p" +
+                        " where p.id =: id", Purchase.class)
+                .setParameter("id", id)
+                .getResultStream()
+                .findAny();
     }
 
     public List<Purchase> findAll(){

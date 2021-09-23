@@ -63,9 +63,11 @@ public class Post extends DeleteEntity{
     private District district;
 
     @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name = "sale_id")
     private Sale sale;
 
     @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name = "purchase_id")
     private Purchase purchase;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)

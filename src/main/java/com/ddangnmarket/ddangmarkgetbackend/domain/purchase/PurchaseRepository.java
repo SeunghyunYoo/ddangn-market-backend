@@ -21,6 +21,9 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     List<Purchase> findAllByAccount(@Param("account") Account account);
 
 
+    Optional<Purchase> findByPostId(Long postId);
+
+
     List<Purchase> findByAccount(Account account);
 
     long countByAccount(Account account);

@@ -6,13 +6,10 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chat.ChatRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.file.UploadFileRepository;
-import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetPagePostsResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.UpdatePostRequestDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -115,11 +112,19 @@ public class PostService {
 
     private void resetOtherChatsStatus(Post post){
         if(post.getPostStatus().equals(PostStatus.COMPLETE)){
+            deletePurchaseAndSale(post.getId());
             post.cancelSale();
         }
         if(post.getPostStatus().equals(PostStatus.RESERVE)){
             post.cancelReserve();
         }
+    }
+
+    private void deletePurchaseAndSale(Long postId) {
+        Purchase purchase = purchaseRepository.findByPostId(postId).orElseThrow();
+        purchaseRepository.delete(purchase);
+        Sale sale = saleRepository.findByPostId(postId).orElseThrow();
+        saleRepository.delete(sale);
     }
 
     private void saveSaleAndPurchaseHistory(Account seller, Account buyer, Post post){
@@ -130,11 +135,12 @@ public class PostService {
         purchaseRepository.save(purchase);
     }
 
-    public void cancelSale(Account seller, Long postId){
+    public void deletePurchaseAndSale(Account seller, Long postId){
         validateIsSellerPost(postId, seller);
         // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
         Post post = findPostByIdOrThrow(postId);
         if(post.getPostStatus().equals(PostStatus.COMPLETE)) {
+            deletePurchaseAndSale(postId);
             post.cancelSale();
         }
     }
@@ -146,11 +152,10 @@ public class PostService {
         // TODO 판매 완료된 건 예약 상태로 바꾸게 허용할지 말지
         //  validateSaleComplete(post);
         if(post.getPostStatus() == PostStatus.COMPLETE){
+            deletePurchaseAndSale(postId);
             post.cancelSale();
         }
-
         Chat chat = findChatByIdOrThrow(chatId);
-
         post.changeReserve(chat);
     }
 

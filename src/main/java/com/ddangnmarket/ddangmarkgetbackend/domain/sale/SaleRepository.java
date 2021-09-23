@@ -18,4 +18,7 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     @Query("select avg(s.score) from Sale s where s.account = :account")
     Optional<Double> findAvgScoreByAccount(@Param("account") Account account);
+
+
+    Optional<Sale> findByPostId(Long postId);
 }

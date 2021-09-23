@@ -16,7 +16,7 @@ public class Purchase extends DeleteEntity{
     @Column(name = "purchase_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 

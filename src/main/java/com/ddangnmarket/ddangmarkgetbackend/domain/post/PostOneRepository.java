@@ -20,8 +20,6 @@ public class PostOneRepository {
         Post post = em.createQuery("select p from Post p" +
                         " join fetch p.seller s" +
                         " join fetch p.district d" +
-                        " join fetch p.sale sl" +
-                        " join fetch p.purchase pc" +
                         " where p.id = :id", Post.class)
                 .setParameter("id", id)
                 .getResultStream()

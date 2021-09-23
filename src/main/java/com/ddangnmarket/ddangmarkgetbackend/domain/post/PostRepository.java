@@ -20,16 +20,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
     @Query("select p from Post p where p.id = :id and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"sale", "purchase"})
     Optional<Post> findById(@Param("id") Long id);
     // TODO sale, purchase 왜 같이 조회를 하는지
     // -> toOne 관계는 대상 테이블에 외래키가 있을 시, 프록시 기능의 한계로 항상 즉시 로딩
 
     @Query("select p from Post p where p.id = :id and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"seller", "category", "district", "sale", "purchase"})
+    @EntityGraph(attributePaths = {"seller", "category", "district"})
     Optional<Post> findAllInfoById(@Param("id") Long id);
 
-    @EntityGraph(attributePaths = {"sale", "purchase"})
+
     @Query("select p from Post p where p.id = :id and p.isDeleted = false")
     Optional<Post> findWithSaleAndPurchaseById(@Param("id") Long id);
 
@@ -38,30 +37,29 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findWithSellerById(@Param("id") Long id);
 
     @Query("select p from Post p where p.district in :districts and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"seller", "category", "sale", "purchase"})
+    @EntityGraph(attributePaths = {"seller", "category"})
     List<Post> findAll(@Param("districts") Collection<District> districts);
 
     @Query("select p from Post p where p.district in :districts and p.postStatus = :postStatus and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"seller", "category", "sale", "purchase"})
+    @EntityGraph(attributePaths = {"seller", "category"})
     List<Post> findAllByPostStatus(
             @Param("districts") Collection<District> districts, @Param("postStatus") PostStatus postStatus);
 
 
     @Query("select p from Post p where p.district in :districts and p.postStatus in :postStatuses and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"seller", "category", "sale", "purchase"})
+    @EntityGraph(attributePaths = {"seller", "category"})
     List<Post> findAllByPostStatuses(
             @Param("districts") Collection<District> districts, @Param("postStatuses") Collection<PostStatus> postStatuses
     );
 
-    @EntityGraph(attributePaths = {"category", "district", "sale", "purchase"})
+    @EntityGraph(attributePaths = {"category", "district"})
     @Query("select p from Post p where p.seller = :seller and p.isDeleted = false")
     List<Post> findAllBySeller(@Param("seller") Account seller);
 
     @Query("select p from Post p where p.seller = :seller and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"sale", "purchase"})
     List<Post> findAllIdsBySeller(@Param("seller") Account seller);
 
-    @EntityGraph(attributePaths = {"category", "district", "sale", "purchase"})
+    @EntityGraph(attributePaths = {"category", "district"})
     @Query("select p from Post p" +
             " where p.seller = :seller and p.postStatus = :postStatus" +
             " and p.isDeleted = false")
@@ -69,13 +67,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             @Param("seller") Account seller, @Param("postStatus") PostStatus postStatus);
 
     @Query("select p from Post p where p.seller in :seller and p.postStatus in :postStatuses and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"category", "district", "sale", "purchase"})
+    @EntityGraph(attributePaths = {"category", "district"})
     List<Post> findAllBySellerAndPostStatuses(
             @Param("seller") Account seller, @Param("postStatuses") Collection<PostStatus> postStatuses);
 
     @Query("select p from Post p where p.district in :districts and p.category.categoryTag = :categoryTag and p.isDeleted = false")
 
-    @EntityGraph(attributePaths = {"seller", "sale", "purchase"})
+    @EntityGraph(attributePaths = {"seller"})
     List<Post> findAllByCategory(
             @Param("districts") Collection<District> districts, @Param("categoryTag") CategoryTag categoryTag);
 
@@ -83,7 +81,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p where p.district in :districts" +
             " and p.category.categoryTag = :categoryTag" +
             " and p.postStatus = :postStatus and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"seller", "sale", "purchase"})
+    @EntityGraph(attributePaths = {"seller"})
     List<Post> findAllByCategoryAndPostStatus(
             @Param("districts") Collection<District> districts,
             @Param("categoryTag") CategoryTag categoryTag, @Param("postStatus") PostStatus postStatus);
@@ -91,26 +89,24 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p where p.district in :districts" +
             " and p.category.categoryTag = :categoryTag" +
             " and p.postStatus in :postStatuses and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"seller", "sale", "purchase"})
+    @EntityGraph(attributePaths = {"seller"})
     List<Post> findAllByCategoryAndPostStatuses(
             @Param("districts") Collection<District> districts,
             @Param("categoryTag") CategoryTag categoryTag,
             @Param("postStatuses") Collection<PostStatus> postStatuses);
 
-    @Query("select p from Post p" +
-            " join fetch p.district d" +
-            " join fetch p.category c" +
-            " join fetch p.seller s" +
-            " join fetch p.purchase pc" +
-            " join fetch p.sale sl" +
-            " where pc.account = :buyer and p.isDeleted = false")
-    List<Post> findAllPurchase(@Param("buyer") Account buyer);
+//    @Query("select p from Post p" +
+//            " join fetch p.district d" +
+//            " join fetch p.category c" +
+//            " join fetch p.seller s" +
+//            " where pc.account = :buyer and p.isDeleted = false")
+//    List<Post> findAllPurchase(@Param("buyer") Account buyer);
 
 
     @Query("select p from Post p" +
             " where p.district in :districts" +
             " and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"district", "category", "seller", "purchase", "sale"})
+    @EntityGraph(attributePaths = {"district", "category", "seller"})
     Page<Post> findPagePosts(
             Pageable pageable,
             @Param("districts") Collection<District> districts);
@@ -119,7 +115,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             " where p.postStatus in :postStatuses" +
             " and p.district in :districts" +
             " and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"district", "category", "seller", "purchase", "sale"})
+    @EntityGraph(attributePaths = {"district", "category", "seller"})
     Page<Post> findPagePostsByStatuses(
             Pageable pageable,
             @Param("postStatuses") Collection<PostStatus> postStatuses,
@@ -128,7 +124,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p" +
             " where p.seller = :seller" +
             " and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"district", "category", "purchase", "sale"})
+    @EntityGraph(attributePaths = {"district", "category"})
     Page<Post> findPagePostsBySeller(
             Pageable pageable,
             @Param("seller") Account seller);
@@ -137,7 +133,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             " where p.postStatus in :postStatuses" +
             " and p.seller = :seller" +
             " and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"district", "category", "purchase", "sale"})
+    @EntityGraph(attributePaths = {"district", "category"})
     Page<Post> findPagePostsBySellerAndStatuses(
             Pageable pageable,
             @Param("seller") Account seller,
@@ -147,7 +143,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             " where p.district in :districts" +
             " and p.category.categoryTag = :categoryTag" +
             " and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"district", "category", "seller", "purchase", "sale"})
+    @EntityGraph(attributePaths = {"district", "category", "seller"})
     Page<Post> findPagePostsByCategory(
             Pageable pageable,
             @Param("categoryTag") CategoryTag categoryTag,
@@ -158,7 +154,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             " and p.postStatus in :postStatuses" +
             " and p.category.categoryTag = :categoryTag" +
             " and p.isDeleted = false")
-    @EntityGraph(attributePaths = {"district", "category", "seller", "purchase", "sale"})
+    @EntityGraph(attributePaths = {"district", "category", "seller"})
     Page<Post> findPagePostsByCategoryAndStatuses(
             Pageable pageable,
             @Param("categoryTag") CategoryTag categoryTag,

@@ -62,13 +62,11 @@ public class Post extends DeleteEntity{
     @JoinColumn(name = "district_id")
     private District district;
 
-    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
-//    @JoinColumn(name = "sale_id")
-    private Sale sale;
+//    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
+//    private Sale sale;
 
-    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
-//    @JoinColumn(name = "purchase_id")
-    private Purchase purchase;
+//    @OneToOne(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true)
+//    private Purchase purchase;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies;
@@ -99,12 +97,12 @@ public class Post extends DeleteEntity{
 
     public void deletePost(){
         super.delete();
-        if(sale != null){
-            sale.delete();
-        }
-        if(purchase != null){
-            purchase.delete();
-        }
+//        if(sale != null){
+//            sale.delete();
+//        }
+//        if(purchase != null){
+//            purchase.delete();
+//        }
         if(chats != null){
             chats.forEach(Chat::delete);
         }
@@ -112,12 +110,13 @@ public class Post extends DeleteEntity{
     }
 
     public void absoluteDeletePost(){
-        if(sale != null){
-            sale = null;
-        }
-        if(purchase != null){
-            purchase = null;
-        }
+//        if(sale != null){
+//            sale = null;
+//        }
+//        if(purchase != null){
+//            purchase = null;
+//        }
+
 //        if(chats != null){
 //            chats.forEach(chat -> {
 //                chat.setPost(null);
@@ -157,8 +156,8 @@ public class Post extends DeleteEntity{
      * repository delete operation 필요 x
      */
     public void cancelSale(){
-        sale = null;
-        purchase = null;
+//        sale = null;
+//        purchase = null;
         postStatus = PostStatus.NEW;
         // mappedBy라 여기서 변경 못함 Chat에서
         chats.forEach(Chat::changeNone);
@@ -178,10 +177,10 @@ public class Post extends DeleteEntity{
 //        chats.forEach(Chat::changeNone);
         chat.changeReserve();
 
-        if (postStatus == PostStatus.COMPLETE) {
-            sale = null;
-            purchase = null;
-        }
+//        if (postStatus == PostStatus.COMPLETE) {
+//            sale = null;
+//            purchase = null;
+//        }
 
         postStatus = PostStatus.RESERVE;
     }

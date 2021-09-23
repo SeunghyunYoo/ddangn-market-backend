@@ -4,20 +4,16 @@ import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.api.dto.ResponseSimpleOKDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
-import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-
-import static java.util.stream.Collectors.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -79,7 +75,7 @@ public class PostController {
         Account seller = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
-        postService.cancelSale(seller, postId);
+        postService.deletePurchaseAndSale(seller, postId);
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 

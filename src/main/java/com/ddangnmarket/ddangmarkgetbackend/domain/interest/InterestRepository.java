@@ -24,6 +24,8 @@ public interface InterestRepository extends JpaRepository<Interest, Long>, Inter
             " join fetch i.post p" +
             " join fetch p.seller s" +
             " join fetch i.account a" +
+            " join fetch p.category c" +
+            " join fetch p.district d" +
             " where a = :account" +
             " and i.isDeleted = false and p.isDeleted = false")
     List<Interest> findAllByAccount(@Param("account") Account account);
@@ -34,11 +36,11 @@ public interface InterestRepository extends JpaRepository<Interest, Long>, Inter
             " join fetch p.seller s" +
             " join fetch p.category c" +
             " join fetch i.account a" +
+            " join fetch p.district d" +
             " where a = :account" +
             " and i.isDeleted = false and p.isDeleted = false",
             countQuery = "select count(i.id) from Interest i" +
                     " join i.post p" +
-//                    " join fetch p.category c" +
                     " where i.account =: account" +
                     " and i.isDeleted = false and p.isDeleted = false")
     Page<Interest> findInterestsByAccount(Pageable pageable, @Param("account") Account account);

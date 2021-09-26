@@ -50,7 +50,6 @@ public class PostPageQueryController {
         Page<Post> pagePost = checkStatusParamAndFindPosts(account, status, pageable);
 
         return new ResponseEntity<>(new ResponseOKDto<>(new GetPagePostsResponseDto(pagePost)), HttpStatus.OK);
-
     }
 
     private Page<Post> checkStatusParamAndFindPosts(Account account, List<String> status, Pageable pageable){
@@ -83,7 +82,6 @@ public class PostPageQueryController {
         Page<Post> pagePost = checkStatusParamAndFindPosts(account, condition, pageable);
 
         return new ResponseEntity<>(new ResponseOKDto<>(new GetPagePostsResponseDto(pagePost)), HttpStatus.OK);
-
     }
 
     private Page<Post> checkStatusParamAndFindPosts(Account account, PostSearchCondition condition, Pageable pageable){

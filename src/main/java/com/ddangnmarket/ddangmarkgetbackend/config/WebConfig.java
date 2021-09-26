@@ -1,6 +1,7 @@
 package com.ddangnmarket.ddangmarkgetbackend.config;
 
 import com.ddangnmarket.ddangmarkgetbackend.config.converter.StringToCategoryTagConverter;
+import com.ddangnmarket.ddangmarkgetbackend.config.converter.StringToPostStatusConverter;
 import com.ddangnmarket.ddangmarkgetbackend.interceptor.LogInterceptor;
 import com.ddangnmarket.ddangmarkgetbackend.interceptor.LoginCheckInterceptor;
 import org.springframework.context.annotation.Configuration;
@@ -56,5 +57,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new StringToCategoryTagConverter());
+        registry.addConverter(new StringToPostStatusConverter());
     }
 }

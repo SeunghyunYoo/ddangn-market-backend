@@ -5,11 +5,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.search.PostSearchCondition;
 import com.ddangnmarket.ddangmarkgetbackend.utils.repository.Querydsl4RepositorySupport;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.Ops;
-import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +17,6 @@ import org.springframework.util.Assert;
 import javax.persistence.EntityManager;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -63,7 +58,7 @@ public class PostRepositoryImpl extends Querydsl4RepositorySupport implements Po
                         .where(postStatusCond(districts, postStatuses)));
     }
 
-    public Page<Post> getPagePostByStatusSearch(
+    public Page<Post> getPagePostBySearch(
             List<District> districts, PostSearchCondition condition, Pageable pageable){
         return applyPagination(pageableWithOrderAt(pageable),
                 query -> query
@@ -123,7 +118,7 @@ public class PostRepositoryImpl extends Querydsl4RepositorySupport implements Po
     private BooleanBuilder searchCond(PostSearchCondition condition){
         return titleKeyword(condition.getTitle()).and(descKeyword(condition.getDesc()))
                 .and(priceGoe(condition.getPriceGoe())).and(priceLoe(condition.getPriceLoe()))
-                .and(categoryIn(condition.getCategoryTags())).and(postStatusIn(condition.getPostStatuses()));
+                .and(categoryIn(condition.getCategoryTags())).and(postStatusIn(condition.getStatus()));
     }
 
     private BooleanBuilder titleKeyword(String keyword){
@@ -171,9 +166,11 @@ public class PostRepositoryImpl extends Querydsl4RepositorySupport implements Po
     private BooleanBuilder nullSafeBuilder(Supplier<BooleanExpression> f){
         try{
             return new BooleanBuilder(f.get());
-        } catch (NullPointerException e){
-            return new BooleanBuilder();
-        } catch (IllegalArgumentException e){
+        }
+//        catch (IllegalArgumentException e){
+//            return new BooleanBuilder();
+//        }
+        catch (NullPointerException e){
             return new BooleanBuilder();
         }
     }

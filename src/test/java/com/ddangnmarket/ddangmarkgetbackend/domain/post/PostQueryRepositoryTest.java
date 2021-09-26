@@ -65,7 +65,7 @@ class PostQueryRepositoryTest {
 
         PageRequest pageRequest = PageRequest.of(0, 5);
 //        pageRequest.withSort(Sort.by(Sort.Direction.ASC, post.createdAt.toString()));
-        Page<Post> pagePosts = postQueryRepository.getPagePostByStatusSearch(
+        Page<Post> pagePosts = postQueryRepository.getPagePostBySearch(
                 List.of(gumi), new PostSearchCondition(), pageRequest);
 //                List.of(gumi), List.of(), new PostSearchCondition("", null, null, 100000), pageRequest);
 

@@ -49,6 +49,6 @@ public class PostPageService {
     public Page<Post> search(
             Account account, PostSearchCondition condition, Pageable pageable){
         List<District> districts = getDistrict(account);
-        return postRepository.getPagePostByStatusSearch(districts, condition, pageable);
+        return postRepository.getPagePostBySearch(districts, condition, pageable);
     }
 }

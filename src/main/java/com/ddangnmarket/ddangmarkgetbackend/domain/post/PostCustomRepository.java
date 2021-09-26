@@ -23,6 +23,6 @@ public interface PostCustomRepository {
             List<District> districts, List<PostStatus> postStatuses, CategoryTag categoryTag, Pageable pageable);
     Page<Post> getPagePostsBySellerAndStatus(
             Account seller, List<PostStatus> postStatuses, Pageable pageable);
-    Page<Post> getPagePostByStatusSearch(
+    Page<Post> getPagePostBySearch(
             List<District> districts, PostSearchCondition condition, Pageable pageable);
 }

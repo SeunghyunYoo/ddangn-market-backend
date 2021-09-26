@@ -2,6 +2,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.post.search;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,22 +20,7 @@ public class PostSearchCondition {
     private String desc;
     private Integer priceGoe;
     private Integer priceLoe;
-    private List<CategoryTag> categoryTags;
-    private List<PostStatus> postStatuses;
+    private List<CategoryTag> category;
+    private List<PostStatus> status;
 
-//    public PostSearchCondition(String title, String desc, Integer priceGoe, Integer priceLoe) {
-//        this.title = title;
-//        this.desc = desc;
-//        this.priceGoe = priceGoe;
-//        this.priceLoe = priceLoe;
-//        this.categoryTags = List.of();
-//    }
-//
-//    public PostSearchCondition(String title, String desc, Integer priceGoe, Integer priceLoe, List<CategoryTag> categoryTags) {
-//        this.title = title;
-//        this.desc = desc;
-//        this.priceGoe = priceGoe;
-//        this.priceLoe = priceLoe;
-//        this.categoryTags = categoryTags;
-//    }
 }

@@ -9,6 +9,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetAllPostResponseDt
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetPagePostsResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -28,7 +29,7 @@ import static java.util.stream.Collectors.toList;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v2/posts")
+@RequestMapping("/api/v1/posts")
 public class PostPageQueryController {
 
     private final PostService postService;
@@ -41,24 +42,23 @@ public class PostPageQueryController {
     @GetMapping
     public ResponseEntity<ResponseOKDto<GetPagePostsResponseDto>> getPagePosts(
             @RequestParam(required = false) @Nullable List<String> status,
-            @RequestParam int page, @RequestParam int size,
-            @ApiIgnore HttpSession session){
+            Pageable pageable, @ApiIgnore HttpSession session){
 
         Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
-        Page<Post> pagePost = checkStatusParamAndFindPosts(account, status, page, size);
+        Page<Post> pagePost = checkStatusParamAndFindPosts(account, status, pageable);
 
         return new ResponseEntity<>(new ResponseOKDto<>(new GetPagePostsResponseDto(pagePost)), HttpStatus.OK);
 
     }
 
-    private Page<Post> checkStatusParamAndFindPosts(Account account, List<String> status, int page, int size){
-        if (status == null || status.size() == 0){
-            return postPageService.findPagePosts(account, page, size);
+    private Page<Post> checkStatusParamAndFindPosts(Account account, List<String> status, Pageable pageable){
+        if (status == null){
+            return postPageService.findPagePosts(account, List.of(), pageable);
         }
         postStatusParamValidation(status);
         List<PostStatus> postStatuses = convertStringToPostStatus(status);
-        return postPageService.findPagePostsByStatuses(account, postStatuses, page, size);
+        return postPageService.findPagePosts(account, postStatuses, pageable);
     }
 
     private void postStatusParamValidation(List<String> status) {
@@ -77,23 +77,22 @@ public class PostPageQueryController {
     @GetMapping("/sales")
     public ResponseEntity<ResponseOKDto<GetPagePostsResponseDto>> getPageSellerPosts(
             @RequestParam(required = false) @Nullable List<String> status,
-            @RequestParam int page, @RequestParam int size,
-            @ApiIgnore HttpSession session) {
+            Pageable pageable, @ApiIgnore HttpSession session) {
 
         Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
-        Page<Post> pagePost = checkStatusParamAndFindSellerPosts(account, status, page, size);
+        Page<Post> pagePost = checkStatusParamAndFindSellerPosts(account, status, pageable);
         return new ResponseEntity<>(new ResponseOKDto<>(new GetPagePostsResponseDto(pagePost)), HttpStatus.OK);
     }
 
     private Page<Post> checkStatusParamAndFindSellerPosts(
-            Account seller, List<String> status, int page, int size){
-        if (status == null || status.size() == 0){
-            return postPageService.findPagePostsBySeller(seller, page, size);
+            Account seller, List<String> status, Pageable pageable){
+        if (status == null){
+            return postPageService.findPagePostsBySeller(seller, List.of(), pageable);
         }
         postStatusParamValidation(status);
         List<PostStatus> postStatuses = convertStringToPostStatus(status);
-        return postPageService.findPagePostsBySellerAndStatuses(seller, postStatuses, page, size);
+        return postPageService.findPagePostsBySeller(seller, postStatuses, pageable);
     }
 
 
@@ -101,28 +100,27 @@ public class PostPageQueryController {
     public ResponseEntity<ResponseOKDto<GetPagePostsResponseDto>> getPagePostsByCategory(
             @RequestParam(name = "category") String categoryTag,
             @RequestParam(name = "status", required = false) @Nullable List<String> status,
-            @RequestParam int page, @RequestParam int size,
+            Pageable pageable,
             @ApiIgnore HttpSession session){
         Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         Page<Post> pagePost = checkStatusParamAndFindPostsByCategory(
-                account, categoryTag, status, page, size);
+                account, categoryTag, status, pageable);
 
         return new ResponseEntity<>(new ResponseOKDto<>(new GetPagePostsResponseDto(pagePost)), HttpStatus.OK);
     }
 
     private Page<Post> checkStatusParamAndFindPostsByCategory(
             Account account, String categoryTag, List<String> status,
-            int page, int size){
-        if (status == null || status.size() == 0){
+            Pageable pageable){
+        if (status == null){
             return postPageService.findPagePostsByCategory(
-                    account, CategoryTag.fromString(categoryTag), page, size);
+                    account, CategoryTag.fromString(categoryTag), List.of(), pageable);
         }
         postStatusParamValidation(status);
         List<PostStatus> postStatuses = convertStringToPostStatus(status);
-        return postPageService.findPagePostsByCategoryAndStatuses(
-                account, CategoryTag.valueOf(categoryTag.toUpperCase()),
-                postStatuses, page, size);
+        return postPageService.findPagePostsByCategory(account, CategoryTag.valueOf(categoryTag.toUpperCase()),
+                postStatuses, pageable);
     }
 
 }

@@ -6,8 +6,12 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetAllPostResponseDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetPagePostsResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetPostOneResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -22,7 +26,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * @author SeunghyunYoo
  */
-@RestController
+//@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/posts")
 public class PostQueryController {
@@ -40,9 +44,7 @@ public class PostQueryController {
         Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         List<Post> posts = checkStatusParamAndFindPosts(account, status);
-
         return new ResponseEntity<>(new ResponseOKDto<>(new GetAllPostResponseDto(posts)), HttpStatus.OK);
-
     }
 
     private List<Post> checkStatusParamAndFindPosts(Account account, List<String> status){

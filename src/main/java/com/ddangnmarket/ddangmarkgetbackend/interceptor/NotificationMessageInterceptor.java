@@ -26,9 +26,7 @@ public class NotificationMessageInterceptor implements ChannelInterceptor {
                 return message;
             }
         }
-
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-
         return message;
     }
 

@@ -51,12 +51,21 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<ResponseSimpleOKDto> updatePost(
+    public ResponseEntity<ResponseSimpleOKDto> pullPost(
             @PathVariable Long postId,
             @RequestBody UpdatePostRequestDto updatePostRequestDto, @ApiIgnore HttpSession session){
         Account seller = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         postService.updatePost(seller, postId, updatePostRequestDto);
+        return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
+    }
+
+    @PutMapping("/pull/{postId}")
+    public ResponseEntity<ResponseSimpleOKDto> pullPost(
+            @PathVariable Long postId, @ApiIgnore HttpSession session){
+        Account seller = accountService.checkSessionAndFindAccountWithActivityArea(session);
+
+        postService.pullPost(seller, postId);
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 

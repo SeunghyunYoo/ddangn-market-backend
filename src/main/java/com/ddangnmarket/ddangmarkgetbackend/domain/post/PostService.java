@@ -10,6 +10,8 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.UpdatePostRequestDto
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -164,6 +166,13 @@ public class PostService {
 
         Post post = findPostByIdOrThrow(postId);
         post.cancelReserve();
+    }
+
+    public void pullPost(Account seller, Long postId){
+        validateIsSellerPost(postId, seller);
+
+        Post post = findPostByIdOrThrow(postId);
+        post.pullPost();
     }
 
     public void delete(Account seller, Long postId){

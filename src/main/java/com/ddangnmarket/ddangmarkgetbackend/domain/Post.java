@@ -43,6 +43,9 @@ public class Post extends DeleteEntity{
     @Column(updatable = false)
     private LocalDateTime updatedAt;
 
+    @CreatedDate
+    private LocalDateTime orderAt;
+
     @Enumerated(EnumType.STRING)
     private PostStatus postStatus;
 
@@ -89,6 +92,10 @@ public class Post extends DeleteEntity{
     }
 
     //== 바즈니스 로직 ==//
+
+    public void pullPost(){
+        orderAt = LocalDateTime.now();
+    }
 
     public void addUploadFile(UploadFile file){
         uploadFiles.add(file);

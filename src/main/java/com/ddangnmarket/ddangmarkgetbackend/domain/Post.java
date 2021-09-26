@@ -1,5 +1,6 @@
 package com.ddangnmarket.ddangmarkgetbackend.domain;
 
+
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.PostStatus;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

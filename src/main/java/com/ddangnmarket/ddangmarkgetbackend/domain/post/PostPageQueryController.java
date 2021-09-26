@@ -7,6 +7,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetAllPostResponseDto;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetPagePostsResponseDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.search.PostSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +47,6 @@ public class PostPageQueryController {
             Pageable pageable, @ApiIgnore HttpSession session){
 
         Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
-        List<String> collect = pageable.getSort().get().map(Sort.Order::getProperty).collect(toList());
         Page<Post> pagePost = checkStatusParamAndFindPosts(account, status, pageable);
 
         return new ResponseEntity<>(new ResponseOKDto<>(new GetPagePostsResponseDto(pagePost)), HttpStatus.OK);
@@ -72,6 +72,22 @@ public class PostPageQueryController {
         return status.stream()
                 .map(PostStatus::fromString)
                 .collect(toList());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ResponseOKDto<GetPagePostsResponseDto>> getPagePostsSearch(
+            PostSearchCondition condition,
+            Pageable pageable, @ApiIgnore HttpSession session){
+
+        Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
+        Page<Post> pagePost = checkStatusParamAndFindPosts(account, condition, pageable);
+
+        return new ResponseEntity<>(new ResponseOKDto<>(new GetPagePostsResponseDto(pagePost)), HttpStatus.OK);
+
+    }
+
+    private Page<Post> checkStatusParamAndFindPosts(Account account, PostSearchCondition condition, Pageable pageable){
+        return postPageService.search(account, condition, pageable);
     }
 
 

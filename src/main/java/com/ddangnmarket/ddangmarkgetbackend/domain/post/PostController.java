@@ -60,7 +60,7 @@ public class PostController {
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 
-    @PutMapping("/pull/{postId}")
+    @PutMapping("/{postId}/pull")
     public ResponseEntity<ResponseSimpleOKDto> pullPost(
             @PathVariable Long postId, @ApiIgnore HttpSession session){
         Account seller = accountService.checkSessionAndFindAccountWithActivityArea(session);

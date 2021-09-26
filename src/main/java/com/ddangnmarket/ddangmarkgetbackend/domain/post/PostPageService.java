@@ -3,6 +3,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.post;
 import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.search.PostSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,5 +44,11 @@ public class PostPageService {
             Account account, CategoryTag categoryTag, List<PostStatus> postStatuses, Pageable pageable){
         List<District> districts = getDistrict(account);
         return postRepository.getPagePostsByStatusAndCategory(districts, postStatuses, categoryTag, pageable);
+    }
+
+    public Page<Post> search(
+            Account account, PostSearchCondition condition, Pageable pageable){
+        List<District> districts = getDistrict(account);
+        return postRepository.getPagePostByStatusSearch(districts, condition, pageable);
     }
 }

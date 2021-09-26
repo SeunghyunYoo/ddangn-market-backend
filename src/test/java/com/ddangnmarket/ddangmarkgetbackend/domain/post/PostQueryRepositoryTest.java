@@ -3,6 +3,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.post;
 import com.ddangnmarket.ddangmarkgetbackend.domain.District;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.search.PostSearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,6 +56,25 @@ class PostQueryRepositoryTest {
         for (Post post : content) {
             System.out.println("post = " + post.getTitle());
             System.out.println("post = " + post.getCreatedAt());
+        }
+    }
+
+    @Test
+    void pagePostsByPostStatusAndKeyword(){
+        District gumi = districtRepository.findByDong(GUMI);
+
+        PageRequest pageRequest = PageRequest.of(0, 5);
+//        pageRequest.withSort(Sort.by(Sort.Direction.ASC, post.createdAt.toString()));
+        Page<Post> pagePosts = postQueryRepository.getPagePostByStatusSearch(
+                List.of(gumi), new PostSearchCondition(), pageRequest);
+//                List.of(gumi), List.of(), new PostSearchCondition("", null, null, 100000), pageRequest);
+
+        List<Post> content = pagePosts.getContent();
+
+        for (Post post : content) {
+            System.out.println("post = " + post.getTitle());
+            System.out.println("post = " + post.getCreatedAt());
+            System.out.println("post = " + post.getPrice());
         }
     }
 }

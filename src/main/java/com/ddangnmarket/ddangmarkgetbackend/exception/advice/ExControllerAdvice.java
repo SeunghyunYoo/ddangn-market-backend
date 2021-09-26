@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.transaction.TransactionSystemException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -125,6 +126,29 @@ public class ExControllerAdvice {
         return new ErrorResult(HttpStatus.INTERNAL_SERVER_ERROR.name(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 HttpStatus.INTERNAL_SERVER_ERROR.name());
+    }
+
+    @ExceptionHandler({BindException.class})
+    public ResponseEntity<ErrorResult> bindExceptionHandler(BindException e) throws JsonProcessingException {
+        log.error("[exceptionHandler]", e);
+//        log.error("[exceptionHandler] [{}]",handlerMethod, e);
+        BindingResult bindingResult = e.getBindingResult();
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+
+        ValidationErrorMessage validationErrorMessage = new ValidationErrorMessage();
+        List<ValidError> validationErrors = validationErrorMessage.getValidationErrors();
+
+        for (FieldError fieldError : fieldErrors) {
+            String defaultMessage = fieldError.getDefaultMessage();
+            String field = fieldError.getField();
+            validationErrors.add(new ValidError(field, defaultMessage));
+        }
+
+        String errorMessage = objectMapper.writeValueAsString(validationErrors);
+
+        ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(),
+                HttpStatus.BAD_REQUEST.value(), errorMessage);
+        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({HttpMediaTypeNotSupportedException.class})

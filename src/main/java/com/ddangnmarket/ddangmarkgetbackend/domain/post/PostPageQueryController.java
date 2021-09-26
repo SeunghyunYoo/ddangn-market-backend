@@ -10,6 +10,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.GetPagePostsResponse
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -45,7 +46,7 @@ public class PostPageQueryController {
             Pageable pageable, @ApiIgnore HttpSession session){
 
         Account account = accountService.checkSessionAndFindAccountWithActivityArea(session);
-
+        List<String> collect = pageable.getSort().get().map(Sort.Order::getProperty).collect(toList());
         Page<Post> pagePost = checkStatusParamAndFindPosts(account, status, pageable);
 
         return new ResponseEntity<>(new ResponseOKDto<>(new GetPagePostsResponseDto(pagePost)), HttpStatus.OK);

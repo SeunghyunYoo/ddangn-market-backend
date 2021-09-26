@@ -6,10 +6,13 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.account.exception.SignUpExcep
 import com.ddangnmarket.ddangmarkgetbackend.exception.dto.ErrorResult;
 import com.ddangnmarket.ddangmarkgetbackend.exception.dto.ValidError;
 import com.ddangnmarket.ddangmarkgetbackend.exception.dto.ValidationErrorMessage;
+import com.ddangnmarket.ddangmarkgetbackend.utils.repository.IllegalSortArgumentException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -149,9 +152,17 @@ public class ExControllerAdvice {
     }
 
     @ExceptionHandler({MaxUploadSizeExceededException.class})
-    public ResponseEntity<ErrorResult> MaxUploadSizeExceededExHandler(MaxUploadSizeExceededException e){
+    public ResponseEntity<ErrorResult> maxUploadSizeExceededExHandler(MaxUploadSizeExceededException e){
         ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(),
                 HttpStatus.BAD_REQUEST.value(), "파일의 용량이 지원하는 용량을 초과합니다.");
+        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({IllegalSortArgumentException.class})
+    public ResponseEntity<ErrorResult> IllegalSortArgumentExHandler(IllegalSortArgumentException e){
+
+        ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(),
+                HttpStatus.BAD_REQUEST.value(), e.getMessage());
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
 }

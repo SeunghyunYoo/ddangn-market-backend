@@ -10,6 +10,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.Querydsl;
@@ -21,10 +22,14 @@ import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.ddangnmarket.ddangmarkgetbackend.domain.QPost.post;
+import static java.util.stream.Collectors.*;
 
 /**
  * @author SeunghyunYoo
@@ -79,6 +84,7 @@ public abstract class Querydsl4RepositorySupport {
     }
 
     protected <T> Page<T> applyPagination(Pageable pageable, Function<JPAQueryFactory, JPQLQuery> contentQuery){
+        checkSortProperties(pageable);
 
         JPQLQuery jpaQuery = contentQuery.apply(queryFactory);
         List<T> content = getQuerydsl().applyPagination(pageable, jpaQuery).fetch();
@@ -86,9 +92,19 @@ public abstract class Querydsl4RepositorySupport {
     }
     protected <T> Page<T> applyPagination(Pageable pageable, Function<JPAQueryFactory, JPQLQuery> contentQuery,
                                           Function<JPAQueryFactory, JPQLQuery> countQuery){
+        checkSortProperties(pageable);
+
         JPQLQuery jpaContentQuery = contentQuery.apply(queryFactory);
         JPQLQuery jpaCountQuery = countQuery.apply(queryFactory);
         List<T> content = getQuerydsl().applyPagination(pageable, jpaContentQuery).fetch();
         return PageableExecutionUtils.getPage(content, pageable, jpaCountQuery::fetchCount);
+    }
+
+    private void checkSortProperties(Pageable pageable) {
+        List<String> domainFields = Arrays.stream(domainClass.getDeclaredFields()).map(Field::getName).collect(toList());
+        List<String> sortFields = pageable.getSort().get().map(Sort.Order::getProperty).collect(toList());
+        if (!domainFields.containsAll(sortFields)) {
+            throw new IllegalSortArgumentException("invalid sort property, properties must be in " + domainFields);
+        }
     }
 }

@@ -20,7 +20,6 @@ public class PostSearchCondition {
     private String desc;
     private Integer priceGoe;
     private Integer priceLoe;
-    private List<CategoryTag> category;
-    private List<PostStatus> status;
-
+    private List<CategoryTag> categoryTags;
+    private List<PostStatus> postStatuses;
 }

@@ -7,9 +7,11 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.chat.ChatRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.file.UploadFileRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.UpdatePostRequestDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.event.PostSaleEvent;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ public class PostService {
     private final SaleRepository saleRepository;
     private final PurchaseRepository purchaseRepository;
     private final UploadFileRepository uploadFileRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public Long post(Post post){
         return postRepository.save(post).getId();
@@ -99,6 +102,8 @@ public class PostService {
         Account buyer = chat.getAccount();
 
         saveSaleAndPurchaseHistory(seller, buyer, post);
+
+        eventPublisher.publishEvent(new PostSaleEvent(post, buyer));
     }
 
     private Chat findChatByIdOrThrow(Long chatId) {
@@ -137,7 +142,7 @@ public class PostService {
         purchaseRepository.save(purchase);
     }
 
-    public void deletePurchaseAndSale(Account seller, Long postId){
+    public void cancelSale(Account seller, Long postId){
         validateIsSellerPost(postId, seller);
         // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
         Post post = findPostByIdOrThrow(postId);

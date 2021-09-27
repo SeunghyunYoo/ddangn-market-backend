@@ -82,4 +82,8 @@ public class RedisSubscriber {
         return nicknames;
     }
 
+    public void sendNotificationPost(String publishMessage){
+
+    }
+
 }

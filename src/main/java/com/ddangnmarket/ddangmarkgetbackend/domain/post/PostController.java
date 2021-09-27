@@ -84,7 +84,7 @@ public class PostController {
         Account seller = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
-        postService.deletePurchaseAndSale(seller, postId);
+        postService.cancelSale(seller, postId);
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 

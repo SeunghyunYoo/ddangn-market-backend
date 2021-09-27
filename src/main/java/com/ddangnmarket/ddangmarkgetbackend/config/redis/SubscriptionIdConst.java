@@ -7,7 +7,8 @@ import java.util.UUID;
  */
 public enum SubscriptionIdConst {
     CHAT_ROOM("sub-chatroom"),
-    NOTIFICATION_MSG("sub-notification-msg");
+    NOTIFICATION_MSG("sub-notification-msg"),
+    NOTIFICATION_POST("sub-notification-post");
 
     private final String subId;
 

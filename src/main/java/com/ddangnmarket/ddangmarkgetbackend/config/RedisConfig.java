@@ -42,6 +42,7 @@ public class RedisConfig {
         Map<String, ChannelTopic> topics = new HashMap<>();
         topics.put(TopicConst.CHAT_ROOM, new ChannelTopic(TopicConst.CHAT_ROOM));
         topics.put(TopicConst.NOTIFICATION_MESSAGE, new ChannelTopic(TopicConst.NOTIFICATION_MESSAGE));
+        topics.put(TopicConst.NOTIFICATION_POST, new ChannelTopic(TopicConst.NOTIFICATION_POST));
         return topics;
     }
 
@@ -80,6 +81,7 @@ public class RedisConfig {
             RedisConnectionFactory redisConnectionFactory,
             @Qualifier("messageListenerAdapter") MessageListenerAdapter messageListenerAdapter,
             @Qualifier("messageNotificationListenerAdapter") MessageListenerAdapter messageNotificationListenerAdapter,
+            @Qualifier("notificationPostListenerAdapter") MessageListenerAdapter notificationPostListenerAdapter,
             Map<String, ChannelTopic> topics
             ){
 //            ChannelTopic channelTopic){
@@ -89,6 +91,8 @@ public class RedisConfig {
         container.setConnectionFactory(redisConnectionFactory);
         container.addMessageListener(messageListenerAdapter, topics.get(TopicConst.CHAT_ROOM));
         container.addMessageListener(messageNotificationListenerAdapter, topics.get(TopicConst.NOTIFICATION_MESSAGE));
+        container.addMessageListener(notificationPostListenerAdapter, topics.get(TopicConst.NOTIFICATION_POST));
+
         return container;
     }
 
@@ -100,5 +104,10 @@ public class RedisConfig {
     @Bean("messageNotificationListenerAdapter")
     public MessageListenerAdapter messageNotificationListenerAdapter(RedisSubscriber redisSubscriber){
         return new MessageListenerAdapter(redisSubscriber, "sendMessageNotification");
+    }
+
+    @Bean("notificationPostListenerAdapter")
+    public MessageListenerAdapter notificationPostListenerAdapter(RedisSubscriber redisSubscriber){
+        return new MessageListenerAdapter(redisSubscriber, "sendNotificationPost");
     }
 }

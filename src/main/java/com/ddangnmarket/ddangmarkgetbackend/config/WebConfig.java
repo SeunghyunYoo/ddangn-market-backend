@@ -4,9 +4,12 @@ import com.ddangnmarket.ddangmarkgetbackend.config.converter.StringToCategoryTag
 import com.ddangnmarket.ddangmarkgetbackend.config.converter.StringToPostStatusConverter;
 import com.ddangnmarket.ddangmarkgetbackend.interceptor.LogInterceptor;
 import com.ddangnmarket.ddangmarkgetbackend.interceptor.LoginCheckInterceptor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

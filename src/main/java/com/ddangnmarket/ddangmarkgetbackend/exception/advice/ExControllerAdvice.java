@@ -21,6 +21,7 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
@@ -49,7 +51,7 @@ public class ExControllerAdvice {
 
     @ExceptionHandler({IllegalArgumentException.class, SignUpException.class, IllegalStateException.class,
             DuplicateEmailException.class, DuplicateNicknameException.class})
-    public ResponseEntity<ErrorResult> signUpExHandler(Exception e){
+    public ResponseEntity<ErrorResult> signUpExHandler(Exception e) {
         log.error("[exceptionHandler]", e);
 //        log.error("[exceptionHandler] [{}]",handlerMethod, e);
         ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(),
@@ -79,8 +81,8 @@ public class ExControllerAdvice {
     }
 
     @ExceptionHandler({ValueInstantiationException.class})
-    public ResponseEntity<ErrorResult> valueInstantiationExHandler(ValueInstantiationException e){
-        if(e.getCause() instanceof NullPointerException){
+    public ResponseEntity<ErrorResult> valueInstantiationExHandler(ValueInstantiationException e) {
+        if (e.getCause() instanceof NullPointerException) {
             ErrorResult errorResult = new ErrorResult(
                     HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value()
                     , "모든 요청 필드값을 넣어주세요");
@@ -92,8 +94,8 @@ public class ExControllerAdvice {
     }
 
     @ExceptionHandler({ConstraintViolationException.class})
-    public ResponseEntity<ErrorResult> contraintValidationExHandler(ConstraintViolationException e){
-        if(e.getCause() instanceof NullPointerException){
+    public ResponseEntity<ErrorResult> contraintValidationExHandler(ConstraintViolationException e) {
+        if (e.getCause() instanceof NullPointerException) {
             ErrorResult errorResult = new ErrorResult(
                     HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value()
                     , "모든 요청 필드값을 넣어주세요");
@@ -106,8 +108,8 @@ public class ExControllerAdvice {
 
 
     @ExceptionHandler({ValidationException.class})
-    public ResponseEntity<ErrorResult> validationExHandler(ValidationException e){
-        if(e.getCause() instanceof NullPointerException){
+    public ResponseEntity<ErrorResult> validationExHandler(ValidationException e) {
+        if (e.getCause() instanceof NullPointerException) {
             ErrorResult errorResult = new ErrorResult(
                     HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value()
                     , "모든 요청 필드값을 넣어주세요");
@@ -121,7 +123,7 @@ public class ExControllerAdvice {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
-    public ErrorResult exHandler(Exception e){
+    public ErrorResult exHandler(Exception e) {
         log.error("[exceptionHandler]", e);
         return new ErrorResult(HttpStatus.INTERNAL_SERVER_ERROR.name(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -152,7 +154,7 @@ public class ExControllerAdvice {
     }
 
     @ExceptionHandler({HttpMediaTypeNotSupportedException.class})
-    public ResponseEntity<ErrorResult> notSupportMethodExHandler(Exception e){
+    public ResponseEntity<ErrorResult> notSupportMethodExHandler(Exception e) {
         log.error("[exceptionHandler]", e);
 //        log.error("[exceptionHandler] [{}]",handlerMethod, e);
         ErrorResult errorResult = new ErrorResult(HttpStatus.METHOD_NOT_ALLOWED.name(),
@@ -161,7 +163,7 @@ public class ExControllerAdvice {
     }
 
     @ExceptionHandler({HttpMessageNotReadableException.class, MissingServletRequestParameterException.class})
-    public ResponseEntity<ErrorResult> httpMessageExHandler(Exception e){
+    public ResponseEntity<ErrorResult> httpMessageExHandler(Exception e) {
         ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(),
                 HttpStatus.BAD_REQUEST.value(), "잘못된 입력 값 입니다.");
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
@@ -169,24 +171,41 @@ public class ExControllerAdvice {
 
     //HttpRequestMethodNotSupportedException
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class, MethodArgumentTypeMismatchException.class})
-    public ResponseEntity<ErrorResult> httpMethodExHandler(Exception e){
+    public ResponseEntity<ErrorResult> httpMethodExHandler(Exception e) {
         ErrorResult errorResult = new ErrorResult(HttpStatus.NOT_FOUND.name(),
                 HttpStatus.NOT_FOUND.value(), "존재하지 않는 경로입니다");
         return new ResponseEntity<>(errorResult, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({MaxUploadSizeExceededException.class})
-    public ResponseEntity<ErrorResult> maxUploadSizeExceededExHandler(MaxUploadSizeExceededException e){
+    public ResponseEntity<ErrorResult> maxUploadSizeExceededExHandler(MaxUploadSizeExceededException e) {
         ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(),
                 HttpStatus.BAD_REQUEST.value(), "파일의 용량이 지원하는 용량을 초과합니다.");
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({IllegalSortArgumentException.class})
-    public ResponseEntity<ErrorResult> IllegalSortArgumentExHandler(IllegalSortArgumentException e){
+    public ResponseEntity<ErrorResult> IllegalSortArgumentExHandler(IllegalSortArgumentException e) {
 
         ErrorResult errorResult = new ErrorResult(HttpStatus.BAD_REQUEST.name(),
                 HttpStatus.BAD_REQUEST.value(), e.getMessage());
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
+
+//    @ExceptionHandler({AsyncRequestTimeoutException.class})
+//    public void AsyncRequestTimeoutExHandler(AsyncRequestTimeoutException e){
+//        log.info("AsyncRequestTimeoutExHandler", e);
+//    }
+//
+//    @ExceptionHandler({HttpMediaTypeNotAcceptableException.class})
+//    public void HttpMediaTypeNotAcceptableExHandler(HttpMediaTypeNotAcceptableException e){
+//        log.info("HttpMediaTypeNotAcceptableExHandler", e);
+//    }
+
+//    @ExceptionHandler(value = AsyncRequestTimeoutException.class)
+//    public String AsyncRequestTimeoutExHandler(AsyncRequestTimeoutException ex) {
+//
+//        log.info("SSE timeout");
+//        return "SSE timeout... OK";
+//    }
 }

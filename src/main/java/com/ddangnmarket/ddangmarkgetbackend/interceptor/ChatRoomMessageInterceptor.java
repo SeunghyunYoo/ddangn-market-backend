@@ -1,6 +1,5 @@
 package com.ddangnmarket.ddangmarkgetbackend.interceptor;
 
-import com.ddangnmarket.ddangmarkgetbackend.config.redis.SubscriptionIdConst;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chatmessage.ChatMessageService;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoomRedisRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoomService;
@@ -38,7 +37,7 @@ public class ChatRoomMessageInterceptor implements ChannelInterceptor {
         String loginAccountId = getLoginAccountId(message);
         if (StompCommand.DISCONNECT.equals(accessor.getCommand())){
             String simpSessionId = getSimpSessionId(message);
-            chatRoomService.decreaseConnection2(loginAccountId, simpSessionId);
+            chatRoomService.decreaseConnectionIfRoomExist(loginAccountId, simpSessionId);
         }
         if(!checkIsChatRoomMessageSubscription(message)){
             return message;

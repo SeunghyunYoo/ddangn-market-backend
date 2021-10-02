@@ -88,4 +88,18 @@ public class ChatRoomService {
             chatRoomRedisRepository.minusConnectionCount(roomId);
         }
     }
+
+    public void decreaseConnectionIfRoomExist(String loginId, String sessionId){
+        Optional<String> optRoomId = chatRoomRedisRepository.getRoomIdFromMap(loginId, sessionId);
+        if(optRoomId.isEmpty()){
+            return;
+        }
+//        Map<String, String> map = chatRoomRedisRepository.getSessionRoomMapFromLoginId(loginId);
+        // map에서 안지워지는듯 함
+//        map.remove(sessionId);
+        chatRoomRedisRepository.removeUserEnterInfo2(loginId, sessionId);
+        if(!chatRoomRedisRepository.getInfoMap(loginId).containsValue(optRoomId.get())){
+            chatRoomRedisRepository.minusConnectionCount(optRoomId.get());
+        }
+    }
 }

@@ -13,8 +13,13 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author SeunghyunYoo
@@ -29,8 +34,10 @@ public class PostEventListener {
     private final RedisTemplate<String, Object> redisTemplate;
     private final SimpMessageSendingOperations messageTemplate;
     private final Map<String, ChannelTopic> topics;
+    private final Map<String, SseEmitter> postEmitter;
 
-    @EventListener
+
+//    @EventListener
     public void handlePostSaleEvent(PostSaleEvent postSaleEvent){
         Post post = postSaleEvent.getPost();
         log.info(post.getId() + "saled");
@@ -45,6 +52,18 @@ public class PostEventListener {
         messageTemplate.convertAndSend(
                 "/sub/api/user/" + nickname +"/notification/post",
                 new PostSaleMessageDto(MessageType.NOTIFICATION_POST, "판매완료", post.getId()));
+
+
+        SseEmitter emitter = postEmitter.get(nickname);
+
+        try {
+            log.info("postEmitter send Message ======");
+            emitter.send("/test" + " @ " + new Date());
+            // we could send more events
+            emitter.complete();
+        } catch (Exception ex) {
+            emitter.completeWithError(ex);
+        }
 
     }
 }

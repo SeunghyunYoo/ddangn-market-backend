@@ -80,11 +80,12 @@ public class PostController {
 
     @PostMapping("/{postId}/sales/cancel")
     public ResponseEntity<ResponseSimpleOKDto> cancelSalePost(
-            @PathVariable Long postId, @ApiIgnore HttpSession session){
+            @PathVariable Long postId, @RequestBody PostSaleCancelRequestDto postSaleCancelRequestDto,
+            @ApiIgnore HttpSession session){
         Account seller = accountService.checkSessionAndFindAccountWithActivityArea(session);
 
         // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
-        postService.cancelSale(seller, postId);
+        postService.cancelSale(seller, postId, postSaleCancelRequestDto.getChatId());
         return new ResponseEntity<>(new ResponseSimpleOKDto(), HttpStatus.OK);
     }
 

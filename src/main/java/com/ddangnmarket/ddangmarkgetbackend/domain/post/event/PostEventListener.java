@@ -52,18 +52,5 @@ public class PostEventListener {
         messageTemplate.convertAndSend(
                 "/sub/api/user/" + nickname +"/notification/post",
                 new PostSaleMessageDto(MessageType.NOTIFICATION_POST, "판매완료", post.getId()));
-
-
-        SseEmitter emitter = postEmitter.get(nickname);
-
-        try {
-            log.info("postEmitter send Message ======");
-            emitter.send("/test" + " @ " + new Date());
-            // we could send more events
-            emitter.complete();
-        } catch (Exception ex) {
-            emitter.completeWithError(ex);
-        }
-
     }
 }

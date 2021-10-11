@@ -8,6 +8,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.function.Supplier;
 
 /**
  * @author SeunghyunYoo
@@ -34,4 +36,5 @@ public class AsyncConfig implements AsyncConfigurer {
         // ERROR 노티피케이션 에러 처리
         return AsyncConfigurer.super.getAsyncUncaughtExceptionHandler();
     }
+
 }

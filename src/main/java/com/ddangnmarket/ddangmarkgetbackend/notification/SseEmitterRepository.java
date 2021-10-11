@@ -1,4 +1,4 @@
-package com.ddangnmarket.ddangmarkgetbackend.sse;
+package com.ddangnmarket.ddangmarkgetbackend.notification;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

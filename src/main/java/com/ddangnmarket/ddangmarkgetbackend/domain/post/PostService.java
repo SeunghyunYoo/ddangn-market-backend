@@ -7,6 +7,7 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.chat.ChatRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.file.UploadFileRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.dto.UpdatePostRequestDto;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.event.PostSaleCancelEvent;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.event.PostSaleEvent;
 import com.ddangnmarket.ddangmarkgetbackend.domain.purchase.PurchaseRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.sale.SaleRepository;
@@ -140,13 +141,17 @@ public class PostService {
         purchaseRepository.save(purchase);
     }
 
-    public void cancelSale(Account seller, Long postId){
+    public void cancelSale(Account seller, Long postId, Long chatId){
         validateIsSellerPost(postId, seller);
         // TODO chatId를 받아올지, 전체 chat을 looping해서 상태를 바꿀지
         Post post = findPostByIdOrThrow(postId);
         if(post.getPostStatus().equals(PostStatus.COMPLETE)) {
+            Chat chat = chatRepository.findWithAccountById(chatId).orElseThrow();
+            Account buyer = chat.getAccount();
             deletePurchaseAndSale(postId);
             post.cancelSale();
+            chat.changeNone();
+            eventPublisher.publishEvent(new PostSaleCancelEvent(post, buyer));
         }
     }
 

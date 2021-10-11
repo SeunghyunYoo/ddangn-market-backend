@@ -3,6 +3,7 @@ package com.ddangnmarket.ddangmarkgetbackend.domain.chat;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Chat;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,9 @@ import java.util.Optional;
 public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     Optional<Chat> findById(Long id);
+
+    @EntityGraph(attributePaths = "account")
+    Optional<Chat> findWithAccountById(Long id);
 
     Optional<Chat> findByAccountAndPost(Account account, Post post);
 

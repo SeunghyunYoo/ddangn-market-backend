@@ -1,7 +1,8 @@
-package com.ddangnmarket.ddangmarkgetbackend.sse;
+package com.ddangnmarket.ddangmarkgetbackend.notification;
 
 import com.ddangnmarket.ddangmarkgetbackend.domain.Account;
 import com.ddangnmarket.ddangmarkgetbackend.domain.Post;
+import com.ddangnmarket.ddangmarkgetbackend.domain.post.event.PostSaleCancelEvent;
 import com.ddangnmarket.ddangmarkgetbackend.domain.post.event.PostSaleEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,28 @@ public class NotificationService {
         Post post = postSaleEvent.getPost();
 
         Account buyer = postSaleEvent.getBuyer();
+        String nickname = buyer.getNickname();
+
+        SseEmitter emitter = sseEmitterRepository.get(nickname);
+
+        try {
+            emitter.send(SseEmitter.event().name("message").data("notification", MediaType.APPLICATION_JSON));
+            emitter.complete();
+        } catch (Exception ex) {
+            emitter.completeWithError(ex);
+        }
+
+        emitter.onCompletion(() -> {
+            sseEmitterRepository.remove(nickname);
+        });
+    }
+
+    @Async
+    @EventListener
+    public void handlePostSaleCancelEvent(PostSaleCancelEvent postSaleCancelEvent){
+        Post post = postSaleCancelEvent.getPost();
+
+        Account buyer = postSaleCancelEvent.getBuyer();
         String nickname = buyer.getNickname();
 
         SseEmitter emitter = sseEmitterRepository.get(nickname);

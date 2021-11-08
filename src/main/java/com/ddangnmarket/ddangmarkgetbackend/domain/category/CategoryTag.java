@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum CategoryTag {
     //생활 가전, 가구, 의류, 도서, 디지털기기, 기타
-    APPLIANCE, FURNITURE, CLOTHES, BOOK, DIGITAL, OTHERS;
+    APPLIANCE, FURNITURE_INTERIOR, WOMEN_CLOTHES, BOOK_TICKET_RECORD, DIGITAL, OTHERS,
+    SPORTS_LEISURE, WOMAN_ACCESSORIES, GAME_HOBBY, BEAUTY, PLANT,
+    LIVING_PROCESSED_FOOD, PET_STUFF, MAN_FASHION_ACCESSORIES, CHILDREN_BOOK;
 
     @JsonCreator
     public static CategoryTag fromString(String key){

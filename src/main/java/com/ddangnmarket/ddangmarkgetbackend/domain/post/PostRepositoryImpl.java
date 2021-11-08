@@ -116,9 +116,13 @@ public class PostRepositoryImpl extends Querydsl4RepositorySupport implements Po
     }
 
     private BooleanBuilder searchCond(PostSearchCondition condition){
-        return titleKeyword(condition.getTitle()).and(descKeyword(condition.getDesc()))
+        return titleOrDescKeyword(condition.getKeyword())
                 .and(priceGoe(condition.getPriceGoe())).and(priceLoe(condition.getPriceLoe()))
                 .and(categoryIn(condition.getCategoryTags())).and(postStatusIn(condition.getPostStatuses()));
+    }
+
+    private BooleanBuilder titleOrDescKeyword(String keyword){
+        return titleKeyword(keyword).or(descKeyword(keyword));
     }
 
     private BooleanBuilder titleKeyword(String keyword){

@@ -4,10 +4,8 @@ import com.ddangnmarket.ddangmarkgetbackend.domain.*;
 import com.ddangnmarket.ddangmarkgetbackend.domain.account.AccountRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryJpaRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.category.CategoryTag;
-import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoom;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoomRedisRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.ChatRoomRepository;
-import com.ddangnmarket.ddangmarkgetbackend.domain.chatroom.EnterInfo;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.DistrictRepository;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Dong;
 import com.ddangnmarket.ddangmarkgetbackend.domain.district.Position;
@@ -111,9 +109,9 @@ public class InitDb {
             em.persist(account3);
 
             Category digital = categoryJpaRepository.findByCategoryTag(CategoryTag.DIGITAL);
-            Category book = categoryJpaRepository.findByCategoryTag(CategoryTag.BOOK);
-            Category clothes = categoryJpaRepository.findByCategoryTag(CategoryTag.CLOTHES);
-            Category furniture = categoryJpaRepository.findByCategoryTag(CategoryTag.FURNITURE);
+            Category book = categoryJpaRepository.findByCategoryTag(CategoryTag.BOOK_TICKET_RECORD);
+            Category clothes = categoryJpaRepository.findByCategoryTag(CategoryTag.WOMEN_CLOTHES);
+            Category furniture = categoryJpaRepository.findByCategoryTag(CategoryTag.FURNITURE_INTERIOR);
 
             Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, digital, account1);
             postRepository.save(post1);
@@ -183,9 +181,9 @@ public class InitDb {
             em.persist(account3);
 
             Category digital = categoryJpaRepository.findByCategoryTag(CategoryTag.DIGITAL);
-            Category book = categoryJpaRepository.findByCategoryTag(CategoryTag.BOOK);
-            Category clothes = categoryJpaRepository.findByCategoryTag(CategoryTag.CLOTHES);
-            Category furniture = categoryJpaRepository.findByCategoryTag(CategoryTag.FURNITURE);
+            Category book = categoryJpaRepository.findByCategoryTag(CategoryTag.BOOK_TICKET_RECORD);
+            Category clothes = categoryJpaRepository.findByCategoryTag(CategoryTag.WOMEN_CLOTHES);
+            Category furniture = categoryJpaRepository.findByCategoryTag(CategoryTag.FURNITURE_INTERIOR);
 
             Post post1 = Post.createPost("맥북판매", "맥북팔아요", 100000, digital, account1);
             em.persist(post1);

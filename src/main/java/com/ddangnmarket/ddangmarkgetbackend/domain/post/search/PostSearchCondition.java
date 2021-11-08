@@ -16,8 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostSearchCondition {
-    private String title;
-    private String desc;
+    private String keyword;
     private Integer priceGoe;
     private Integer priceLoe;
     private List<CategoryTag> categoryTags;
